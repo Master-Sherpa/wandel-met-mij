@@ -1,0 +1,26 @@
+<style>
+  .email-auth-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 10000; }
+  .email-auth-modal.active { display: flex; }
+  .email-auth-content { background: #0c1f31; padding: 40px; border-radius: 12px; max-width: 400px; width: 90%; }
+  .email-auth-content h2 { color: #f0a500; margin-bottom: 20px; }
+  .email-auth-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #7ab8d4; border-radius: 6px; background: #1a2f3f; color: #e8f4f8; }
+  .email-auth-button { width: 100%; padding: 12px; margin: 15px 0; background: #f0a500; color: #0c1f31; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+  .email-auth-status { padding: 10px; margin: 10px 0; border-radius: 6px; text-align: center; }
+  .email-auth-status.success { background: #4CAF50; color: white; }
+  .email-auth-status.error { background: #f44336; color: white; }
+</style>
+<div id="emailAuthModal" class="email-auth-modal">
+  <div class="email-auth-content">
+    <div id="step1"><h2>🔐 Email Authentication</h2><input type="email" id="emailInput" class="email-auth-input" placeholder="Enter your email"><button class="email-auth-button" onclick="EmailAuthUI.sendCode()">Send Code</button><div id="step1Status"></div></div>
+    <div id="step2" style="display:none;"><h2>✓ Enter Code</h2><p style="color: #e8f4f8;">A 6-digit code was sent to your email</p><input type="text" id="codeInput" class="email-auth-input" placeholder="000000" maxlength="6"><button class="email-auth-button" onclick="EmailAuthUI.verifyCode()">Verify</button><div id="step2Status"></div></div>
+    <div id="step3" style="display:none;"><h2>✓ Success!</h2><div class="email-auth-status success">Account created!</div><button class="email-auth-button" onclick="EmailAuthUI.close()">Close</button></div>
+  </div>
+</div>
+<script>
+const EmailAuthUI = {
+  open() { document.getElementById('emailAuthModal').classList.add('active'); },
+  async sendCode() { const email = document.getElementById('emailInput').value; const result = await AuthLibrary.sendCode(email); if (result.success) { document.getElementById('step1').style.display = 'none'; document.getElementById('step2').style.display = 'block'; } else { document.getElementById('step1Status').innerHTML = '<div class="email-auth-status error">' + result.message + '</div>'; } },
+  async verifyCode() { const code = document.getElementById('codeInput').value; const result = await AuthLibrary.verifyCode(code); if (result.success) { document.getElementById('step2').style.display = 'none'; document.getElementById('step3').style.display = 'block'; } else { document.getElementById('step2Status').innerHTML = '<div class="email-auth-status error">' + result.message + '</div>'; } },
+  close() { document.getElementById('emailAuthModal').classList.remove('active'); }
+};
+</script>
