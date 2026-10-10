@@ -6921,5 +6921,406 @@ function startApp() {
 registerSW().then(startApp).catch(startApp);
 setTimeout(startApp, 3000); // absoluut vangnet: na 3s start de app sowieso
 </script>
+
+  
+<script src="authLibrary.js"></script>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- Wandel met Mij - Email Authentication v2                          -->
+<!-- Features: login, logout, upgrade anonymous, recovery, polished UI -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<style>
+  /* Modal overlay */
+  .wmm-auth-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px; backdrop-filter: blur(4px); }
+  .wmm-auth-modal.active { display: flex; }
+  .wmm-auth-content { background: #0c1f31; padding: 32px; border-radius: 16px; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(240,165,0,0.2); position: relative; animation: wmmFadeIn 0.3s ease-out; }
+  @keyframes wmmFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Header */
+  .wmm-auth-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .wmm-auth-header h2 { color: #f0a500; margin: 0; font-size: 22px; font-weight: 700; }
+  .wmm-auth-close { background: transparent; border: none; color: #7ab8d4; font-size: 24px; cursor: pointer; padding: 4px 12px; border-radius: 6px; transition: background 0.2s; }
+  .wmm-auth-close:hover { background: rgba(122,184,212,0.1); }
+
+  /* Form elements */
+  .wmm-auth-label { display: block; color: #7ab8d4; font-size: 13px; margin-bottom: 6px; font-weight: 500; }
+  .wmm-auth-input { width: 100%; padding: 14px; margin-bottom: 16px; border: 1px solid rgba(122,184,212,0.3); border-radius: 8px; background: rgba(255,255,255,0.95); color: #0c1f31; font-size: 16px; box-sizing: border-box; transition: border-color 0.2s; }
+  .wmm-auth-input:focus { outline: none; border-color: #f0a500; box-shadow: 0 0 0 3px rgba(240,165,0,0.15); }
+  .wmm-auth-input.code { font-size: 24px; letter-spacing: 10px; text-align: center; font-weight: 600; font-family: monospace; }
+
+  /* Buttons */
+  .wmm-auth-button { width: 100%; padding: 14px; margin-top: 8px; background: #f0a500; color: #0c1f31; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 15px; transition: all 0.2s; }
+  .wmm-auth-button:hover:not(:disabled) { background: #ffb820; transform: translateY(-1px); }
+  .wmm-auth-button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .wmm-auth-button.secondary { background: transparent; color: #7ab8d4; border: 1px solid rgba(122,184,212,0.3); margin-top: 8px; }
+  .wmm-auth-button.secondary:hover:not(:disabled) { background: rgba(122,184,212,0.1); transform: none; }
+
+  /* Status messages */
+  .wmm-auth-status { padding: 12px; border-radius: 8px; margin: 12px 0; font-size: 14px; }
+  .wmm-auth-status.error { background: rgba(220,53,69,0.15); color: #ff8a95; border: 1px solid rgba(220,53,69,0.3); }
+  .wmm-auth-status.success { background: rgba(40,167,69,0.15); color: #7fdd92; border: 1px solid rgba(40,167,69,0.3); }
+  .wmm-auth-status.info { background: rgba(122,184,212,0.1); color: #7ab8d4; border: 1px solid rgba(122,184,212,0.2); }
+
+  /* Loading spinner */
+  .wmm-auth-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(12,31,49,0.3); border-top-color: #0c1f31; border-radius: 50%; animation: wmmSpin 0.8s linear infinite; margin-right: 8px; vertical-align: middle; }
+  @keyframes wmmSpin { to { transform: rotate(360deg); } }
+
+  /* Info boxes */
+  .wmm-auth-info { background: rgba(240,165,0,0.08); border-left: 3px solid #f0a500; padding: 12px 14px; border-radius: 6px; margin: 12px 0; font-size: 13px; color: #e8f4f8; line-height: 1.5; }
+  .wmm-auth-timer { color: #7ab8d4; font-size: 13px; text-align: center; margin: 8px 0; }
+
+  /* Account button (vervangt "Upgrade to Email") */
+  .wmm-account-btn { position: fixed; top: 12px; right: 12px; padding: 8px 14px; border-radius: 20px; border: 1px solid rgba(240,165,0,0.3); background: rgba(12,31,49,0.9); color: #f0a500; font-size: 13px; font-weight: 600; cursor: pointer; z-index: 999; display: flex; align-items: center; gap: 6px; transition: all 0.2s; backdrop-filter: blur(10px); }
+  .wmm-account-btn:hover { background: rgba(12,31,49,1); transform: translateY(-1px); }
+  .wmm-account-btn.logged-in { background: rgba(40,167,69,0.15); border-color: rgba(40,167,69,0.4); color: #7fdd92; }
+  @media (max-width: 480px) { .wmm-account-btn { top: 8px; right: 8px; font-size: 12px; padding: 6px 12px; } }
+
+  /* Account dropdown */
+  .wmm-account-dropdown { position: fixed; top: 50px; right: 12px; background: #0c1f31; border: 1px solid rgba(240,165,0,0.2); border-radius: 10px; padding: 8px; z-index: 999; display: none; min-width: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+  .wmm-account-dropdown.active { display: block; }
+  .wmm-account-dropdown-email { padding: 10px 12px; color: #7ab8d4; font-size: 12px; border-bottom: 1px solid rgba(122,184,212,0.1); margin-bottom: 4px; word-break: break-all; }
+  .wmm-account-dropdown button { width: 100%; text-align: left; padding: 10px 12px; background: transparent; border: none; color: #e8f4f8; cursor: pointer; border-radius: 6px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .wmm-account-dropdown button:hover { background: rgba(240,165,0,0.1); color: #f0a500; }
+</style>
+
+<!-- Modal (hidden by default) -->
+<div id="wmmAuthModal" class="wmm-auth-modal" role="dialog" aria-modal="true">
+  <div class="wmm-auth-content">
+    <div class="wmm-auth-header">
+      <h2 id="wmmAuthTitle">🔐 Inloggen met e-mail</h2>
+      <button class="wmm-auth-close" onclick="EmailAuthUI.close()" aria-label="Sluiten">×</button>
+    </div>
+
+    <!-- STAP 1: email invullen -->
+    <div id="wmmStep1">
+      <div id="wmmUpgradeInfo" class="wmm-auth-info" style="display:none;">
+        💾 <strong>Je lokale voortgang wordt bewaard</strong> en gekoppeld aan je e-mail.
+      </div>
+      <label class="wmm-auth-label" for="wmmEmail">E-mailadres</label>
+      <input type="email" id="wmmEmail" class="wmm-auth-input" placeholder="jouw@email.nl" autocomplete="email">
+      <button class="wmm-auth-button" id="wmmSendBtn" onclick="EmailAuthUI.sendCode()">Verstuur code</button>
+      <div id="wmmStep1Status"></div>
+    </div>
+
+    <!-- STAP 2: code invullen -->
+    <div id="wmmStep2" style="display:none;">
+      <div class="wmm-auth-info">
+        📧 Code verstuurd naar <strong id="wmmSentTo"></strong><br>
+        <small>Check ook je spam-folder.</small>
+      </div>
+      <label class="wmm-auth-label" for="wmmCode">6-cijferige code</label>
+      <input type="text" id="wmmCode" class="wmm-auth-input code" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
+      <div class="wmm-auth-timer" id="wmmTimer"></div>
+      <button class="wmm-auth-button" id="wmmVerifyBtn" onclick="EmailAuthUI.verifyCode()">Verifieer code</button>
+      <button class="wmm-auth-button secondary" onclick="EmailAuthUI.resendCode()">Nieuwe code aanvragen</button>
+      <div id="wmmStep2Status"></div>
+    </div>
+
+    <!-- STAP 3: success -->
+    <div id="wmmStep3" style="display:none; text-align:center;">
+      <div style="font-size: 48px; margin: 20px 0;">✅</div>
+      <h3 id="wmmSuccessTitle" style="color:#7fdd92; margin:0 0 8px;">Welkom!</h3>
+      <p id="wmmSuccessMsg" style="color:#e8f4f8; margin:0 0 20px;"></p>
+      <button class="wmm-auth-button" onclick="EmailAuthUI._doorgaan()">Doorgaan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Account button rechtsboven -->
+<button id="wmmAccountBtn" class="wmm-account-btn" onclick="EmailAuthUI.toggleAccount()">
+  <span id="wmmAccountIcon">🔐</span>
+  <span id="wmmAccountLabel">Inloggen</span>
+</button>
+
+<!-- Account dropdown -->
+<div id="wmmAccountDropdown" class="wmm-account-dropdown">
+  <div class="wmm-account-dropdown-email" id="wmmDropdownEmail"></div>
+  <div style="padding: 6px 12px; font-size: 11px; color: #7ab8d4;" id="wmmSyncStatus">☁️ Laatste sync: --</div>
+  <button onclick="EmailAuthUI.manualSync()">🔄 Nu synchroniseren</button>
+  <button onclick="EmailAuthUI.logout()">🚪 Uitloggen</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// EmailAuthUI - Alle UI logica voor email auth
+// ═══════════════════════════════════════════════════════════════
+const EmailAuthUI = {
+  _timerInterval: null,
+  _codeExpiresAt: null,
+
+  // ─── Modal open/close ─────────────────────────────────────────
+  open() {
+    this._resetSteps();
+    const isUpgrade = !AuthLibrary.isEmailAuthenticated() && !!window._wmm_authUid;
+    document.getElementById('wmmUpgradeInfo').style.display = isUpgrade ? 'block' : 'none';
+    document.getElementById('wmmAuthTitle').textContent = isUpgrade
+      ? '💾 Bewaar je voortgang'
+      : '🔐 Inloggen met e-mail';
+    document.getElementById('wmmAuthModal').classList.add('active');
+    setTimeout(() => document.getElementById('wmmEmail').focus(), 100);
+    document.getElementById('wmmAccountDropdown').classList.remove('active');
+  },
+
+  close() {
+    document.getElementById('wmmAuthModal').classList.remove('active');
+    this._stopTimer();
+  },
+
+  _resetSteps() {
+    document.getElementById('wmmStep1').style.display = 'block';
+    document.getElementById('wmmStep2').style.display = 'none';
+    document.getElementById('wmmStep3').style.display = 'none';
+    document.getElementById('wmmEmail').value = '';
+    document.getElementById('wmmCode').value = '';
+    this._clearStatus('wmmStep1Status');
+    this._clearStatus('wmmStep2Status');
+  },
+
+  // ─── Step 1: Verstuur code ────────────────────────────────────
+  async sendCode() {
+    const email = document.getElementById('wmmEmail').value.trim();
+    const btn = document.getElementById('wmmSendBtn');
+    if (!email) {
+      this._showStatus('wmmStep1Status', 'Vul een e-mailadres in', 'error');
+      return;
+    }
+    this._setLoading(btn, true, 'Versturen...');
+    this._clearStatus('wmmStep1Status');
+
+    const result = await AuthLibrary.sendCode(email);
+
+    this._setLoading(btn, false, 'Verstuur code');
+    if (result.success) {
+      document.getElementById('wmmSentTo').textContent = email;
+      document.getElementById('wmmStep1').style.display = 'none';
+      document.getElementById('wmmStep2').style.display = 'block';
+      setTimeout(() => document.getElementById('wmmCode').focus(), 100);
+      if (result.expiresAt) this._startTimer(result.expiresAt);
+      if (result.code) {
+        // Emulator mode: toon de code
+        this._showStatus('wmmStep2Status', `🧪 Emulator code: ${result.code}`, 'info');
+      }
+    } else {
+      this._showStatus('wmmStep1Status', result.message, 'error');
+    }
+  },
+
+  // ─── Step 2: Verifieer code ───────────────────────────────────
+  async verifyCode() {
+    const code = document.getElementById('wmmCode').value.trim();
+    const btn = document.getElementById('wmmVerifyBtn');
+    if (code.length !== 6) {
+      this._showStatus('wmmStep2Status', 'Vul alle 6 cijfers in', 'error');
+      return;
+    }
+    this._setLoading(btn, true, 'Verifiëren...');
+
+    const result = await AuthLibrary.verifyCode(code);
+
+    this._setLoading(btn, false, 'Verifieer code');
+    if (result.success) {
+      this._stopTimer();
+      document.getElementById('wmmStep2').style.display = 'none';
+      document.getElementById('wmmStep3').style.display = 'block';
+
+      // ✨ Nieuwe v3: toon wat er met data is gebeurd
+      let title, msg;
+      if (result.isNewAccount) {
+        title = 'Account aangemaakt! 🎉';
+        msg = result.dataAction === 'uploaded'
+          ? `Je lokale voortgang is nu veilig opgeslagen in de cloud onder ${result.email}`
+          : `Je bent nu ingelogd als ${result.email}`;
+      } else {
+        if (result.dataAction === 'restored') {
+          title = 'Welkom terug! 👋';
+          msg = `Je voortgang is opgehaald uit de cloud voor ${result.email}. De app herlaadt nu om alles bij te werken.`;
+        } else {
+          title = 'Welkom terug! 👋';
+          msg = `Je bent ingelogd als ${result.email}`;
+        }
+      }
+      document.getElementById('wmmSuccessTitle').textContent = title;
+      document.getElementById('wmmSuccessMsg').textContent = msg;
+
+      // Reload-flag voor "Doorgaan" knop
+      EmailAuthUI._reloadOnClose = (result.dataAction === 'restored');
+
+      EmailAuthUI._updateAccountButton();
+    } else {
+      this._showStatus('wmmStep2Status', result.message, 'error');
+    }
+  },
+
+  async resendCode() {
+    const email = AuthLibrary.getPendingEmail();
+    if (!email) {
+      this._resetSteps();
+      return;
+    }
+    const result = await AuthLibrary.sendCode(email);
+    if (result.success) {
+      document.getElementById('wmmCode').value = '';
+      this._showStatus('wmmStep2Status', '✅ Nieuwe code verstuurd', 'success');
+      if (result.expiresAt) this._startTimer(result.expiresAt);
+      if (result.code) {
+        setTimeout(() => this._showStatus('wmmStep2Status', `🧪 Emulator code: ${result.code}`, 'info'), 1500);
+      }
+    } else {
+      this._showStatus('wmmStep2Status', result.message, 'error');
+    }
+  },
+
+  // ─── Account knop toggle ──────────────────────────────────────
+  toggleAccount() {
+    if (AuthLibrary.isEmailAuthenticated()) {
+      const dd = document.getElementById('wmmAccountDropdown');
+      dd.classList.toggle('active');
+      document.getElementById('wmmDropdownEmail').textContent = AuthLibrary.getEmailSession();
+      this._updateSyncStatus();
+    } else {
+      this.open();
+    }
+  },
+
+  _updateSyncStatus() {
+    const last = AuthLibrary.getLastSync();
+    const el = document.getElementById('wmmSyncStatus');
+    if (!el) return;
+    if (!last) { el.textContent = '☁️ Nog niet gesynchroniseerd'; return; }
+    const diff = Math.round((Date.now() - new Date(last).getTime()) / 1000);
+    let txt;
+    if (diff < 60) txt = `net nu`;
+    else if (diff < 3600) txt = `${Math.round(diff/60)} min geleden`;
+    else if (diff < 86400) txt = `${Math.round(diff/3600)} uur geleden`;
+    else txt = `${Math.round(diff/86400)} dagen geleden`;
+    el.textContent = `☁️ Laatste sync: ${txt}`;
+  },
+
+  async manualSync() {
+    const btn = document.querySelector('#wmmAccountDropdown button');
+    const originalText = document.getElementById('wmmSyncStatus').textContent;
+    document.getElementById('wmmSyncStatus').textContent = '⏳ Synchroniseren...';
+    const result = await AuthLibrary.syncToCloud({ force: true });
+    if (result.success) {
+      document.getElementById('wmmSyncStatus').textContent = `✅ Gesynchroniseerd (${result.syncedKeys} items)`;
+      setTimeout(() => this._updateSyncStatus(), 2000);
+    } else {
+      document.getElementById('wmmSyncStatus').textContent = `❌ ${result.message || 'Mislukt'}`;
+      setTimeout(() => this._updateSyncStatus(), 3000);
+    }
+  },
+
+  logout() {
+    const msg = 'Weet je zeker dat je wilt uitloggen?\n\n' +
+                '✓ Je data blijft op dit toestel\n' +
+                '✓ Je data blijft in de cloud (herstelbaar bij opnieuw inloggen)\n' +
+                '✓ Je blijft doorwerken als anonieme gebruiker';
+    if (!confirm(msg)) return;
+
+    // Laatste sync voor uitloggen (voor de zekerheid)
+    AuthLibrary.syncToCloud({ force: true }).finally(() => {
+      AuthLibrary.logout();
+      document.getElementById('wmmAccountDropdown').classList.remove('active');
+      this._updateAccountButton();
+      // Geen reload - lokale data blijft, app werkt door
+    });
+  },
+
+  _doorgaan() {
+    this.close();
+    if (this._reloadOnClose) {
+      // Data uit cloud opgehaald → reload om de nieuwe data in de app te laden
+      window.location.reload();
+    }
+  },
+
+  // ─── Update button bovenin ────────────────────────────────────
+  _updateAccountButton() {
+    const btn = document.getElementById('wmmAccountBtn');
+    const icon = document.getElementById('wmmAccountIcon');
+    const label = document.getElementById('wmmAccountLabel');
+    if (AuthLibrary.isEmailAuthenticated()) {
+      btn.classList.add('logged-in');
+      icon.textContent = '✓';
+      const email = AuthLibrary.getEmailSession();
+      label.textContent = email.length > 20 ? email.substring(0, 17) + '...' : email;
+    } else {
+      btn.classList.remove('logged-in');
+      icon.textContent = '🔐';
+      label.textContent = window._wmm_authUid ? 'Opslaan' : 'Inloggen';
+    }
+  },
+
+  // ─── Timer & status helpers ───────────────────────────────────
+  _startTimer(expiresAt) {
+    this._stopTimer();
+    this._codeExpiresAt = expiresAt;
+    const update = () => {
+      const seconds = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      const el = document.getElementById('wmmTimer');
+      if (seconds > 0) {
+        el.textContent = `⏱️ Code verloopt over ${m}:${s.toString().padStart(2, '0')}`;
+      } else {
+        el.textContent = '⚠️ Code is verlopen. Vraag een nieuwe aan.';
+        this._stopTimer();
+      }
+    };
+    update();
+    this._timerInterval = setInterval(update, 1000);
+  },
+
+  _stopTimer() {
+    if (this._timerInterval) {
+      clearInterval(this._timerInterval);
+      this._timerInterval = null;
+    }
+  },
+
+  _setLoading(btn, loading, text) {
+    btn.disabled = loading;
+    btn.innerHTML = loading ? `<span class="wmm-auth-spinner"></span>${text}` : text;
+  },
+
+  _showStatus(id, msg, type) {
+    const el = document.getElementById(id);
+    el.innerHTML = `<div class="wmm-auth-status ${type}">${msg}</div>`;
+  },
+
+  _clearStatus(id) {
+    document.getElementById(id).innerHTML = '';
+  }
+};
+
+// ─── Initialisatie bij page load ──────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  EmailAuthUI._updateAccountButton();
+
+  // Enter-key support
+  document.getElementById('wmmEmail').addEventListener('keydown', e => {
+    if (e.key === 'Enter') EmailAuthUI.sendCode();
+  });
+  document.getElementById('wmmCode').addEventListener('keydown', e => {
+    if (e.key === 'Enter') EmailAuthUI.verifyCode();
+  });
+
+  // Code field: automatisch alleen cijfers
+  document.getElementById('wmmCode').addEventListener('input', e => {
+    e.target.value = e.target.value.replace(/\D/g, '').substring(0, 6);
+  });
+
+  // Click buiten dropdown = sluiten
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#wmmAccountBtn') && !e.target.closest('#wmmAccountDropdown')) {
+      document.getElementById('wmmAccountDropdown').classList.remove('active');
+    }
+  });
+
+  console.log('[EmailAuthUI] Initialized. Logged in:', AuthLibrary.isEmailAuthenticated());
+});
+</script>
+
 </body>
-</html>
+</html>   
+
