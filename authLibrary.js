@@ -16,6 +16,7 @@ const AuthLibrary = (() => {
   const KEY_PENDING_EMAIL = 'wmm_email_auth';
   const KEY_SESSION_EMAIL = 'wmm_session_token';
   const KEY_SESSION_META  = 'wmm_session_meta';
+  const KEY_SESSION_SECRET = 'wmm_session_secret';
   const KEY_LAST_SYNC     = 'wmm_last_sync';
   const KEY_SYNC_HASH     = 'wmm_sync_hash';
 
@@ -25,7 +26,10 @@ const AuthLibrary = (() => {
   // Keys die NOOIT gesynced worden (auth state + sync internals)
   const SYNC_BLOCKLIST = new Set([
     KEY_PENDING_EMAIL, KEY_SESSION_EMAIL, KEY_SESSION_META,
-    KEY_LAST_SYNC, KEY_SYNC_HASH
+    KEY_LAST_SYNC, KEY_SYNC_HASH,
+    // Notities, markeringen en bladwijzers blijven op het toestel en worden niet in de cloud bewaard
+    'wmm_markeringen', 'wmm_bladwijzers', 'wmm_apparaat',
+    KEY_SESSION_SECRET
   ]);
 
   // Internal state
@@ -60,6 +64,7 @@ const AuthLibrary = (() => {
     if (m.includes('failed to fetch')) return 'Geen verbinding. Check je internet.';
     if (m.includes('valid email')) return 'Vul een geldig e-mailadres in.';
     if (m.includes('too large')) return 'Je hebt veel data. Opschonen nodig.';
+    if (m.includes('session invalid')) return 'Je inlogsessie is verlopen. Log opnieuw in om te synchroniseren.';
     return msg;
   }
 
@@ -95,6 +100,7 @@ const AuthLibrary = (() => {
       const data = await _post('verifyCode', { email, code: code.trim(), anonymousId });
       if (data.success) {
         localStorage.setItem(KEY_SESSION_EMAIL, data.email);
+        if (data.sessionSecret) localStorage.setItem(KEY_SESSION_SECRET, data.sessionSecret);
         localStorage.setItem(KEY_SESSION_META, JSON.stringify({
           email: data.email,
           isNewAccount: data.isNewAccount,
@@ -198,7 +204,7 @@ const AuthLibrary = (() => {
         return { success: true, skipped: true, reason: 'no changes' };
       }
 
-      const data = await _post('syncData', { email, storage });
+      const data = await _post('syncData', { email, storage, sessionSecret: getSessionSecret() });
       localStorage.setItem(KEY_LAST_SYNC, new Date().toISOString());
       localStorage.setItem(KEY_SYNC_HASH, hash);
       _notifyListeners('synced', { keys: data.syncedKeys, size: data.size });
@@ -214,18 +220,39 @@ const AuthLibrary = (() => {
   }
 
   // Download van cloud naar localStorage
+  // Koppellijst en streak samenvoegen i.p.v. overschrijven, zodat een login nooit een koppeling of streak weghaalt
+  function _samenvoegen(key, cloudWaarde) {
+    try {
+      const lokaal = localStorage.getItem(key);
+      if (key === 'wmm_koppels') {
+        const a = lokaal ? (JSON.parse(lokaal) || []) : [];
+        const b = JSON.parse(cloudWaarde) || [];
+        const codes = new Set(a.map(k => k.code));
+        const samen = [...a];
+        b.forEach(k => { if (k && k.code && !codes.has(k.code)) { samen.push(k); codes.add(k.code); } });
+        return JSON.stringify(samen);
+      }
+      if (key.startsWith('wmm_streak_') && lokaal) {
+        const a = JSON.parse(lokaal) || {};
+        const b = JSON.parse(cloudWaarde) || {};
+        return JSON.stringify((b.count || 0) > (a.count || 0) ? b : a);
+      }
+    } catch (e) { /* bij fout de cloudwaarde gebruiken */ }
+    return cloudWaarde;
+  }
+
   async function restoreFromCloud() {
     const email = getEmailSession();
     if (!email) return { success: false, reason: 'not logged in' };
 
     try {
-      const data = await _post('restoreData', { email });
+      const data = await _post('restoreData', { email, sessionSecret: getSessionSecret() });
       if (!data.hasData) {
         return { success: true, hasData: false };
       }
       // Schrijf alle restored keys naar localStorage
       Object.entries(data.storage).forEach(([key, value]) => {
-        try { localStorage.setItem(key, value); } catch (e) { console.warn('setItem fail:', key, e); }
+        try { localStorage.setItem(key, _samenvoegen(key, value)); } catch (e) { console.warn('setItem fail:', key, e); }
       });
       // Update sync tracking
       const hash = _hashStorage(data.storage);
@@ -275,7 +302,7 @@ const AuthLibrary = (() => {
         try {
           navigator.sendBeacon?.(
             `${FUNCTIONS_URL}/syncData`,
-            new Blob([JSON.stringify({ email: getEmailSession(), storage })], { type: 'application/json' })
+            new Blob([JSON.stringify({ email: getEmailSession(), storage, sessionSecret: getSessionSecret() })], { type: 'application/json' })
           );
         } catch {}
       }
@@ -295,6 +322,7 @@ const AuthLibrary = (() => {
   // Session management
   // ─────────────────────────────────────────────────────────────
   function getEmailSession() { return localStorage.getItem(KEY_SESSION_EMAIL); }
+  function getSessionSecret() { return localStorage.getItem(KEY_SESSION_SECRET); }
   function getSessionMeta() { try { return JSON.parse(localStorage.getItem(KEY_SESSION_META) || 'null'); } catch { return null; } }
   function isEmailAuthenticated() { return !!getEmailSession(); }
   function getLastSync() { return localStorage.getItem(KEY_LAST_SYNC); }
@@ -303,6 +331,7 @@ const AuthLibrary = (() => {
     // ✨ Belangrijk: localStorage data (wmm_*) blijft BEHOUDEN
     // Alleen auth-gerelateerde keys worden gewist
     localStorage.removeItem(KEY_SESSION_EMAIL);
+    localStorage.removeItem(KEY_SESSION_SECRET);
     localStorage.removeItem(KEY_SESSION_META);
     localStorage.removeItem(KEY_PENDING_EMAIL);
     stopAutoSync();

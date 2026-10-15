@@ -535,11 +535,40 @@
     .week-hist-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
     .week-hist-lbl{font-size:11px;font-weight:600;color:#7ab8d4;}
     .week-hist-xp{font-size:12px;font-weight:600;color:#f0a500;}
-    .week-mini{display:flex;align-items:flex-end;gap:4px;height:36px;}
+    .week-mini{display:flex;align-items:flex-end;gap:6px;height:96px;}
     .week-mini-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;height:100%;justify-content:flex-end;}
     .week-mini-fill{width:100%;border-radius:2px 2px 0 0;min-height:2px;}
     .week-mini-lbl{font-size:8px;color:#7ab8d4;}
     .week-mini-lbl.tv{color:#c0392b;font-weight:600;}
+    /* Hoge weekgrafiek (geestelijk + lichamelijk lijn, echtgenoot + periode) */
+    .week-mini-wrap{position:relative;padding-top:16px;}
+    .week-mini.wk-tall{height:124px;gap:0;}
+    .wk-tall .week-mini-col{flex:1;padding:0;}
+    .wk-tall .week-mini-fill{width:calc(100% - 4px);margin:0 2px;}
+    .week-mini-overlay{position:absolute;left:0;right:0;bottom:12px;height:100px;pointer-events:none;}
+    .week-mini-line{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;}
+    .week-mini-dot{position:absolute;width:7px;height:7px;border-radius:50%;background:#7ab8d4;border:1.5px solid #0d2d4a;transform:translate(-50%,50%);}
+    .echt-hart{position:absolute;transform:translate(-50%,0);top:-24px;color:#ff7eb6;font-size:11px;line-height:1;text-shadow:0 0 6px rgba(255,126,182,.6);}
+    .week-mini-star{position:absolute;transform:translate(-50%,0);color:#f0a500;font-size:12px;line-height:1;}
+    .sub-note{display:block;font-size:11px;color:#7ab8d4;font-weight:400;margin-top:2px;}
+    .blok-kop{display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 6px;font-size:11px;color:#f0a500;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;}
+    .blok-kop .blok-pct{font-size:12px;color:#7ab8d4;letter-spacing:0;text-transform:none;font-weight:600;}
+    .bc-wrap{position:relative;padding:14px 0 0 28px;}
+    .bc-axis{position:absolute;left:0;top:14px;width:26px;height:100px;}
+    .bc-tick{position:absolute;left:0;right:4px;text-align:right;font-size:8px;color:#7ab8d4;transform:translateY(50%);line-height:1;}
+    .bc-grid{position:absolute;left:28px;right:0;top:14px;height:100px;}
+    .bc-gridline{position:absolute;left:0;right:0;height:1px;background:rgba(122,184,212,.16);}
+    .bc-plot{position:relative;display:flex;height:114px;}
+    .bc-day{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:0 2px;}
+    .bc-bars{height:100px;display:flex;align-items:flex-end;justify-content:center;gap:3px;}
+    .bc-bar{position:relative;width:14px;border-radius:3px 3px 0 0;}
+    .bc-bar span{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:8px;line-height:1;color:#e8f4f8;white-space:nowrap;padding-bottom:2px;}
+    .bc-lbl{height:14px;font-size:9px;line-height:14px;color:#7ab8d4;text-align:center;}
+    .bc-lbl.tv{color:#c0392b;font-weight:600;}
+    .bc-legenda{display:flex;flex-wrap:wrap;gap:12px;font-size:10px;color:#7ab8d4;margin:8px 0 0 28px;}
+    .bc-legenda i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;vertical-align:middle;}
+    .bat-track{height:10px;background:#0a1e35;border-radius:999px;overflow:hidden;margin:2px 0 10px;}
+    .bat-fill{height:100%;border-radius:999px;transition:width .3s;}
 
     /* ── SLEUTELHANGERS (edelstenen badges) ── */
     .sleutel-scroll{display:flex;gap:16px;overflow-x:auto;padding:6px 2px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;}
@@ -583,6 +612,31 @@
 
     /* ── SWIPE-TO-DELETE BERICHT ── */
     .bericht-wrap{position:relative;overflow:hidden;border-radius:12px;margin-bottom:10px;}
+    /* Instellingenpaneel (rechts, ±75%) */
+    .instel-open{background:none;border:none;color:#7ab8d4;font-size:22px;padding:6px;margin-left:8px;cursor:pointer;line-height:1;}
+    .instel-overlay{position:fixed;inset:0;background:rgba(4,12,22,.6);z-index:900;display:none;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e8f4f8;}
+    .instel-overlay button,.instel-overlay select,.instel-overlay input{font-family:inherit;}
+    .instel-overlay.open{display:block;}
+    .instel-paneel{position:absolute;top:0;right:0;bottom:0;width:75%;max-width:560px;min-width:260px;background:#0d2d4a;border-left:1px solid #1d3d5a;box-shadow:-16px 0 32px rgba(0,0,0,.4);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease;}
+    .instel-overlay.open .instel-paneel{transform:none;}
+    .instel-kop{display:flex;align-items:center;justify-content:space-between;padding:14px 10px 10px 14px;border-bottom:1px solid #1d3d5a;}
+    .instel-kop h2{margin:0;font-size:16px;font-weight:700;color:#e8f4f8;}
+    .instel-sluit{background:none;border:none;color:#7ab8d4;font-size:22px;padding:6px;cursor:pointer;}
+    .instel-body{flex:1;overflow-y:auto;padding-bottom:20px;}
+    .instel-groep{font-size:11px;color:#7ab8d4;text-transform:uppercase;letter-spacing:.8px;margin:16px 14px 4px;}
+    .instel-rij{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;padding:6px 14px;border-bottom:1px solid #1d3d5a;font-size:13px;color:#e8f4f8;}
+    .instel-rij.uit{opacity:.45;}
+    .instel-rij .sub{display:block;font-size:11px;color:#7ab8d4;}
+    .instel-sel,.instel-input{background:#0a1e35;color:#e8f4f8;border:1px solid #2a5275;border-radius:10px;min-height:36px;padding:0 8px;font:inherit;font-size:13px;max-width:150px;}
+    .instel-knop{white-space:nowrap;min-height:36px;padding:0 12px;border-radius:10px;border:1px solid #2a5275;background:none;color:#7ab8d4;font:inherit;font-size:12px;font-weight:600;cursor:pointer;}
+    .instel-knop.gevaar{border-color:#5c2a2a;color:#ff8a80;}
+    .instel-knop:disabled{opacity:.45;cursor:default;}
+    .instel-foto{width:56px;height:56px;border-radius:50%;background:#0a1e35;border:1px solid #2a5275;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#7ab8d4;font-size:22px;flex:none;}
+    .instel-foto img{width:100%;height:100%;object-fit:cover;}
+    .instel-tekst{font-size:11px;color:#7ab8d4;padding:4px 14px 0;line-height:1.5;}
+    .disc-head{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+    .disc-head-tekst{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0;}
+    .disc-naam{font-size:20px;font-weight:700;color:#e8f4f8;}
     /* Snap-streak badge */
     .streak-badge{display:inline-flex;align-items:center;gap:2px;font-size:12px;font-weight:700;padding:2px 8px;border-radius:20px;line-height:1.3;}
     .streak-vlam{background:rgba(240,120,20,0.16);color:#ff8a3c;}
@@ -664,15 +718,24 @@
     <button class="welcome-start" onclick="welcomeNaarStap2()" id="welcome-stap1-btn">Volgende →</button>
   </div>
 
-  <!-- Stap 2: naam + koppelcode -->
+  <!-- Stap 2: naam -->
   <div class="welcome-step" id="welcome-stap2">
     <div class="welcome-sectie">Jouw naam</div>
     <input class="welcome-input" id="welcome-naam" type="text" maxlength="20" placeholder="Bijv: Daniel"/>
-    <div class="welcome-sectie" style="margin-top:12px;">Koppelcode</div>
-    <input class="welcome-input" id="welcome-code" type="text" maxlength="40" placeholder="Bijv: daniel-en-maria-2026"/>
-    <div style="font-size:12px;color:#7ab8d4;text-align:center;line-height:1.6;margin-bottom:8px;">Gebruik dezelfde code als je partner. Alleen jullie tweeën hebben toegang.</div>
+    <div style="font-size:12px;color:#7ab8d4;text-align:center;line-height:1.6;margin:12px 0;">
+      <span id="welcome-koppel-hint"></span>
+    </div>
+    <div id="welcome-toest-uitleg" style="font-size:12px;color:#b8ddf0;line-height:1.6;margin:4px 0 8px;"></div>
+    <label style="display:flex;gap:10px;align-items:flex-start;margin:0 0 12px;font-size:12px;line-height:1.5;color:#e8f4f8;cursor:pointer;">
+      <input type="checkbox" id="welcome-toestemming" style="margin-top:2px;width:18px;height:18px;flex-shrink:0;">
+      <span id="welcome-toest-vink"></span>
+    </label>
     <div class="welcome-err" id="welcome-err"></div>
     <button class="welcome-start" onclick="welcomeStart()" id="welcome-start-btn">Begin →</button>
+    <div style="text-align:center;margin-top:14px;font-size:13px;color:#7ab8d4;">
+      Account al eerder gemaakt?<br>
+      <a href="#" onclick="event.preventDefault(); welcomeInloggen();" style="color:#f0a500;text-decoration:none;font-weight:600;">🔐 Inloggen met e-mail</a>
+    </div>
   </div>
 </div>
 
@@ -683,11 +746,12 @@
       <h1>Wandel met Mij</h1>
     </div>
     <div class="header-date" id="datum"></div>
+    <button class="instel-open" onclick="openInstellingen()" aria-label="Instellingen"><i class="ti ti-settings"></i></button>
   </div>
   <div class="tabs">
     <button class="tab active" onclick="showPage('vandaag',this)"><i class="ti ti-sun"></i>Vandaag</button>
     <button class="tab" onclick="showPage('voortgang',this)"><i class="ti ti-chart-bar"></i>Voortgang</button>
-    <button class="tab" onclick="showPage('countdown',this)"><i class="ti ti-calendar-event"></i>Zondag</button>
+    <button class="tab" onclick="showPage('countdown',this)"><i class="ti ti-calendar-event"></i>Avondmaal</button>
     <button class="tab" onclick="showPage('bibliotheek',this)"><i class="ti ti-books"></i>Bibliotheek</button>
   </div>
 
@@ -760,14 +824,21 @@
   <div class="page" id="page-voortgang">
     <!-- Partner terugval banner — alleen zichtbaar als partner terugval heeft -->
     <div class="partner-tv-banner" id="partner-tv-banner">
-      <div class="partner-tv-banner-titel"><i class="ti ti-heart"></i> <span id="partner-tv-naam"></span> heeft het vandaag zwaar</div>
-      <div class="partner-tv-banner-tekst">Je partner heeft vandaag een terugval gemarkeerd. Een berichtje of gebed voor hem/haar kan veel betekenen.</div>
+      <div class="partner-tv-banner-titel"><i class="ti ti-heart"></i> <span id="partner-tv-naam"></span> <span id="partner-tv-titel"></span></div>
+      <div class="partner-tv-banner-tekst" id="partner-tv-tekst"></div>
+      <button type="button" onclick="sluitPartnerTv()" style="margin-top:10px;min-height:36px;padding:0 14px;border-radius:10px;border:1px solid #8b2020;background:none;color:#e8c4c4;font:inherit;font-size:12px;font-weight:600;cursor:pointer;" id="partner-tv-gezien">Gezien</button>
     </div>
     <div class="card" id="xp-card" style="transition:background 0.4s,border-color 0.4s;">
-      <div class="card-label"><i class="ti ti-trophy"></i> <span id="xp-card-label">Totaalscore (XP)</span></div>
-      <div class="level-badge" onclick="showLevelPopup()" title="Tik voor meer info">
-        <i class="ti ti-star"></i> <span id="level-name">Wandelaar</span> <i class="ti ti-info-circle" style="font-size:12px;opacity:0.7"></i>
+      <div class="disc-head">
+        <div id="disc-avatar"></div>
+        <div class="disc-head-tekst">
+          <div id="disc-naam" class="disc-naam"></div>
+          <div class="level-badge" onclick="showLevelPopup()" title="Tik voor meer info">
+            <i class="ti ti-star"></i> <span id="level-name">Wandelaar</span> <i class="ti ti-info-circle" style="font-size:12px;opacity:0.7"></i>
+          </div>
+        </div>
       </div>
+      <div class="card-label"><i class="ti ti-trophy"></i> <span id="xp-card-label">Totaalscore (XP)</span></div>
       <div class="xp-row"><div class="xp-big" id="xp-num">0</div><div class="xp-max" id="xp-max">/ 0 XP</div></div>
       <div class="progress-wrap"><div class="progress-bar" id="xp-bar" style="width:0%"></div></div>
       <div class="progress-labels"><span id="xp-next-label"></span><span id="xp-next-val"></span></div>
@@ -795,6 +866,17 @@
       <div id="week-history-list" class="week-history-scroll"></div>
     </div>
 
+    <!-- ECHTGENOOT VOORTGANG (standaard ingeklapt, alleen zichtbaar als aan) -->
+    <div class="card" id="echt-card" style="display:none;">
+      <button type="button" id="echt-toggle" onclick="toggleEchtKaart()" aria-expanded="false" aria-controls="echt-body" style="width:100%;background:none;border:0;padding:0;margin:0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;color:inherit;font:inherit;">
+        <span class="card-label" style="margin:0;"><i class="ti ti-heart"></i> <span id="echt-label">Echtgenoot voortgang</span></span>
+        <i class="ti ti-chevron-down" id="echt-chev" aria-hidden="true" style="color:#7ab8d4;transition:transform .2s;"></i>
+      </button>
+      <div id="echt-body" style="display:none;margin-top:10px;">
+        <div id="echt-history-list" class="week-history-scroll"></div>
+      </div>
+    </div>
+
     <!-- POSTVAK / BERICHTEN -->
     <div class="card" id="postvak-card" style="display:none;">
       <div class="card-label" style="display:flex;align-items:center;justify-content:space-between;">
@@ -807,7 +889,7 @@
     <!-- PARTNER VOORTGANG + KOPPELS BEHEER -->
     <div class="card" id="partner-sectie">
       <div class="card-label" style="display:flex;align-items:center;justify-content:space-between;">
-        <span><i class="ti ti-users"></i> Partner voortgang</span>
+        <span><i class="ti ti-users"></i> Voortgang vriend/vriendin</span>
         <span id="koppels-count-badge" style="font-size:11px;color:#3a6a8c;background:#0d2d4a;border:0.5px solid #1a3f5c;padding:2px 10px;border-radius:20px;"></span>
       </div>
       <!-- Partner kaartjes worden hier dynamisch ingevoegd -->
@@ -974,14 +1056,49 @@
     </div>
     <div id="biblio-zoek-resultaten"></div>
     <div id="biblio-planken"></div>
-    <div class="backup-kaart">
-      <div class="backup-titel"><i class="ti ti-shield-lock"></i> Back-up van mijn gegevens</div>
-      <div class="backup-uitleg">Je markeringen, studieschriften en bladwijzers worden op dít toestel bewaard. Maak af en toe een back-up, zodat je niets kwijtraakt bij een nieuwe telefoon of het wissen van gegevens.</div>
-      <div class="backup-privacy"><i class="ti ti-lock"></i> Bewaar het back-upbestand op een privéplek — het bevat je persoonlijke gegevens.</div>
-      <div class="backup-knoppen">
-        <button class="backup-knop maak" onclick="maakBackup()"><i class="ti ti-download"></i> Back-up maken</button>
-        <button class="backup-knop terug" onclick="startBackupTerugzetten()"><i class="ti ti-upload"></i> Back-up terugzetten</button>
-      </div>
+  </div>
+</div>
+
+<!-- ══ INSTELLINGEN (paneel rechts) ══ -->
+<div class="instel-overlay" id="instel-overlay" onclick="if(event.target===this)sluitInstellingen()">
+  <div class="instel-paneel" role="dialog" aria-labelledby="instel-titel">
+    <div class="instel-kop">
+      <h2 id="instel-titel">Instellingen</h2>
+      <button class="instel-sluit" onclick="sluitInstellingen()" aria-label="Sluiten"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="instel-body" id="instel-body"></div>
+  </div>
+</div>
+
+<!-- ══ DUBBELE BEVESTIGING (instellingen: wissen / account verwijderen) ══ -->
+<div id="toestemming-overlay" class="invoer-overlay" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e8f4f8;">
+  <div class="invoer-paneel">
+    <div class="invoer-titel" id="toest-titel"></div>
+    <div id="toest-tekst" class="instel-tekst" style="padding:0 0 12px;"></div>
+    <div id="toest-priv" style="padding:0 0 12px;"></div>
+    <label class="instel-rij" style="padding:0 0 4px;align-items:flex-start;gap:10px;cursor:pointer;">
+      <input type="checkbox" id="toest-vink" style="margin-top:3px;width:18px;height:18px;flex-shrink:0;">
+      <span id="toest-vinktekst" style="font-size:13px;line-height:1.5;color:#e8f4f8;"></span>
+    </label>
+    <div id="toest-err" style="font-size:12px;color:#e74c3c;min-height:16px;margin-top:6px;"></div>
+    <div class="invoer-knoppen"><button class="invoer-ok" id="toest-ok" onclick="toestemmingBevestig()"></button></div>
+  </div>
+</div>
+<div id="privacy-overlay" class="invoer-overlay" style="z-index:1150;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e8f4f8;">
+  <div class="invoer-paneel" style="max-height:85vh;overflow-y:auto;">
+    <div class="invoer-titel" id="priv-titel"></div>
+    <div id="priv-tekst" class="instel-tekst" style="padding:0 0 12px;font-size:13px;line-height:1.6;"></div>
+    <div class="invoer-knoppen"><button class="invoer-ok" id="priv-ok" onclick="sluitPrivacy()"></button></div>
+  </div>
+</div>
+<div class="invoer-overlay" id="set-dialoog" style="z-index:1100;">
+  <div class="invoer-paneel">
+    <div class="invoer-titel" id="set-dialoog-titel"></div>
+    <div id="set-dialoog-tekst" style="font-size:13px;color:#b8ddf0;line-height:1.6;margin-bottom:6px;"></div>
+    <input id="set-dialoog-code" class="instel-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" style="display:none;width:100%;margin:8px 0;text-align:center;font-family:monospace;font-size:20px;letter-spacing:6px;">
+    <div class="invoer-knoppen">
+      <button class="invoer-annuleer" id="set-dialoog-annuleer">Annuleren</button>
+      <button class="invoer-ok" id="set-dialoog-ok">OK</button>
     </div>
   </div>
 </div>
@@ -1273,10 +1390,12 @@ const TERUGVAL_TEKSTEN = [
 // ── TAAL SYSTEEM ─────────────────────────────────────────────
 const TALEN = {
   nl: { vlag:"🇳🇱", naam:"Nederlands",
-    tabs:["Vandaag","Voortgang","Zondag"],
+    tabs:["Vandaag","Voortgang","Avondmaal","Bibliotheek"],
     quoteLabel:"Quote van de dag", batterijLabel:"Geestelijke batterij",
     batterijStatus:["Beantwoord de vragen","Opwarmen...","Goed bezig!","Bijna vol!","Volledig opgeladen! 🌟"],
-    vragen:["Heb ik vandaag in de schriften gelezen?","Was ik aardig en liefdevol naar iedereen?","Heb ik vandaag mijn persoonlijke gebeden gedaan?","Heb ik vandaag iets goeds gedaan voor een ander?"],
+    vragen:["Mijn relatie met God is versterkt door mijn gesprekken en gebeden","Heb ik vandaag iets goed gedaan voor een ander, zoals Jezus dat zou doen?","Heb ik mijn goddelijke gaven/talenten gebruikt?","Mijn relatie met God is door schriftstudie verdiept"],
+    lichLabel:"Lichamelijke batterij", lichVragen:["Heb ik {N} uur of meer geslapen?","Heb ik gezond gegeten?","Heb ik voldoende beweging gehad?"],
+    echtLabel:"Echtgenoot batterij", echtVragen:["We hebben samen God gezocht","We hebben oprechte tijd samen doorgebracht"], echtBonus:"Vandaag zijn wij 1 vlees geworden", echtBonusKort:"Wij zijn 1",
     ja:"Ja", nee:"Nee",
     doneMessages:[["Kleine stap, grote moed.","Elke dag telt. Probeer morgen meer."],["Goed gedaan vandaag!","Je bent op de goede weg."],["Bijna op volle kracht!","Zo ga je vol vertrouwen."],["Geestelijke batterij vol! 🌟","De Heer is trots op jou vandaag."]],
     xpLabel:"Totaalscore (XP)", gemiddeldLabel:"Gemiddeld", gemBatterij:"Gem. batterij", dagenActief:"Aantal dagen sereen en doelbewust", besteDag:"Beste dag",
@@ -1297,10 +1416,12 @@ const TALEN = {
     notifMessages:["🔥 Heb jij vandaag al je geestelijke batterij ingevuld?","⭐ Neem even 1 minuutje voor je check-in!","🙏 Vergeet niet je batterij bij te vullen vandaag!","💛 Elke dag telt op weg naar het Avondmaal!","📖 Heb je vandaag al in de schriften gelezen?"],
   },
   en: { vlag:"🇬🇧", naam:"English",
-    tabs:["Today","Progress","FSY"],
+    tabs:["Today","Progress","Sacrament","Library"],
     quoteLabel:"Quote of the day", batterijLabel:"Spiritual battery",
     batterijStatus:["Answer the questions","Warming up...","Keep it up!","Almost full!","Fully charged! 🌟"],
-    vragen:["Have I read the scriptures today?","Was I kind and loving to everyone?","Have I said my personal prayer today?","Have I done something good for someone else today?"],
+    vragen:["My relationship with God has grown through my conversations and prayers","Did I do something good for someone else today, as Jesus would do?","Have I used my divine gifts/talents?","My relationship with God has deepened through the study of scripture"],
+    lichLabel:"Physical battery", lichVragen:["Did I sleep {N} hours or more?","Did I eat healthily?","Did I get enough exercise?"],
+    echtLabel:"Spouse battery", echtVragen:["We sought God together","We spent sincere time together"], echtBonus:"Today we became one flesh", echtBonusKort:"We are one",
     ja:"Yes", nee:"No",
     doneMessages:[["Small step, great courage.","Every day counts. Try more tomorrow."],["Well done today!","You are on the right track towards FSY."],["Almost at full power!","You will go to FSY full of confidence."],["Spiritual battery full! 🌟","The Lord is proud of you today."]],
     xpLabel:"Total score (XP)", gemiddeldLabel:"Average", gemBatterij:"Avg. battery", dagenActief:"Days active", besteDag:"Best day",
@@ -1321,10 +1442,12 @@ const TALEN = {
     notifMessages:["🔥 Have you filled in your spiritual battery today?","⭐ Take 1 minute for your daily check-in!","🙏 Don't forget to fill in your battery today!","💛 Every day counts on the way to FSY!","📖 Have you read the scriptures today?"],
   },
   fr: { vlag:"🇫🇷", naam:"Français",
-    tabs:["Aujourd'hui","Progrès","FSY"],
+    tabs:["Aujourd'hui","Progrès","Sainte Cène","Bibliothèque"],
     quoteLabel:"Citation du jour", batterijLabel:"Batterie spirituelle",
     batterijStatus:["Réponds aux questions","On se réchauffe...","Continue comme ça!","Presque pleine!","Complètement chargée! 🌟"],
-    vragen:["Ai-je lu les Écritures aujourd'hui?","Ai-je été aimable envers tout le monde?","Ai-je fait ma prière personnelle aujourd'hui?","Ai-je fait quelque chose de bien pour quelqu'un d'autre aujourd'hui?"],
+    vragen:["Ma relation avec Dieu s'est renforcée à travers mes conversations et mes prières","Ai-je fait quelque chose de bien pour quelqu'un aujourd'hui, comme Jésus le ferait?","Ai-je utilisé mes dons/talents divins?","Ma relation avec Dieu s'est approfondie par l'étude des Écritures"],
+    lichLabel:"Batterie physique", lichVragen:["Ai-je dormi {N} heures ou plus?","Ai-je mangé sainement?","Ai-je fait assez d'exercice?"],
+    echtLabel:"Batterie conjugale", echtVragen:["Nous avons cherché Dieu ensemble","Nous avons passé du temps sincère ensemble"], echtBonus:"Aujourd'hui nous sommes devenus une seule chair", echtBonusKort:"Nous sommes un",
     ja:"Oui", nee:"Non",
     doneMessages:[["Petit pas, grand courage.","Chaque jour compte. Essaie plus demain."],["Bien fait aujourd'hui!","Tu es sur la bonne voie vers le FSY."],["Presque à pleine puissance!","Tu iras au FSY plein(e) de confiance."],["Batterie spirituelle pleine! 🌟","Le Seigneur est fier de toi aujourd'hui."]],
     xpLabel:"Score total (XP)", gemiddeldLabel:"Moyenne", gemBatterij:"Moy. batterie", dagenActief:"Jours actifs", besteDag:"Meilleur jour",
@@ -1345,10 +1468,12 @@ const TALEN = {
     notifMessages:["🔥 As-tu rempli ta batterie spirituelle aujourd'hui?","⭐ Prends 1 minute pour ton check-in!","🙏 N'oublie pas de remplir ta batterie!","💛 Chaque jour compte vers le FSY!","📖 As-tu lu les Écritures aujourd'hui?"],
   },
   de: { vlag:"🇩🇪", naam:"Deutsch",
-    tabs:["Heute","Fortschritt","FSY"],
+    tabs:["Heute","Fortschritt","Abendmahl","Bibliothek"],
     quoteLabel:"Zitat des Tages", batterijLabel:"Geistliche Batterie",
     batterijStatus:["Beantworte die Fragen","Aufwärmen...","Weiter so!","Fast voll!","Vollständig aufgeladen! 🌟"],
-    vragen:["Habe ich heute in den Schriften gelesen?","War ich heute freundlich und liebevoll zu allen?","Habe ich heute mein persönliches Gebet gesprochen?","Habe ich heute etwas Gutes für jemand anderen getan?"],
+    vragen:["Meine Beziehung zu Gott ist durch meine Gespräche und Gebete gewachsen","Habe ich heute etwas Gutes für einen anderen getan, so wie Jesus es tun würde?","Habe ich meine göttlichen Gaben/Talente eingesetzt?","Meine Beziehung zu Gott ist durch das Schriftstudium vertieft worden"],
+    lichLabel:"Körperliche Batterie", lichVragen:["Habe ich mindestens {N} Stunden geschlafen?","Habe ich gesund gegessen?","Habe ich genug Bewegung gehabt?"],
+    echtLabel:"Ehemann-/Ehefrau-Batterie", echtVragen:["Wir haben gemeinsam Gott gesucht","Wir haben aufrichtig Zeit miteinander verbracht"], echtBonus:"Heute sind wir ein Fleisch geworden", echtBonusKort:"Wir sind eins",
     ja:"Ja", nee:"Nein",
     doneMessages:[["Kleiner Schritt, große Courage.","Jeder Tag zählt. Versuche morgen mehr."],["Gut gemacht heute!","Du bist auf dem richtigen Weg zum FSY."],["Fast auf voller Kraft!","So gehst du voller Vertrauen zum FSY."],["Geistliche Batterie voll! 🌟","Der Herr ist heute stolz auf dich."]],
     xpLabel:"Gesamtpunktzahl (XP)", gemiddeldLabel:"Durchschnitt", gemBatterij:"Ø Batterie", dagenActief:"Aktive Tage", besteDag:"Bester Tag",
@@ -1369,10 +1494,12 @@ const TALEN = {
     notifMessages:["🔥 Hast du heute deine geistliche Batterie gefüllt?","⭐ Nimm dir 1 Minute für dein Check-in!","🙏 Vergiss nicht, deine Batterie zu füllen!","💛 Jeder Tag zählt auf dem Weg zum FSY!","📖 Hast du heute in den Schriften gelesen?"],
   },
   es: { vlag:"🇪🇸", naam:"Español",
-    tabs:["Hoy","Progreso","FSY"],
+    tabs:["Hoy","Progreso","Santa Cena","Biblioteca"],
     quoteLabel:"Cita del día", batterijLabel:"Batería espiritual",
     batterijStatus:["Responde las preguntas","Calentando...","¡Sigue así!","¡Casi llena!","¡Completamente cargada! 🌟"],
-    vragen:["¿He leído las Escrituras hoy?","¿Fui amable y amoroso(a) con todos hoy?","¿He hecho mi oración personal hoy?","¿He hecho algo bueno por otra persona hoy?"],
+    vragen:["Mi relación con Dios se ha fortalecido a través de mis conversaciones y oraciones","¿Hice algo bueno por otra persona hoy, como lo haría Jesús?","¿He usado mis dones/talentos divinos?","Mi relación con Dios se ha profundizado con el estudio de las Escrituras"],
+    lichLabel:"Batería física", lichVragen:["¿He dormido {N} horas o más?","¿He comido saludablemente?","¿He hecho suficiente ejercicio?"],
+    echtLabel:"Batería de esposo/esposa", echtVragen:["Hemos buscado a Dios juntos","Hemos pasado tiempo sincero juntos"], echtBonus:"Hoy nos hemos hecho una sola carne", echtBonusKort:"Somos uno",
     ja:"Sí", nee:"No",
     doneMessages:[["Pequeño paso, gran valor.","Cada día cuenta. Intenta más mañana."],["¡Bien hecho hoy!","Estás en el camino correcto hacia el FSY."],["¡Casi a plena potencia!","Así irás al FSY lleno(a) de confianza."],["¡Batería espiritual llena! 🌟","El Señor está orgulloso de ti hoy."]],
     xpLabel:"Puntuación total (XP)", gemiddeldLabel:"Promedio", gemBatterij:"Prom. batería", dagenActief:"Días activos", besteDag:"Mejor día",
@@ -1871,11 +1998,104 @@ function loadAllDays() {
   }
   return days;
 }
+// ── UI-TEKSTEN NIEUWE BLOKKEN ────────────────────────────────
+const UI_TV = {
+  nl: {titel:"heeft onlangs een terugval gemarkeerd", tekst:"Een berichtje of gebed voor hem/haar kan veel betekenen.", gezien:"Gezien"},
+  en: {titel:"recently marked a setback", tekst:"A message or prayer for them can mean a lot.", gezien:"Seen"},
+  fr: {titel:"a récemment marqué une rechute", tekst:"Un petit message ou une prière peut beaucoup compter.", gezien:"Vu"},
+  de: {titel:"hat kürzlich einen Rückfall markiert", tekst:"Eine Nachricht oder ein Gebet für ihn/sie kann viel bedeuten.", gezien:"Gesehen"},
+  es: {titel:"marcó recientemente una recaída", tekst:"Un mensaje o una oración por él/ella puede significar mucho.", gezien:"Visto"}
+};
+const UI_TEKST = {
+  nl: {periodeLabel:"Maandelijkse periode", periodeSub:"Puntloos, telt niet mee in je score", echtKaart:"Echtgenoten voortgang", leegEcht:"Nog geen gegevens van je echtgenoot.", bonusNote:"(+50%)"},
+  en: {periodeLabel:"Monthly period", periodeSub:"No points, not part of your score", echtKaart:"Spouses' progress", leegEcht:"No spouse data yet.", bonusNote:"(+50%)"},
+  fr: {periodeLabel:"Période mensuelle", periodeSub:"Sans points, ne compte pas dans votre score", echtKaart:"Progrès du couple", leegEcht:"Pas encore de données conjugales.", bonusNote:"(+50 %)"},
+  de: {periodeLabel:"Monatliche Periode", periodeSub:"Ohne Punkte, zählt nicht zur Punktzahl", echtKaart:"Fortschritt der Eheleute", leegEcht:"Noch keine Daten zum Ehepartner.", bonusNote:"(+50 %)"},
+  es: {periodeLabel:"Periodo mensual", periodeSub:"Sin puntos, no cuenta en tu puntuación", echtKaart:"Progreso de los esposos", leegEcht:"Aún no hay datos de tu pareja.", bonusNote:"(+50 %)"}
+};
+function uiT() { return UI_TEKST[huidigtaal] || UI_TEKST.nl; }
+// Melding: partner heeft een terugval gemarkeerd sinds je laatst keek
+function checkPartnerTerugval(code, naam, tijdstip) {
+  const banner = document.getElementById('partner-tv-banner');
+  if (!banner) return;
+  if (!tijdstip) { if (banner.dataset.code === code) banner.classList.remove('visible'); return; }
+  let gezien = null, getoondToast = null;
+  try { gezien = localStorage.getItem('wmm_tv_gezien_' + code); getoondToast = localStorage.getItem('wmm_tv_toast_' + code); } catch {}
+  if (gezien && tijdstip <= gezien) return;
+  const ui = UI_TV[huidigtaal] || UI_TV.nl;
+  document.getElementById('partner-tv-naam').textContent = naam;
+  document.getElementById('partner-tv-titel').textContent = ui.titel;
+  document.getElementById('partner-tv-tekst').textContent = ui.tekst;
+  document.getElementById('partner-tv-gezien').textContent = ui.gezien;
+  banner.dataset.code = code; banner.dataset.tijd = tijdstip;
+  banner.classList.add('visible');
+  if (getoondToast !== tijdstip) {
+    toonToast(naam + ' ' + ui.titel);
+    try { localStorage.setItem('wmm_tv_toast_' + code, tijdstip); } catch {}
+  }
+}
+function sluitPartnerTv() {
+  const b = document.getElementById('partner-tv-banner');
+  if (!b) return;
+  try { localStorage.setItem('wmm_tv_gezien_' + b.dataset.code, b.dataset.tijd); } catch {}
+  b.classList.remove('visible');
+}
+// Vlaggen om blokken aan/uit te zetten (instellingen komen in fase 4)
+function echtAan()   { return localStorage.getItem('wmm_echt_aan') === '1'; }
+function periodeAan(){ return localStorage.getItem('wmm_periode_aan') === '1'; }
+
+// ── DAGVRAGEN: sleutels per batterij ─────────────────────────
+// Geestelijk: 0..3 (4 vragen, elk 25%)   Lichamelijk: l0..l2 (3 vragen, elk ~33%)
+// Echtgenoot: e0..e1 (2 vragen, elk 50%) + eb (bonus, +50%, mag boven 100% uitkomen)
+// Periode (puntloos): p ('ja' = vandaag periode)
+function getSlaapMin() {
+  const v = parseInt(localStorage.getItem('wmm_slaap_min'), 10);
+  return v > 0 ? v : 7;
+}
+function lichVraagTekst(i) {
+  return T().lichVragen[i].replace('{N}', getSlaapMin());
+}
+function geestelijkJa(data) {
+  return T().vragen.filter((_, i) => data[i] === 'ja').length;
+}
 function pctFromData(data) {
-  return Math.round((Object.values(data).filter(v => v==='ja').length / T().vragen.length) * 100);
+  // Zelfde regels als updateBattery: basis (geestelijk) + doelen-bonus (10% per ja, max 30%)
+  const basisPct = Math.round((geestelijkJa(data) / T().vragen.length) * 100);
+  const doelen = loadDoelen();
+  const doelJa = doelen.filter((_, i) => data['doel_' + i] === 'ja').length;
+  const bonusPct = doelen.length > 0 ? Math.min(30, doelJa * 10) : 0;
+  return basisPct + bonusPct;
+}
+// Weging lichamelijke batterij: slaap 40%, eten 40%, bewegen 20% (volgorde van lichVragen)
+const LICH_GEWICHT = [40, 40, 20];
+function lichPctFromData(data) {
+  return Math.round(T().lichVragen.reduce((som, _, i) => som + (data['l' + i] === 'ja' ? (LICH_GEWICHT[i] || 0) : 0), 0));
+}
+// Puntentelling: samen God gezocht 45%, samen tijd 45%, 1 vlees 50%.
+// 1 vlees van gisteren telt ook vandaag mee (prevEb), zonder dubbel te tellen.
+const ECHT_PUNTEN = {e0: 45, e1: 45, eb: 50};
+function echtPctFromData(data, prevEb = false) {
+  let p = 0;
+  if (data.e0 === 'ja') p += ECHT_PUNTEN.e0;
+  if (data.e1 === 'ja') p += ECHT_PUNTEN.e1;
+  if (data.eb === 'ja' || prevEb) p += ECHT_PUNTEN.eb;
+  return p;
+}
+// Is 1 vlees (gezamenlijk) op een bepaalde dag gegeven?
+function echtEbOpDag(d) {
+  const key = dayKey(d);
+  return echtKies('eb', loadDay(key), echtPartnerDag(key) || {}) === 'ja';
+}
+function answerKey(k, val) {
+  const key = todayKey(), data = loadDay(key);
+  data[k] = val;
+  if (['e0', 'e1', 'eb', 'p'].includes(k)) data['_t_' + k] = Date.now();
+  saveDay(key, data); renderVragen(data); updateBattery(data);
+  if (k === 'p' && val === 'ja' && window.toonToast) toonToast('★ ' + uiT().periodeLabel + ' opgeslagen');
 }
 function xpFromData(data) {
-  const vraagXP = Object.entries(data).filter(([k,v]) => !k.startsWith('doel_') && v==='ja').length;
+  // Periode ('p') is puntloos en telt niet mee
+  const vraagXP = Object.entries(data).filter(([k,v]) => !k.startsWith('doel_') && k !== 'p' && v==='ja').length;
   const doelXP  = Object.entries(data).filter(([k,v]) => k.startsWith('doel_') && v==='ja').length * 2;
   return vraagXP + doelXP;
 }
@@ -1994,6 +2214,33 @@ function renderVragen(data) {
     row.innerHTML = `<span class="question-text">${v}</span><div class="btn-group"><button class="btn-yn ${data[i]==='ja'?'selected-ja':''}" onclick="answer(${i},'ja')">${t.ja}</button><button class="btn-yn ${data[i]==='nee'?'selected-nee':''}" onclick="answer(${i},'nee')">${t.nee}</button></div>`;
     c.appendChild(row);
   });
+  // Lichamelijke batterij (altijd aan)
+  const ui = uiT();
+  const blokKop = (titel, pct) => `<div class="blok-kop" style="width:100%"><span><i class="ti ti-battery-charging"></i> ${titel}</span>${pct !== null ? `<span class="blok-pct">${pct}%</span>` : ''}</div>`;
+  const vraagRij = (tekst, key, sub) => `<div class="question-row" style="width:100%"><span class="question-text">${tekst}${sub ? `<span class="sub-note">${sub}</span>` : ''}</span><div class="btn-group"><button class="btn-yn ${data[key]==='ja'?'selected-ja':''}" onclick="answerKey('${key}','ja')">${t.ja}</button><button class="btn-yn ${data[key]==='nee'?'selected-nee':''}" onclick="answerKey('${key}','nee')">${t.nee}</button></div></div>`;
+  c.insertAdjacentHTML('beforeend', blokKop(t.lichLabel, lichPctFromData(data)) + balkHTML(lichPctFromData(data), 100, BAT_RGB.lich) + t.lichVragen.map((_, i) => vraagRij(lichVraagTekst(i), 'l' + i)).join(''));
+  // Gezamenlijke echtgenoot-batterij: één stand van beide partners, iedereen kan invullen
+  const pd = echtPartnerDag(todayKey()) || {};
+  const m = echtSamengevoegd(data, pd);
+  const pNaam = window._echtPartnerNaam || '';
+  // Rij voor een gedeelde vraag: ja/nee van jezelf, en zichtbaar als de partner die al heeft ingevuld
+  const gedeeldeRij = (tekst, key, sub) => {
+    const selJa = m[key] === 'ja';
+    const selNee = m[key] === 'nee';
+    const doorPartner = pd[key] !== undefined && m[key] === pd[key] && data[key] !== pd[key];
+    const notitie = doorPartner && pNaam ? `<span class="sub-note" style="color:#f0a500">✓ laatst gewijzigd door ${setEsc(pNaam)}</span>` : (sub ? `<span class="sub-note">${sub}</span>` : '');
+    return `<div class="question-row" style="width:100%"><span class="question-text">${tekst}${notitie}</span><div class="btn-group"><button class="btn-yn ${selJa?'selected-ja':''}" onclick="answerKey('${key}','ja')">${t.ja}</button><button class="btn-yn ${selNee?'selected-nee':''}" onclick="answerKey('${key}','nee')">${t.nee}</button></div></div>`;
+  };
+  // Echtgenoot batterij (aan via instellingen)
+  if (echtAan()) {
+    const gisteren = new Date(); gisteren.setDate(gisteren.getDate() - 1);
+    const echtPct = echtPctFromData(m, echtEbOpDag(gisteren));
+    c.insertAdjacentHTML('beforeend', blokKop(t.echtLabel, echtPct) + balkHTML(echtPct, 150, BAT_RGB.echt) + t.echtVragen.map((v, i) => gedeeldeRij(`${v} <span style="color:#f0a500">(+${ECHT_PUNTEN['e' + i]}%)</span>`, 'e' + i)).join('') + gedeeldeRij(`${t.echtBonus} <span style="color:#f0a500">${ui.bonusNote}</span>`, 'eb'));
+  }
+  // Periode (puntloos, aan via instellingen; ook gedeeld)
+  if (periodeAan()) {
+    c.insertAdjacentHTML('beforeend', gedeeldeRij(ui.periodeLabel, 'p', ui.periodeSub));
+  }
   const doelen = loadDoelen();
   if (doelen.length > 0) {
     const sep = document.createElement('div'); sep.style.cssText='width:100%;border-top:0.5px solid #1a3f5c;margin:10px 0 8px;'; c.appendChild(sep);
@@ -2304,6 +2551,7 @@ window.renderSleutelhangers = renderSleutelhangers;
 
 // ── VOORTGANG ────────────────────────────────────────────────
 function renderVoortgang() {
+  renderDiscAvatar();
   const t = T(), days = loadAllDays();
   const totalXP  = days.reduce((s,d) => s + xpFromData(d.data), 0);
   const level    = [...LEVELS].reverse().find(l => totalXP >= l.min) || LEVELS[0];
@@ -2353,87 +2601,222 @@ function renderVoortgang() {
   document.getElementById('best-day').textContent   = (pcts.length ? Math.max(...pcts) : 0) + '%';
 
   renderWeekHistory();
+  renderEchtKaart();
   renderSleutelhangers();
   renderPartner();
   updateDebugStatus();
 }
 
-// ── WEEK HISTORY Optie B ─────────────────────────────────────
+// ── GRAFIEK-HULPFUNCTIES ─────────────────────────────────────
+// x-positie van dag i (0 = maandag) in procenten van de weekbreedte
+function dagX(i) { return (i + 0.5) / 7 * 100; }
+
+// Vloeiende kromme door punten (cubic bezier), voor de periode-lijn
+function curvePad(punten) {
+  let d = `M${punten[0].x},${punten[0].y}`;
+  for (let k = 1; k < punten.length; k++) {
+    const a = punten[k-1], b = punten[k], dx = (b.x - a.x) / 2;
+    d += ` C${a.x + dx},${a.y} ${b.x - dx},${b.y} ${b.x},${b.y}`;
+  }
+  return d;
+}
+
+// Periode: kromme lijn dag-op-dag (bovenin = periode, onderin = niet) + sterretje op periodedagen
+function tekenPeriodeCurve(plot, dagen, kleur = '#e8f4f8', sterDagen = null) {
+  const runs = []; let run = [];
+  dagen.forEach((d, i) => {
+    if (!d.h) { if (run.length) runs.push(run); run = []; return; }
+    run.push({x: dagX(i), y: d.periode ? 0 : 100});
+  });
+  if (run.length) runs.push(run);
+  const paths = runs.filter(r => r.length > 1)
+    .map(r => `<path d="${curvePad(r)}" fill="none" stroke="${kleur}" stroke-width="2" vector-effect="non-scaling-stroke"/>`).join('');
+  const ster = sterDagen || dagen.map(d => d.h && d.periode);
+  let stars = '';
+  ster.forEach((aan, i) => { if (aan) stars += `<div class="week-mini-star" style="left:${dagX(i)}%;top:-4px;">★</div>`; });
+  plot.insertAdjacentHTML('beforeend', `<div class="week-mini-overlay" style="top:0;bottom:auto;height:100px;"><svg class="week-mini-line" viewBox="0 0 100 100" preserveAspectRatio="none">${paths}</svg>${stars}</div>`);
+}
+
+// Weken (maandagen), nieuwste eerst; stopt bij de startdatum
+function bouwWekenLijst() {
+  const now = new Date();
+  const m = new Date(now); m.setDate(now.getDate() - ((now.getDay()+6)%7)); m.setHours(0,0,0,0);
+  const startStr = localStorage.getItem('wmm_startdatum');
+  const start = startStr ? new Date(startStr) : now;
+  const weken = []; let ws = new Date(m);
+  for (let w = 0; w < 52; w++) {
+    weken.push(new Date(ws));
+    ws = new Date(ws); ws.setDate(ws.getDate()-7);
+    if (ws < new Date(start.getTime() - 7*86400000)) break;
+  }
+  return weken;
+}
+
+// Echtgenoot-voortgang: blokjes per dag (schaal 150%) + periode-curve
+function toggleEchtKaart() {
+  const body = document.getElementById('echt-body');
+  const btn = document.getElementById('echt-toggle');
+  const open = body.style.display === 'none';
+  body.style.display = open ? 'block' : 'none';
+  btn.setAttribute('aria-expanded', String(open));
+  document.getElementById('echt-chev').style.transform = open ? 'rotate(180deg)' : '';
+  if (open) renderEchtHistory();
+}
+
+function renderEchtKaart() {
+  const card = document.getElementById('echt-card');
+  if (!card) return;
+  const toon = echtAan() || periodeAan();
+  card.style.display = toon ? '' : 'none';
+  const ui = uiT();
+  const lbl = document.getElementById('echt-label');
+  const mijn = localStorage.getItem('wmm_naam') || '';
+  const partner = window._echtPartnerNaam || '';
+  if (lbl) lbl.textContent = (mijn && partner) ? `${mijn} & ${partner} ${ui.echtKaart}` : ui.echtKaart;
+}
+
+// ── KLEUR, GLOED EN STAVEN ───────────────────────────────────
+const BAT_RGB = {ger:'240,165,0', lich:'122,184,212', echt:'200,162,255', laag:'231,76,60'};
+// Kleur wordt feller én gloeiender naarmate het percentage stijgt
+function glowStijl(v, schaal, rgb) {
+  const f = Math.min(1, Math.max(0, (v || 0) / schaal));
+  const a = (0.25 + 0.75 * f).toFixed(2);
+  const g = Math.round(2 + f * 10);
+  const s = (0.2 + 0.7 * f).toFixed(2);
+  return `background:rgba(${rgb},${a});box-shadow:0 0 ${g}px rgba(${rgb},${s});`;
+}
+// Gevulde balk voor de dagvragen (Vandaag)
+function balkHTML(pct, schaal, rgb) {
+  const w = Math.min(100, (pct || 0) / schaal * 100);
+  return `<div class="bat-track"><div class="bat-fill" style="width:${w}%;${glowStijl(pct, schaal, rgb)}"></div></div>`;
+}
+// Staafdiagram per week: één staaf per reeks per dag, met waarde erboven en een as
+function bcWeekHTML(dagen, schaal, reeksen, ticks) {
+  const H = 100;
+  const pos = v => v / schaal * H;
+  const assen = ticks.map(v => `<div class="bc-tick" style="bottom:${pos(v)}px">${v}%</div>`).join('');
+  const lijnen = ticks.map(v => `<div class="bc-gridline" style="bottom:${pos(v)}px"></div>`).join('');
+  const kolommen = dagen.map(dag => {
+    const staven = reeksen.map(r => {
+      const v = dag.waarden[r.key];
+      if (v === null || v === undefined) return '<div class="bc-bar" style="height:2px;background:#1a3f5c;"></div>';
+      const kleur = v < 35 ? BAT_RGB.laag : r.rgb;
+      return `<div class="bc-bar" style="height:${Math.max(2, pos(v))}px;${glowStijl(v, schaal, kleur)}"><span>${Math.round(v)}</span></div>`;
+    }).join('');
+    return `<div class="bc-day"><div class="bc-bars">${staven}</div><div class="bc-lbl${dag.isTv ? ' tv' : ''}">${dag.naam}</div></div>`;
+  }).join('');
+  return `<div class="bc-wrap"><div class="bc-axis">${assen}</div><div class="bc-grid">${lijnen}</div><div class="bc-plot">${kolommen}</div></div>`;
+}
+function legendaHTML(items) {
+  return `<div class="bc-legenda">${items.map(i => i.symbool
+    ? `<span><b style="color:${i.kleur};margin-right:4px;">${i.symbool}</b>${i.label}</span>`
+    : `<span><i style="background:rgb(${i.rgb})"></i>${i.label}</span>`).join('')}</div>`;
+}
+
+// ── WEEK HISTORY: geestelijk + lichamelijk naast elkaar ──────
 function renderWeekHistory() {
   const container = document.getElementById('week-history-list');
   if (!container) return;
   container.innerHTML = '';
-  const now = new Date();
-  const huidigeMondag = new Date(now);
-  huidigeMondag.setDate(now.getDate() - ((now.getDay()+6)%7));
-  huidigeMondag.setHours(0,0,0,0);
-
-  const weken = [];
-  let ws = new Date(huidigeMondag);
-  for (let w = 0; w < 52; w++) {
-    weken.push(new Date(ws));
-    ws = new Date(ws); ws.setDate(ws.getDate()-7);
-    // Stop als we verder terug gaan dan de startdatum
-    const startStr = localStorage.getItem('wmm_startdatum');
-    const start = startStr ? new Date(startStr) : now;
-    if (ws < new Date(start.getTime() - 7*86400000)) break;
-  }
-
+  const t = T();
   const fmtShort = d => d.toLocaleDateString('nl-NL', {day:'numeric', month:'short'});
-
-  // Huidig week altijd tonen, rest alleen als er data in zit
   let aantalGetoond = 0;
-  weken.forEach((maandag, wi) => {
+  bouwWekenLijst().forEach((maandag, wi) => {
     const zondag = new Date(maandag); zondag.setDate(maandag.getDate()+6);
     const isHuidig = wi === 0;
-
-    let weekXP = 0;
-    let weekHeeftData = false;
-    const dagData = [];
+    let weekXP = 0, weekHeeftData = false;
+    const dagen = [];
     for (let i = 0; i < 7; i++) {
       const d = new Date(maandag); d.setDate(maandag.getDate()+i);
-      const key = dayKey(d);
-      const data = loadDay(key);
-      const heeftData = Object.keys(data).length > 0;
-      if (heeftData) weekHeeftData = true;
-      const isTv = data['terugval'] === 'ja';
-      const pct = heeftData ? pctFromData(data) : null;
-      const xp = heeftData ? xpFromData(data) : 0;
-      weekXP += xp;
-      dagData.push({d, pct, xp, isTv, heeftData});
+      const data = loadDay(dayKey(d));
+      const h = Object.keys(data).length > 0;
+      if (h) weekHeeftData = true;
+      weekXP += h ? xpFromData(data) : 0;
+      dagen.push({h, isTv: data['terugval'] === 'ja', naam: DAYS_NL[(maandag.getDay()+i)%7] || '',
+        waarden: {ger: h ? pctFromData(data) : null, lich: h ? lichPctFromData(data) : null}});
     }
-
-    // Toon alleen huidige week of weken met data
     if (!isHuidig && !weekHeeftData) return;
     aantalGetoond++;
-
     const blok = document.createElement('div');
     blok.className = 'week-hist-block' + (isHuidig ? ' huidige-week' : '');
-
-    const isHuidigeWeek = isHuidig ? ' <span style="font-size:10px;background:#f0a500;color:#0a2238;border-radius:10px;padding:1px 7px;margin-left:4px;">nu</span>' : '';
-    blok.innerHTML = `<div class="week-hist-header">
-      <div class="week-hist-lbl">${fmtShort(maandag)} – ${fmtShort(zondag)}${isHuidigeWeek}</div>
-      <div class="week-hist-xp">${weekXP > 0 ? '+' + weekXP + ' XP' : ''}</div>
-    </div>
-    <div class="week-mini" id="wm-${wi}"></div>`;
+    const nu = isHuidig ? ' <span style="font-size:10px;background:#f0a500;color:#0a2238;border-radius:10px;padding:1px 7px;margin-left:4px;">nu</span>' : '';
+    blok.innerHTML = `<div class="week-hist-header"><div class="week-hist-lbl">${fmtShort(maandag)} – ${fmtShort(zondag)}${nu}</div><div class="week-hist-xp">${weekXP > 0 ? '+' + weekXP + ' XP' : ''}</div></div>`
+      + bcWeekHTML(dagen, 130, [{key:'ger', rgb:BAT_RGB.ger}, {key:'lich', rgb:BAT_RGB.lich}], [0, 50, 100])
+      + legendaHTML([{rgb:BAT_RGB.ger, label:t.batterijLabel}, {rgb:BAT_RGB.lich, label:t.lichLabel}, {rgb:BAT_RGB.laag, label:'< 35%'}]);
     container.appendChild(blok);
-
-    const miniChart = blok.querySelector('.week-mini');
-    dagData.forEach((dag, di) => {
-      const col = document.createElement('div');
-      col.className = 'week-mini-col';
-      const fillH = dag.pct !== null ? Math.max(2, dag.pct * 0.34) : 2;
-      const fillColor = dag.isTv ? '#c0392b' : dag.pct === null ? '#1a3f5c' : dag.pct >= 75 ? '#4fa882' : dag.pct >= 50 ? '#7ecfaa' : dag.pct >= 25 ? '#f0a500' : '#1a3f5c';
-      const dayName = DAYS_NL[(maandag.getDay()+di) % 7] || '';
-      const lblClass = dag.isTv ? 'week-mini-lbl tv' : 'week-mini-lbl';
-      col.innerHTML = `<div class="week-mini-fill" style="height:${fillH}px;background:${fillColor};"></div><div class="${lblClass}">${dayName}</div>`;
-      miniChart.appendChild(col);
-    });
   });
-
   if (aantalGetoond === 0) {
     container.innerHTML = '<p style="font-size:13px;color:#3a6a8c;text-align:center;padding:16px 0;">Vul je eerste dag in om je voortgang te zien!</p>';
   }
+}
+
+// Echtgenoot-voortgang: staven (schaal 150%) + periode-curve
+// Echtgenoot-voortgang per week: jouw blokjes en die van je echtgenoot (alleen bij een echtgenoot-koppeling)
+function echtKoppelCode(){ const k = laadKoppels().find(k => koppelType(k) === 'echt'); return k ? k.code : null; }
+function echtPartnerDag(key){ const code = echtKoppelCode(); const m = code && window._partnerDagen && window._partnerDagen[code]; return (m && m[key]) || null; }
+// Gezamenlijke batterij: een vraag telt als ja zodra een van beiden hem met ja beantwoordt
+// Het laatst gegeven antwoord (ja of nee) geldt voor beiden
+function echtKies(k, eigen, partner) {
+  const ev = eigen[k], pv = partner[k];
+  if (ev === undefined || ev === null) return pv;
+  if (pv === undefined || pv === null) return ev;
+  if (ev === pv) return ev;
+  const et = Number(eigen['_t_' + k] || 0), pt = Number(partner['_t_' + k] || 0);
+  if (et !== pt) return et > pt ? ev : pv;
+  return (ev === 'ja' || pv === 'ja') ? 'ja' : 'nee';
+}
+function echtSamengevoegd(eigen, partner) {
+  const out = {};
+  ['e0', 'e1', 'eb', 'p'].forEach(k => { const v = echtKies(k, eigen, partner); if (v) out[k] = v; });
+  return out;
+}
+function renderEchtHistory() {
+  const container = document.getElementById('echt-history-list');
+  if (!container) return;
+  container.innerHTML = '';
+  const ui = uiT(), t = T();
+  const fmtShort = d => d.toLocaleDateString('nl-NL', {day:'numeric', month:'short'});
+  const toonEcht = echtAan(), toonPeriode = periodeAan();
+  let getoond = 0;
+  bouwWekenLijst().forEach((maandag, wi) => {
+    const zondag = new Date(maandag); zondag.setDate(maandag.getDate()+6);
+    const dagen = []; let heeftData = false;
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(maandag); d.setDate(maandag.getDate()+i);
+      const key = dayKey(d);
+      const naam = DAYS_NL[(maandag.getDay()+i)%7] || '';
+      const data = loadDay(key);
+      const pd = echtPartnerDag(key) || {};
+      const m = echtSamengevoegd(data, pd);
+      const gisteren = new Date(d); gisteren.setDate(d.getDate() - 1);
+      const prevEb = echtEbOpDag(gisteren);
+      const h = Object.keys(data).length > 0 || Object.keys(pd).length > 0 || prevEb;
+      if (h) heeftData = true;
+      dagen.push({h, isTv: false, naam, periode: toonPeriode && h && m.p === 'ja',
+        bonus: toonEcht && h && m.eb === 'ja',
+        waarden: {echt: toonEcht && h ? echtPctFromData(m, prevEb) : null}});
+    }
+    if (wi !== 0 && !heeftData) return;
+    getoond++;
+    const blok = document.createElement('div');
+    blok.className = 'week-hist-block' + (wi === 0 ? ' huidige-week' : '');
+    const nu = wi === 0 ? ' <span style="font-size:10px;background:#f0a500;color:#0a2238;border-radius:10px;padding:1px 7px;margin-left:4px;">nu</span>' : '';
+    const kop = `<div class="week-hist-header"><div class="week-hist-lbl">${fmtShort(maandag)} – ${fmtShort(zondag)}${nu}</div></div>`;
+    const legenda = [];
+    if (toonEcht) legenda.push({rgb:BAT_RGB.echt, label: t.echtLabel});
+    legenda.push({rgb:BAT_RGB.laag, label:'< 35%'});
+    if (toonPeriode) legenda.push({rgb:BAT_RGB.ger, label:'★ ' + ui.periodeLabel});
+    if (toonEcht && dagen.some(d => d.bonus)) legenda.push({symbool:'♥', kleur:'#ff7eb6', label: t.echtBonusKort});
+    blok.innerHTML = kop + bcWeekHTML(dagen, 150, [{key:'echt', rgb:BAT_RGB.echt}], [0, 50, 100, 150]) + legendaHTML(legenda);
+    container.appendChild(blok);
+    const plot = blok.querySelector('.bc-plot');
+    if (plot) {
+      if (toonPeriode) tekenPeriodeCurve(plot, dagen);
+      const harten = dagen.map((d, i) => d.bonus ? `<div class="echt-hart" style="left:${dagX(i)}%;">♥</div>` : '').join('');
+      if (harten) plot.insertAdjacentHTML('beforeend', `<div class="week-mini-overlay" style="top:0;bottom:auto;height:100px;">${harten}</div>`);
+    }
+  });
+  if (getoond === 0) container.innerHTML = `<p style="font-size:13px;color:#3a6a8c;text-align:center;padding:16px 0;">${ui.leegEcht}</p>`;
 }
 
 // ── PARTNER ──────────────────────────────────────────────────
@@ -2468,6 +2851,8 @@ function updateDebugStatus() {
       <div>🔐 Beveiligde login: ${window._wmm_authUid ? '✅ Actief' : '⏳ Bezig...'}</div>
       <div>🔄 Migratie oude data: ${localStorage.getItem('wmm_migratie_v2_done') ? '✅ Uitgevoerd' : '— niet nodig'}</div>
       <div>✉️ Laatste bericht: ${window._wmm_laatsteBerichtStatus || '—'}</div>
+      <div>💑 Echtgenoot-koppeling: ${laadKoppels().some(k => koppelType(k) === 'echt') ? '✅ Ja (type echt)' : '❌ Nee — op dit toestel staat geen echt-koppeling'}</div>
+      <div>📥 Dagen van partner ontvangen: ${(() => { const c = (laadKoppels().find(k => koppelType(k) === 'echt') || {}).code; return c && window._partnerDagen && window._partnerDagen[c] ? Object.keys(window._partnerDagen[c]).length : 0; })()}</div>
       ${status.foutmelding ? `<div style="color:#e05a3a;">⚠️ ${status.foutmelding}</div>` : ''}
     `;
   }
@@ -2525,7 +2910,8 @@ function sluitAanmakenPanel() {
   if (code) {
     const koppels = laadKoppels();
     if (!koppels.find(k => k.code === code)) {
-      koppels.push({ code, aangemaakt: new Date().toISOString() });
+      koppels.push({ code, aangemaakt: new Date().toISOString(), type: window._nieuwType || 'vriend' });
+      window._nieuwType = null;
       slaKoppelsOp(koppels);
       if (window.koppelAanNieuweCode) window.koppelAanNieuweCode(code);
     }
@@ -2590,7 +2976,6 @@ function stuurBericht(koppelCode, partnerNaam, type) {
   if (window.cloudStuurBericht) {
     window.cloudStuurBericht(koppelCode, bericht);
   }
-  streakIkVerstuurd(koppelCode);
   if (window.renderPartner) setTimeout(renderPartner, 100);
   // Visuele bevestiging
   const btns = event?.currentTarget;
@@ -2640,7 +3025,6 @@ function verstuurEigenBericht(koppelCode, partnerNaam) {
     gelezen: false,
   };
   if (window.cloudStuurBericht) window.cloudStuurBericht(koppelCode, bericht);
-  streakIkVerstuurd(koppelCode);
   if (window.renderPartner) setTimeout(renderPartner, 100);
   sluitEigenBericht(koppelCode);
   // Korte bevestiging
@@ -2786,78 +3170,56 @@ window._postvakBerichten = [];
 // Regels:
 // - Streak telt de opeenvolgende dagen dat ZOWEL jij ALS je partner een bericht stuurden.
 // - Officieel zichtbaar (🔥) vanaf 3 opeenvolgende dagen.
-// - Beiden moeten binnen 48 uur (t.o.v. elkaars laatste bericht) iets sturen.
-// - Zandloper (⏳) als de 48-uurs deadline nadert (nog < 12u over).
+// - Een wederzijdse dag = kalenderdag (Amsterdam) waarop jullie allebei een bericht stuurden.
+// - Zandloper (⏳) de dag erna, zolang vandaag nog geen wederzijdse dag is.
+// Een "wederzijdse dag" = een kalenderdag (Europe/Amsterdam) waarop jij én je partner
+// allebei een bericht stuurden. Beide telefoons rekenen met dezelfde twee lijsten
+// (berichttijden van jou en van je partner, uit de cloud), dus ze komen op hetzelfde getal.
+const STREAK_TZ = 'Europe/Amsterdam';
+function streakDagAms(iso){
+  return new Intl.DateTimeFormat('en-CA', {timeZone: STREAK_TZ, year:'numeric', month:'2-digit', day:'2-digit'}).format(new Date(iso));
+}
+function streakDagGetal(dagStr){
+  const [y,m,d] = dagStr.split('-').map(Number);
+  return Math.round(Date.UTC(y, m-1, d) / 86400000);
+}
+// Pure berekening: {count, staat} op basis van twee lijsten ISO-tijden
+function streakBerekenen(eigenTijden, partnerTijden, nuIso){
+  const eigen = new Set((eigenTijden||[]).map(streakDagAms));
+  const partner = new Set((partnerTijden||[]).map(streakDagAms));
+  const wederzijds = [...eigen].filter(d => partner.has(d)).map(streakDagGetal).sort((a,b)=>a-b);
+  if (!wederzijds.length) return {count:0, staat:'geen'};
+  const vandaag = streakDagGetal(streakDagAms(nuIso || new Date().toISOString()));
+  const laatste = wederzijds[wederzijds.length-1];
+  const gap = Math.max(0, vandaag - laatste);
+  if (gap >= 2) return {count:0, staat:'geen', verlopen:true};
+  let count = 1;
+  for (let i = wederzijds.length-2; i >= 0 && wederzijds[i] === wederzijds[i+1]-1; i--) count++;
+  if (gap === 1) return {count, staat:'zandloper'};   // gisteren wederzijds: vandaag nog een bericht nodig
+  return {count, staat: count >= 3 ? 'vlam' : 'geen'};
+}
 function laadStreak(code){
   try { return JSON.parse(localStorage.getItem('wmm_streak_'+code)) || {}; } catch { return {}; }
 }
-function slaStreakOp(code, s){ localStorage.setItem('wmm_streak_'+code, JSON.stringify(s)); }
-function dagKey(d){ const x=new Date(d); return x.getFullYear()+'-'+x.getMonth()+'-'+x.getDate(); }
-function dagenVerschil(a, b){
-  const da=new Date(a); da.setHours(0,0,0,0);
-  const db=new Date(b); db.setHours(0,0,0,0);
-  return Math.round((db-da)/86400000);
-}
-// Registreer dat IK zojuist een bericht stuurde
-function streakIkVerstuurd(code){
+function slaStreakOp(code, s){ try { localStorage.setItem('wmm_streak_'+code, JSON.stringify(s)); } catch {} }
+// Eigen berichtlijst: alleen aanroepen met de lijst zoals die in de cloud staat
+function streakIkVerstuurd(code, berichten){
+  if (!Array.isArray(berichten)) return;
   const s = laadStreak(code);
-  s.ikLaatst = new Date().toISOString();
-  herberekenStreak(code, s);
+  s.ikTijden = berichten.map(b => b.tijd).slice(-30);
+  slaStreakOp(code, s);
 }
-// Registreer de laatste keer dat de PARTNER een bericht stuurde
+// Berichtlijst van de partner (uit zijn/haar cloud-document)
 function streakPartnerActiviteit(code, berichten){
-  if (!Array.isArray(berichten) || !berichten.length) return;
-  let nieuwste = null;
-  berichten.forEach(b => { const t=new Date(b.tijd); if(!nieuwste||t>nieuwste) nieuwste=t; });
-  if (!nieuwste) return;
+  if (!Array.isArray(berichten)) return;
   const s = laadStreak(code);
-  const vorige = s.partnerLaatst ? new Date(s.partnerLaatst) : null;
-  if (!vorige || nieuwste > vorige) {
-    s.partnerLaatst = nieuwste.toISOString();
-    herberekenStreak(code, s);
-  }
-}
-// Herbereken de streak-teller op basis van ikLaatst en partnerLaatst
-function herberekenStreak(code, s){
-  s = s || laadStreak(code);
-  if (s.ikLaatst && s.partnerLaatst){
-    const ik = new Date(s.ikLaatst), partner = new Date(s.partnerLaatst);
-    const laatsteWederzijds = ik < partner ? ik : partner;
-    const binnen48 = Math.abs(ik - partner) <= 48*3600*1000;
-    const wederzijdsDag = dagKey(laatsteWederzijds);
-    if (binnen48){
-      if (!s.laatsteStreakDag){
-        s.count = 1; s.laatsteStreakDag = wederzijdsDag;
-      } else if (s.laatsteStreakDag !== wederzijdsDag){
-        const verschil = s.laatsteStreakDagDatum ? dagenVerschil(s.laatsteStreakDagDatum, laatsteWederzijds) : 1;
-        if (verschil >= 1){
-          const gatUren = s.laatsteWederzijdsTijd ? (laatsteWederzijds - new Date(s.laatsteWederzijdsTijd))/(3600*1000) : 0;
-          if (gatUren > 72){ s.count = 1; } else { s.count = (s.count||1) + 1; }
-          s.laatsteStreakDag = wederzijdsDag;
-        }
-      }
-      s.laatsteStreakDagDatum = laatsteWederzijds.toISOString();
-      s.laatsteWederzijdsTijd = laatsteWederzijds.toISOString();
-    }
-  }
+  s.partnerTijden = berichten.map(b => b.tijd).slice(-30);
   slaStreakOp(code, s);
 }
 // Weergave-status: {count, staat: 'vlam'|'zandloper'|'geen'}
 function streakStatus(code){
   const s = laadStreak(code);
-  const nu = new Date();
-  const count = s.count || 0;
-  if (!s.ikLaatst || !s.partnerLaatst) return {count:0, staat:'geen'};
-  const ik = new Date(s.ikLaatst), partner = new Date(s.partnerLaatst);
-  const oudste = ik < partner ? ik : partner;
-  const urenSindsOudste = (nu - oudste)/(3600*1000);
-  if (urenSindsOudste > 48){ return {count:0, staat:'geen', verlopen:true}; }
-  if (count < 3){
-    if (count >= 1 && urenSindsOudste > 36) return {count, staat:'zandloper'};
-    return {count, staat:'geen'};
-  }
-  if (urenSindsOudste > 36) return {count, staat:'zandloper'};
-  return {count, staat:'vlam'};
+  return streakBerekenen(s.ikTijden, s.partnerTijden);
 }
 function streakBadgeHTML(code){
   const st = streakStatus(code);
@@ -2891,8 +3253,16 @@ window._verzamelBerichten = function(berichtenLijst) {
   if (window.renderPostvak) window.renderPostvak();
 };
 
+const PARTNER_TEKST = {
+  nl:{wachten:"Wachten op vriend/vriendin…",leeg:"Nog geen vrienden gekoppeld. Voeg hieronder een vriend(in) toe."},
+  en:{wachten:"Waiting for friend…",leeg:"No friends linked yet. Add a friend below."},
+  fr:{wachten:"En attente de l'ami(e)…",leeg:"Aucun ami lié pour l'instant. Ajoute un ami ci-dessous."},
+  de:{wachten:"Warte auf Freund/Freundin…",leeg:"Noch keine Freunde verbunden. Füge unten einen Freund hinzu."},
+  es:{wachten:"Esperando a amigo/amiga…",leeg:"Aún no hay amigos vinculados. Añade un amigo abajo."}
+};
 function renderPartner() {
   const partnerInhoud = document.getElementById('partner-inhoud');
+  const pt = PARTNER_TEKST[huidigtaal] || PARTNER_TEKST.nl;
   const badge = document.getElementById('koppels-count-badge');
   if (!partnerInhoud) return;
 
@@ -2903,13 +3273,15 @@ function renderPartner() {
     koppels = [{ code: oudeCode, aangemaakt: new Date().toISOString() }];
     slaKoppelsOp(koppels);
   }
+  // Echtgenoot staat in het echt-blok (Voortgang), niet hier
+  koppels = koppels.filter(k => koppelType(k) !== 'echt');
 
   if (badge) badge.textContent = koppels.length > 0 ? `${koppels.length} van ${MAX_KOPPELS}` : '';
 
   partnerInhoud.innerHTML = '';
 
   if (koppels.length === 0) {
-    partnerInhoud.innerHTML = '<p style="font-size:13px;color:#3a6a8c;padding:10px 0;">Nog geen koppels. Voeg hieronder een vriend(in) toe.</p>';
+    partnerInhoud.innerHTML = `<p style="font-size:13px;color:#3a6a8c;padding:10px 0;">${pt.leeg}</p>`;
   }
 
   koppels.forEach(koppel => {
@@ -2920,7 +3292,7 @@ function renderPartner() {
     if (!data) {
       div.innerHTML = `
         <div style="background:#0d2d4a;border-radius:10px;padding:14px;border:0.5px solid #1a3f5c;">
-          <div style="font-size:13px;color:#3a6a8c;">Wachten op partner...</div>
+          <div style="font-size:13px;color:#3a6a8c;">${pt.wachten}</div>
           <div style="font-size:11px;color:#1a3f5c;margin-top:4px;font-family:monospace;">🔑 ${koppel.code}</div>
           <button onclick="verwijderKoppel('${koppel.code}')" style="margin-top:8px;font-size:10px;color:#3a6a8c;background:none;border:0.5px solid #1a3f5c;border-radius:20px;padding:3px 8px;cursor:pointer;font-family:inherit;">Verwijder koppel</button>
         </div>`;
@@ -2938,31 +3310,28 @@ function renderPartner() {
       const weekStart = week[0]?.datum, weekEnd = week[6]?.datum;
       const weekLabel = (weekStart && weekEnd) ? `${fmtShort(weekStart)} – ${fmtShort(weekEnd)}` : 'Deze week';
 
-      let miniHTML = '';
-      week.forEach(dag => {
-        const h = dag.pct !== null ? Math.max(2, dag.pct * 0.34) : 2;
-        const kleur = dag.isTv ? '#c0392b' : dag.pct === null ? '#1a3f5c' : dag.pct >= 75 ? '#4fa882' : dag.pct >= 50 ? '#7ecfaa' : dag.pct >= 25 ? '#f0a500' : '#1a3f5c';
-        const lbl = DAYS_NL[dag.datum.getDay()];
-        miniHTML += `<div class="week-mini-col"><div class="week-mini-fill" style="height:${h}px;background:${kleur};"></div><div class="week-mini-lbl${dag.isTv?' tv':''}">${lbl}</div></div>`;
-      });
-
       div.innerHTML = `
         ${hasTv ? `<div style="background:#1a0808;border:1px solid #c0392b;border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:12px;color:#e05a3a;display:flex;align-items:center;gap:6px;"><i class="ti ti-heart"></i> ${naam} heeft het vandaag zwaar</div>` : ''}
         <div style="background:#0a2238;border-radius:12px;border:0.5px solid ${hasTv?'#c0392b33':'#1a3f5c'};overflow:hidden;">
           <div style="padding:14px 14px 10px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-              <div style="font-size:15px;font-weight:600;color:#e8f4f8;display:flex;align-items:center;gap:7px;">${naam}${streakBadgeHTML(koppel.code)}</div>
-              <div style="font-size:11px;color:#7ab8d4;">${dagen} dagen sereen</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-              <div style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;background:${kl.bg};color:${kl.accent};border:1px solid ${kl.border};">
-                <i class="ti ti-star" style="font-size:10px;"></i> ${levelNaam}
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;">
+              <div style="display:flex;align-items:center;gap:12px;min-width:0;">${avatarHTML(data.foto, naam, 56)}
+                <div style="min-width:0;">
+                  <div style="font-size:16px;font-weight:600;color:#e8f4f8;display:flex;align-items:center;gap:7px;">${naam}${streakBadgeHTML(koppel.code)}</div>
+                  <div style="display:flex;align-items:center;gap:8px;margin-top:5px;flex-wrap:nowrap;white-space:nowrap;">
+                    <div style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;background:${kl.bg};color:${kl.accent};border:1px solid ${kl.border};white-space:nowrap;flex-shrink:0;">
+                      <i class="ti ti-star" style="font-size:10px;"></i> ${levelNaam}
+                    </div>
+                    <div style="font-size:12px;color:#f0a500;font-weight:600;white-space:nowrap;flex-shrink:0;">${totaalXP} XP</div>
+                  </div>
+                </div>
               </div>
-              <div style="font-size:12px;color:#f0a500;font-weight:600;">${totaalXP} XP</div>
+              <div style="font-size:11px;color:#7ab8d4;white-space:nowrap;">${dagen} dagen sereen</div>
             </div>
           </div>
           <div style="font-size:10px;color:#7ab8d4;padding:0 14px 6px;">${weekLabel}</div>
-          <div class="week-mini" style="padding:0 14px 12px;">${miniHTML}</div>
+          <div style="padding:0 14px 12px;">${bcWeekHTML(week.map(d => ({isTv: d.isTv, naam: DAYS_NL[d.datum.getDay()], waarden: {ger: d.ger, lich: d.lich}})), 130, [{key:'ger', rgb:BAT_RGB.ger}, {key:'lich', rgb:BAT_RGB.lich}], [0, 50, 100])}</div>
+          <div style="padding:0 14px 12px;">${legendaHTML([{rgb:BAT_RGB.ger, label:T().batterijLabel}, {rgb:BAT_RGB.lich, label:T().lichLabel}, {rgb:BAT_RGB.laag, label:'< 35%'}])}</div>
           <div style="padding:10px 14px;border-top:0.5px solid #1a3f5c;">
             <div style="font-size:10px;color:#7ab8d4;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;">Stuur ${naam} een bericht</div>
             <div style="display:flex;gap:8px;">
@@ -6279,6 +6648,7 @@ function updateTaalUI() {
   if (tabs[0]) tabs[0].innerHTML = `<i class="ti ti-sun"></i>${t.tabs[0]}`;
   if (tabs[1]) tabs[1].innerHTML = `<i class="ti ti-chart-bar"></i>${t.tabs[1]}`;
   if (tabs[2]) tabs[2].innerHTML = `<i class="ti ti-calendar-event"></i>${t.tabs[2]}`;
+  if (tabs[3]) tabs[3].innerHTML = `<i class="ti ti-books"></i>${t.tabs[3]}`;
   const set = (id,txt)=>{const el=document.getElementById(id);if(el)el.textContent=txt;};
   const setHTML = (id,html)=>{const el=document.getElementById(id);if(el)el.innerHTML=html;};
   setHTML('quote-card-label',`<i class="ti ti-book"></i> ${t.quoteLabel}`);
@@ -6325,8 +6695,509 @@ function renderTaalKiezer() {
   });
 }
 
+const DIALOOG_TEKST = {
+  nl:{doorgaan:"Doorgaan",annuleer:"Annuleren",zekerTitel:"Weet je het zeker?",wisTitel:"Lokale data wissen?",wisTekst:"Alle voortgang, markeringen en instellingen op dit toestel worden verwijderd. Je cloud-account blijft bestaan.",wisZeker:"Dit kan niet ongedaan worden. Maak eerst een back-up als je die nog wilt.",wisKnop:"Wis lokale data",accTitel:"Account verwijderen?",accTekst:"Je koppelingen en je gegevens in de cloud worden verwijderd, en alle gegevens op dit toestel worden gewist.",accZeker:"Dit kan niet ongedaan worden. Je gegevens komen niet meer terug.",accKnop:"Verwijder mijn account"},
+  en:{doorgaan:"Continue",annuleer:"Cancel",zekerTitel:"Are you sure?",wisTitel:"Clear local data?",wisTekst:"All progress, highlights and settings on this device will be removed. Your cloud account stays.",wisZeker:"This cannot be undone. Make a backup first if you want to keep your data.",wisKnop:"Clear local data",accTitel:"Delete account?",accTekst:"Your links and cloud data will be deleted, and all data on this device will be cleared.",accZeker:"This cannot be undone. Your data will not come back.",accKnop:"Delete my account"},
+  fr:{doorgaan:"Continuer",annuleer:"Annuler",zekerTitel:"Tu es sûr(e) ?",wisTitel:"Effacer les données locales ?",wisTekst:"Toute la progression, les surlignages et les réglages sur cet appareil seront supprimés. Ton compte cloud reste.",wisZeker:"Impossible à annuler. Fais d'abord une sauvegarde si tu veux garder tes données.",wisKnop:"Effacer les données locales",accTitel:"Supprimer le compte ?",accTekst:"Tes liaisons et tes données dans le cloud seront supprimées, et toutes les données de cet appareil seront effacées.",accZeker:"Impossible à annuler. Tes données ne reviendront pas.",accKnop:"Supprimer mon compte"},
+  de:{doorgaan:"Weiter",annuleer:"Abbrechen",zekerTitel:"Bist du sicher?",wisTitel:"Lokale Daten löschen?",wisTekst:"Aller Fortschritt, Markierungen und Einstellungen auf diesem Gerät werden entfernt. Dein Cloud-Konto bleibt bestehen.",wisZeker:"Das kann nicht rückgängig gemacht werden. Erstelle vorher ein Backup, wenn du die Daten behalten willst.",wisKnop:"Lokale Daten löschen",accTitel:"Konto löschen?",accTekst:"Deine Verbindungen und Daten in der Cloud werden gelöscht, und alle Daten auf diesem Gerät werden entfernt.",accZeker:"Das kann nicht rückgängig gemacht werden. Deine Daten kommen nicht zurück.",accKnop:"Mein Konto löschen"},
+  es:{doorgaan:"Continuar",annuleer:"Cancelar",zekerTitel:"¿Estás seguro?",wisTitel:"¿Borrar datos locales?",wisTekst:"Se eliminarán todo el progreso, los subrayados y los ajustes de este dispositivo. Tu cuenta en la nube se mantiene.",wisZeker:"No se puede deshacer. Haz primero una copia de seguridad si quieres conservar tus datos.",wisKnop:"Borrar datos locales",accTitel:"¿Eliminar cuenta?",accTekst:"Tus vínculos y tus datos en la nube se eliminarán, y todos los datos de este dispositivo se borrarán.",accZeker:"No se puede deshacer. Tus datos no volverán.",accKnop:"Eliminar mi cuenta"}
+};
+// Codebevestiging bij accountverwijdering (AVG): de code uit de e-mail is het bewijs
+const ACC_CODE_TEKST = {
+  nl:{titel:"Bevestig met je code",tekst:"We hebben een code naar je e-mail gestuurd. Vul die hieronder in om je account definitief te verwijderen.",fout:"Je account kon niet worden verwijderd. Controleer de code en probeer het opnieuw.",codeFout:"Vul de 6 cijfers in.",knop:"Verwijder account"},
+  en:{titel:"Confirm with your code",tekst:"We sent a code to your email. Enter it below to permanently delete your account.",fout:"Your account could not be deleted. Check the code and try again.",codeFout:"Enter the 6 digits.",knop:"Delete account"},
+  fr:{titel:"Confirme avec ton code",tekst:"Nous avons envoyé un code à ton e-mail. Saisis-le ci-dessous pour supprimer définitivement ton compte.",fout:"Le compte n'a pas pu être supprimé. Vérifie le code et réessaie.",codeFout:"Saisis les 6 chiffres.",knop:"Supprimer le compte"},
+  de:{titel:"Mit deinem Code bestätigen",tekst:"Wir haben dir einen Code per E-Mail gesendet. Gib ihn unten ein, um dein Konto endgültig zu löschen.",fout:"Dein Konto konnte nicht gelöscht werden. Prüfe den Code und versuche es erneut.",codeFout:"Gib die 6 Ziffern ein.",knop:"Konto löschen"},
+  es:{titel:"Confirma con tu código",tekst:"Hemos enviado un código a tu correo. Introdúcelo abajo para eliminar tu cuenta de forma definitiva.",fout:"No se pudo eliminar la cuenta. Revisa el código e inténtalo de nuevo.",codeFout:"Introduce las 6 cifras.",knop:"Eliminar cuenta"}
+};
+// ── INSTELLINGENPAGINA (paneel rechts) ──────────────────────
+const SET_TEKST = {
+  nl:{laatsteSync:"Laatste sync",nuSync:"Nu synchroniseren",uitlogTitel:"Uitloggen?",uitlogTekst:"Je data blijft op dit toestel en in de cloud, en je kunt later weer inloggen.",echtTitel:"Echtgenoot",echtIntro:"Jullie delen alleen de echtgenoot-batterij en de periode. Vrienden zien dat niet.",echtHeeftCode:"Ik heb een code van mijn echtgenoot",echtMaakCode:"Maak een code voor mijn echtgenoot",echtCodeUitleg:"Deel deze code alleen met je echtgenoot. Die vult hem in bij zijn of haar Instellingen, onder Echtgenoot.",echtGekoppeld:"Jullie zijn gekoppeld.",echtOntkoppel:"Ontkoppelen",echtBevestig:"Gedeeld, klaar",echtAnnuleer:"Annuleren",echtDeelWa:"Deel via WhatsApp",echtWa:"{naam} nodigt je uit om samen de app Wandel met Mij te gebruiken. Vul deze koppelcode in bij Instellingen › Echtgenoot:\n🔑 {code}\n📲 wandelmetmij.netlify.app",echtOntkTitel:"Echtgenoot ontkoppelen?",echtOntkTekst:"Jullie delen dan geen echtgenoot-batterij en periode meer. Je kunt later opnieuw koppelen.",echtOntkKnop:"Ontkoppel",kopieer:"Kopieer",titel:"Instellingen",account:"Account",email:"E-mail",niet:"Niet ingelogd",inloggen:"Inloggen",uitloggen:"Uitloggen",
+    algemeen:"Algemeen",naam:"Naam",naamUitleg:"Je naam is vast, zodat je partner je herkent.",foto:"Foto",fotoKies:"Kies foto",fotoWis:"Verwijder",
+    fotoDisc:"Foto tonen in discipelkaart",fotoVriend:"Foto tonen bij vriend/vriendin",taal:"App-taal",
+    lich:"Lichamelijke batterij",slaap:"Minimum uren slaap",uur:"uur",
+    schr:"Schriften",lds:"LDS-schriften",bijbel:"Bijbel",zoekBoeken:"Zoeken in eigen geüploade boeken",zoekGesch:"Zoekgeschiedenis bewaren",
+    herinn:"Herinneringen",herinnAan:"Dagelijkse herinnering",tijd:"Tijdstip",
+    rel:"Relatie",echt:"Echtgenoot-batterij",echtUit:"Toon de echtgenoot-batterij en -grafiek op Voortgang.",periode:"Maandelijkse periode",periodeUit:"Puntloos. Alleen zichtbaar voor jou en je echtgenoot.",
+    koppels:"Koppelcodes",geenKoppel:"Nog geen koppelingen.",koppelToev:"Koppel toevoegen",verwijder:"Verwijder",
+    gegevens:"Gegevens",backupMaken:"Back-up maken",backupTerug:"Back-up terugzetten",wissen:"Lokale data wissen",verwijderAcc:"Account verwijderen",
+    binnenkort:"Binnenkort",echtKoppelen:"Echtgenoot koppelen",vriendKoppelen:"Vrienden koppelen",codeInvoeren:"Koppelcode invoeren",koppelen:"Koppelen",nieuweCode:"Nieuwe code maken",maarEenEcht:"Je kunt maar één echtgenoot koppelen.",codeOngeldig:"Deze code klopt niet. Een code ziet eruit als wmm-abc123.",codeBestaat:"Deze code is al gekoppeld.",typeEcht:"Echtgenoot",typeVriend:"Vriend/vriendin",geenEcht:"Nog geen echtgenoot gekoppeld.",geenVriend:"Nog geen vrienden gekoppeld.",vol:"Je hebt het maximaal aantal koppelingen bereikt."},
+  en:{laatsteSync:"Last sync",nuSync:"Sync now",uitlogTitel:"Log out?",uitlogTekst:"Your data stays on this device and in the cloud, and you can log in again later.",echtTitel:"Spouse",echtIntro:"You share only the spouse battery and the period. Friends cannot see these.",echtHeeftCode:"I have a code from my spouse",echtMaakCode:"Create a code for my spouse",echtCodeUitleg:"Share this code only with your spouse. They enter it in their Settings, under Spouse.",echtGekoppeld:"You are linked.",echtOntkoppel:"Unlink",echtBevestig:"Shared, done",echtAnnuleer:"Cancel",echtDeelWa:"Share via WhatsApp",echtWa:"{naam} invites you to use the Wandel met Mij app together. Enter this link code under Settings › Spouse:\n🔑 {code}\n📲 wandelmetmij.netlify.app",echtOntkTitel:"Unlink spouse?",echtOntkTekst:"You will no longer share the spouse battery and period. You can link again later.",echtOntkKnop:"Unlink",kopieer:"Copy",titel:"Settings",account:"Account",email:"Email",niet:"Not logged in",inloggen:"Log in",uitloggen:"Log out",
+    algemeen:"General",naam:"Name",naamUitleg:"Your name is fixed, so your partner can recognise you.",foto:"Photo",fotoKies:"Choose photo",fotoWis:"Remove",
+    fotoDisc:"Show photo on discipleship card",fotoVriend:"Show photo to friend/partner",taal:"App language",
+    lich:"Physical battery",slaap:"Minimum hours of sleep",uur:"hours",
+    schr:"Scriptures",lds:"LDS scriptures",bijbel:"Bible",zoekBoeken:"Search in my uploaded books",zoekGesch:"Keep search history",
+    herinn:"Reminders",herinnAan:"Daily reminder",tijd:"Time",
+    rel:"Relationship",echt:"Spouse battery",echtUit:"Show the spouse battery and chart on Progress.",periode:"Monthly period",periodeUit:"No points. Visible only to you and your spouse.",
+    koppels:"Link codes",geenKoppel:"No links yet.",koppelToev:"Add link",verwijder:"Remove",
+    gegevens:"Data",backupMaken:"Create backup",backupTerug:"Restore backup",wissen:"Clear local data",verwijderAcc:"Delete account",
+    binnenkort:"Coming soon",echtKoppelen:"Link spouse",vriendKoppelen:"Link friends",codeInvoeren:"Enter link code",koppelen:"Link",nieuweCode:"Create new code",maarEenEcht:"You can link only one spouse.",codeOngeldig:"This code is not valid. A code looks like wmm-abc123.",codeBestaat:"This code is already linked.",typeEcht:"Spouse",typeVriend:"Friend",geenEcht:"No spouse linked yet.",geenVriend:"No friends linked yet.",vol:"You have reached the maximum number of links."},
+  fr:{laatsteSync:"Dernière synchro",nuSync:"Synchroniser maintenant",uitlogTitel:"Se déconnecter ?",uitlogTekst:"Tes données restent sur cet appareil et dans le cloud, et tu pourras te reconnecter plus tard.",echtTitel:"Conjoint",echtIntro:"Vous partagez seulement la batterie conjugale et la période. Vos amis ne les voient pas.",echtHeeftCode:"J'ai un code de mon conjoint",echtMaakCode:"Créer un code pour mon conjoint",echtCodeUitleg:"Ne partage ce code qu'avec ton conjoint. Il ou elle le saisit dans ses Paramètres, sous Conjoint.",echtGekoppeld:"Vous êtes liés.",echtOntkoppel:"Dissocier",echtBevestig:"Partagé, terminé",echtAnnuleer:"Annuler",echtDeelWa:"Partager via WhatsApp",echtWa:"{naam} t'invite à utiliser l'app Wandel met Mij ensemble. Saisis ce code de liaison dans Paramètres › Conjoint :\n🔑 {code}\n📲 wandelmetmij.netlify.app",echtOntkTitel:"Dissocier le conjoint ?",echtOntkTekst:"Vous ne partagerez plus la batterie conjugale ni la période. Vous pourrez relier à nouveau plus tard.",echtOntkKnop:"Dissocier",kopieer:"Copier",titel:"Paramètres",account:"Compte",email:"E-mail",niet:"Non connecté",inloggen:"Se connecter",uitloggen:"Se déconnecter",
+    algemeen:"Général",naam:"Nom",naamUitleg:"Ton nom est fixe, pour que ton partenaire te reconnaisse.",foto:"Photo",fotoKies:"Choisir une photo",fotoWis:"Supprimer",
+    fotoDisc:"Afficher la photo sur la carte disciple",fotoVriend:"Afficher la photo à l'ami/partenaire",taal:"Langue de l'app",
+    lich:"Batterie physique",slaap:"Minimum d'heures de sommeil",uur:"heures",
+    schr:"Écritures",lds:"Écritures LDS",bijbel:"Bible",zoekBoeken:"Rechercher dans mes livres importés",zoekGesch:"Garder l'historique de recherche",
+    herinn:"Rappels",herinnAan:"Rappel quotidien",tijd:"Heure",
+    rel:"Relation",echt:"Batterie du conjoint",echtUit:"Afficher la batterie et le graphique du conjoint sur Progrès.",periode:"Période mensuelle",periodeUit:"Sans points. Visible uniquement par toi et ton conjoint.",
+    koppels:"Codes de liaison",geenKoppel:"Aucune liaison pour l'instant.",koppelToev:"Ajouter une liaison",verwijder:"Supprimer",
+    gegevens:"Données",backupMaken:"Créer une sauvegarde",backupTerug:"Restaurer une sauvegarde",wissen:"Effacer les données locales",verwijderAcc:"Supprimer le compte",
+    binnenkort:"Bientôt disponible",echtKoppelen:"Lier le conjoint",vriendKoppelen:"Lier des amis",codeInvoeren:"Saisir le code de liaison",koppelen:"Lier",nieuweCode:"Créer un nouveau code",maarEenEcht:"Tu ne peux lier qu'un conjoint.",codeOngeldig:"Ce code n'est pas valide. Un code ressemble à wmm-abc123.",codeBestaat:"Ce code est déjà lié.",typeEcht:"Conjoint",typeVriend:"Ami(e)",geenEcht:"Aucun conjoint lié.",geenVriend:"Aucun ami lié.",vol:"Tu as atteint le nombre maximum de liaisons."},
+  de:{laatsteSync:"Letzte Synchronisierung",nuSync:"Jetzt synchronisieren",uitlogTitel:"Abmelden?",uitlogTekst:"Deine Daten bleiben auf diesem Gerät und in der Cloud, und du kannst dich später wieder anmelden.",echtTitel:"Ehepartner",echtIntro:"Ihr teilt nur die Ehepartner-Batterie und den Zeitraum. Freunde sehen das nicht.",echtHeeftCode:"Ich habe einen Code von meinem Ehepartner",echtMaakCode:"Code für meinen Ehepartner erstellen",echtCodeUitleg:"Teile diesen Code nur mit deinem Ehepartner. Er oder sie gibt ihn unter Einstellungen › Ehepartner ein.",echtGekoppeld:"Ihr seid verbunden.",echtOntkoppel:"Trennen",echtBevestig:"Geteilt, fertig",echtAnnuleer:"Abbrechen",echtDeelWa:"Über WhatsApp teilen",echtWa:"{naam} lädt dich ein, die App Wandel met Mij gemeinsam zu nutzen. Gib diesen Verbindungscode unter Einstellungen › Ehepartner ein:\n🔑 {code}\n📲 wandelmetmij.netlify.app",echtOntkTitel:"Ehepartner trennen?",echtOntkTekst:"Ihr teilt dann keine Ehepartner-Batterie und keinen Zeitraum mehr. Ihr könnt später wieder verbinden.",echtOntkKnop:"Trennen",kopieer:"Kopieren",titel:"Einstellungen",account:"Konto",email:"E-Mail",niet:"Nicht angemeldet",inloggen:"Anmelden",uitloggen:"Abmelden",
+    algemeen:"Allgemein",naam:"Name",naamUitleg:"Dein Name ist fest, damit dein Partner dich erkennt.",foto:"Foto",fotoKies:"Foto wählen",fotoWis:"Entfernen",
+    fotoDisc:"Foto auf der Jüngerkarte zeigen",fotoVriend:"Foto dem Freund/Partner zeigen",taal:"App-Sprache",
+    lich:"Körperliche Batterie",slaap:"Mindestens Stunden Schlaf",uur:"Stunden",
+    schr:"Schriften",lds:"LDS-Schriften",bijbel:"Bibel",zoekBoeken:"In meinen hochgeladenen Büchern suchen",zoekGesch:"Suchverlauf speichern",
+    herinn:"Erinnerungen",herinnAan:"Tägliche Erinnerung",tijd:"Uhrzeit",
+    rel:"Beziehung",echt:"Ehepartner-Batterie",echtUit:"Ehepartner-Batterie und -Grafik bei Fortschritt anzeigen.",periode:"Monatliche Periode",periodeUit:"Ohne Punkte. Nur für dich und deinen Ehepartner sichtbar.",
+    koppels:"Verbindungscodes",geenKoppel:"Noch keine Verbindungen.",koppelToev:"Verbindung hinzufügen",verwijder:"Entfernen",
+    gegevens:"Daten",backupMaken:"Backup erstellen",backupTerug:"Backup wiederherstellen",wissen:"Lokale Daten löschen",verwijderAcc:"Konto löschen",
+    binnenkort:"Demnächst",echtKoppelen:"Ehepartner verbinden",vriendKoppelen:"Freunde verbinden",codeInvoeren:"Verbindungscode eingeben",koppelen:"Verbinden",nieuweCode:"Neuen Code erstellen",maarEenEcht:"Du kannst nur einen Ehepartner verbinden.",codeOngeldig:"Dieser Code ist ungültig. Ein Code sieht aus wie wmm-abc123.",codeBestaat:"Dieser Code ist schon verbunden.",typeEcht:"Ehepartner",typeVriend:"Freund/in",geenEcht:"Noch kein Ehepartner verbunden.",geenVriend:"Noch keine Freunde verbunden.",vol:"Du hast die maximale Anzahl an Verbindungen erreicht."},
+  es:{laatsteSync:"Última sincronización",nuSync:"Sincronizar ahora",uitlogTitel:"¿Cerrar sesión?",uitlogTekst:"Tus datos se quedan en este dispositivo y en la nube, y podrás volver a iniciar sesión más tarde.",echtTitel:"Cónyuge",echtIntro:"Solo compartís la batería conyugal y el periodo. Los amigos no lo ven.",echtHeeftCode:"Tengo un código de mi cónyuge",echtMaakCode:"Crear un código para mi cónyuge",echtCodeUitleg:"Comparte este código solo con tu cónyuge. Lo introduce en sus Ajustes, en Cónyuge.",echtGekoppeld:"Estáis vinculados.",echtOntkoppel:"Desvincular",echtBevestig:"Compartido, listo",echtAnnuleer:"Cancelar",echtDeelWa:"Compartir por WhatsApp",echtWa:"{naam} te invita a usar juntos la app Wandel met Mij. Introduce este código en Ajustes › Cónyuge:\n🔑 {code}\n📲 wandelmetmij.netlify.app",echtOntkTitel:"¿Desvincular al cónyuge?",echtOntkTekst:"Dejaréis de compartir la batería conyugal y el periodo. Podéis volver a vincularos más tarde.",echtOntkKnop:"Desvincular",kopieer:"Copiar",titel:"Ajustes",account:"Cuenta",email:"Correo",niet:"No has iniciado sesión",inloggen:"Iniciar sesión",uitloggen:"Cerrar sesión",
+    algemeen:"General",naam:"Nombre",naamUitleg:"Tu nombre es fijo, para que tu pareja te reconozca.",foto:"Foto",fotoKies:"Elegir foto",fotoWis:"Quitar",
+    fotoDisc:"Mostrar foto en la tarjeta de discípulo",fotoVriend:"Mostrar foto al amigo/pareja",taal:"Idioma de la app",
+    lich:"Batería física",slaap:"Mínimo de horas de sueño",uur:"horas",
+    schr:"Escrituras",lds:"Escrituras SUD",bijbel:"Biblia",zoekBoeken:"Buscar en mis libros subidos",zoekGesch:"Guardar historial de búsqueda",
+    herinn:"Recordatorios",herinnAan:"Recordatorio diario",tijd:"Hora",
+    rel:"Relación",echt:"Batería del cónyuge",echtUit:"Mostrar la batería y el gráfico del cónyuge en Progreso.",periode:"Período mensual",periodeUit:"Sin puntos. Solo visible para ti y tu cónyuge.",
+    koppels:"Códigos de vínculo",geenKoppel:"Aún no hay vínculos.",koppelToev:"Añadir vínculo",verwijder:"Quitar",
+    gegevens:"Datos",backupMaken:"Crear copia de seguridad",backupTerug:"Restaurar copia de seguridad",wissen:"Borrar datos locales",verwijderAcc:"Eliminar cuenta",
+    binnenkort:"Próximamente",echtKoppelen:"Vincular cónyuge",vriendKoppelen:"Vincular amigos",codeInvoeren:"Introducir código de vínculo",koppelen:"Vincular",nieuweCode:"Crear código nuevo",maarEenEcht:"Solo puedes vincular un cónyuge.",codeOngeldig:"Este código no es válido. Un código tiene la forma wmm-abc123.",codeBestaat:"Este código ya está vinculado.",typeEcht:"Cónyuge",typeVriend:"Amigo/a",geenEcht:"Aún no hay cónyuge vinculado.",geenVriend:"Aún no hay amigos vinculados.",vol:"Has alcanzado el número máximo de vínculos."}
+};
+function setT(){ return SET_TEKST[huidigtaal] || SET_TEKST.nl; }
+function setEsc(v){ return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function setSchakelaar(id, aan, onchange){
+  return `<label class="notif-toggle"><input type="checkbox" id="${id}" ${aan?'checked':''} onchange="${onchange}" style="opacity:0;width:0;height:0;"><span class="notif-slider"></span></label>`;
+}
+function openInstellingen(){
+  renderInstellingen();
+  document.getElementById('instel-overlay').classList.add('open');
+}
+function sluitInstellingen(){
+  document.getElementById('instel-overlay').classList.remove('open');
+}
+function syncTekst(){
+  try {
+    const last = window.AuthLibrary && AuthLibrary.getLastSync && AuthLibrary.getLastSync();
+    if (!last) return '–';
+    return new Date(last).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' });
+  } catch { return '–'; }
+}
+function setSessieEmail(){
+  try { return (window.AuthLibrary && AuthLibrary.getEmailSession && AuthLibrary.getEmailSession()) || ''; } catch { return ''; }
+}
+function renderInstellingen(){
+  const t = setT();
+  const body = document.getElementById('instel-body');
+  if (!body) return;
+  document.getElementById('instel-titel').textContent = t.titel;
+  const email = setSessieEmail();
+  const nt = document.getElementById('notif-toggle');
+  const ntTijd = document.getElementById('notif-time');
+  const fotoData = (()=>{ try { return localStorage.getItem('wmm_foto'); } catch { return null; } })();
+  const fotoHtml = fotoData ? `<img src="${fotoData}" alt="">` : `<i class="ti ti-user"></i>`;
+  const talen = Object.entries(TALEN).map(([code,taal]) =>
+    `<option value="${code}" ${code===huidigtaal?'selected':''}>${taal.vlag} ${taal.naam}</option>`).join('');
+  const koppels = laadKoppels();
+  const vol = koppels.length >= MAX_KOPPELS;
+  const echt = koppels.find(k => koppelType(k) === 'echt');
+  const vrienden = koppels.filter(k => koppelType(k) !== 'echt');
+  const rijVoorKoppel = k => `<div class="instel-rij"><span style="font-family:monospace;font-size:12px;">${setEsc(k.code)}</span><button class="instel-knop gevaar" onclick="instelOntkoppel('${setEsc(k.code)}')">${t.verwijder}</button></div>`;
+  const echtBlok = echtBlokHTML(echt, t);
+  const vriendBlok = (vrienden.length ? vrienden.map(rijVoorKoppel).join('') : `<div class="instel-tekst">${t.geenVriend}</div>`)
+    + (vol ? `<div class="instel-tekst">${t.vol}</div>` : instelKoppelBlok('vriend'));
+  const slaap = getSlaapMin();
+  const slaapOpties = [5,6,7,8,9,10].map(n => `<option value="${n}" ${n===slaap?'selected':''}>${n} ${t.uur}</option>`).join('');
+
+  const pvKnop = (PRIVACY_TEKST[huidigtaal] || PRIVACY_TEKST.nl).knop;
+  body.innerHTML = `
+    <div class="instel-groep">${t.account}</div>
+    <div class="instel-rij"><span>${t.email}<span class="sub">${setEsc(email || t.niet)}</span></span>
+      ${email ? `<button class="instel-knop" onclick="EmailAuthUI.logout()">${t.uitloggen}</button>`
+              : `<button class="instel-knop" onclick="EmailAuthUI.open()">${t.inloggen}</button>`}
+    </div>
+    ${email ? `<div class="instel-rij"><span>${t.laatsteSync}<span class="sub">${setEsc(syncTekst())}</span></span>
+      <button class="instel-knop" onclick="EmailAuthUI.manualSync().then(renderInstellingen)">${t.nuSync}</button></div>` : ''}
+
+    <div class="instel-groep">${t.algemeen}</div>
+    <div class="instel-rij"><span>${t.naam}<span class="sub">${t.naamUitleg}</span></span>
+      <span style="font-size:13px;color:#7ab8d4;">${setEsc(localStorage.getItem('wmm_naam') || '')}</span></div>
+    <div class="instel-rij"><span>${t.foto}</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="instel-foto">${fotoHtml}</div>
+        <label class="instel-knop" style="display:inline-flex;align-items:center;cursor:pointer;">${t.fotoKies}
+          <input type="file" accept="image/*" onchange="fotoKiezen(event)" style="display:none;"></label>
+        ${fotoData ? `<button class="instel-knop gevaar" onclick="fotoWis()">${t.fotoWis}</button>` : ''}
+      </div></div>
+    <div class="instel-rij"><span>${t.fotoDisc}</span>${setSchakelaar('set-foto-disc', localStorage.getItem('wmm_foto_disc') !== '0', "instelZet('wmm_foto_disc', this.checked)")}</div>
+    <div class="instel-rij"><span>${t.fotoVriend}</span>${setSchakelaar('set-foto-vriend', localStorage.getItem('wmm_foto_vriend') !== '0', "instelZet('wmm_foto_vriend', this.checked)")}</div>
+    <div class="instel-rij"><span>${t.taal}</span>
+      <select class="instel-sel" onchange="stelTaalIn(this.value);renderInstellingen()">${talen}</select></div>
+
+    <div class="instel-groep">${t.lich}</div>
+    <div class="instel-rij"><span>${t.slaap}</span>
+      <select class="instel-sel" onchange="instelSlaap(this.value)">${slaapOpties}</select></div>
+
+    <div class="instel-groep">${t.herinn}</div>
+    <div class="instel-rij"><span>${t.herinnAan}</span>${setSchakelaar('set-herinn', !!(nt && nt.checked), 'instelHerinn(this.checked)')}</div>
+    <div class="instel-rij"><span>${t.tijd}</span>
+      <input type="time" class="instel-input" id="set-herinn-tijd" value="${ntTijd ? ntTijd.value : '20:00'}" onchange="instelHerinnTijd(this.value)"></div>
+
+    <div class="instel-groep">${t.rel}</div>
+    <div class="instel-rij"><span>${t.echt}<span class="sub">${t.echtUit}</span></span>${setSchakelaar('set-echt', echtAan(), "instelZet('wmm_echt_aan', this.checked, 1)")}</div>
+    <div class="instel-rij"><span>${t.periode}<span class="sub">${t.periodeUit}</span></span>${setSchakelaar('set-periode', periodeAan(), "instelZet('wmm_periode_aan', this.checked, 1)")}</div>
+    <div class="instel-groep">${t.echtKoppelen}</div>
+    ${echtBlok}
+    <div class="instel-groep">${t.vriendKoppelen}</div>
+    ${vriendBlok}
+
+    <div class="instel-groep">${t.gegevens}</div>
+    <div class="instel-rij"><span></span><button class="instel-knop" onclick="maakBackup()">${t.backupMaken}</button></div>
+    <div class="instel-rij"><span></span><button class="instel-knop" onclick="startBackupTerugzetten()">${t.backupTerug}</button></div>
+    <div class="instel-rij"><span></span><button class="instel-knop gevaar" onclick="wisLokaleData()">${t.wissen}</button></div>
+    <div class="instel-rij"><span></span><button class="instel-knop gevaar" onclick="verwijderAccount()">${t.verwijderAcc}</button></div>
+    <div class="instel-rij" style="cursor:pointer;" onclick="openPrivacy()"><span><i class="ti ti-shield-lock"></i> ${pvKnop}</span><i class="ti ti-chevron-right"></i></div>
+  `;
+}
+// Echtgenoot-blok: een eigen kaart met hart, los van de vriend-koppelingen
+window._echtInvoer = false;
+window._echtWacht = null;
+function echtBlokHTML(echt, t){
+  const kaart = 'margin:8px 14px 4px;padding:14px;border:1px solid rgba(240,165,0,.3);border-radius:14px;background:#0d2d4a;';
+  const kop = `<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;"><i class="ti ti-heart" style="color:#f0a500;font-size:20px;"></i><span style="font-size:15px;font-weight:600;color:#e8f4f8;">${t.echtTitel}</span></div>`;
+  if (echt) {
+    return `<div style="${kaart}">${kop}
+      <div class="instel-tekst" style="padding:0 0 10px;">${t.echtGekoppeld}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <span style="font-family:monospace;font-size:12px;color:#7ab8d4;">${setEsc(echt.code)}</span>
+        <button class="instel-knop gevaar" onclick="instelOntkoppel('${setEsc(echt.code)}')">${t.echtOntkoppel}</button>
+      </div></div>`;
+  }
+  if (window._echtWacht) {
+    return `<div style="${kaart}">${kop}
+      <div class="instel-tekst" style="padding:0 0 8px;">${t.echtCodeUitleg}</div>
+      <div style="text-align:center;font-family:monospace;font-size:24px;letter-spacing:2px;color:#f0a500;padding:10px 0;">${setEsc(window._echtWacht)}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px;">
+        <button class="instel-knop" onclick="instelEchtKopieer()">${t.kopieer}</button>
+        <button class="instel-knop" onclick="instelEchtWhatsApp()">${t.echtDeelWa}</button>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button class="instel-knop" onclick="instelEchtAnnuleer()">${t.echtAnnuleer}</button>
+        <button class="instel-knop" style="background:#f0a500;color:#0a2238;border-color:#f0a500;" onclick="instelEchtBevestig()">${t.echtBevestig}</button>
+      </div></div>`;
+  }
+  return `<div style="${kaart}">${kop}
+    <div class="instel-tekst" style="padding:0 0 10px;">${t.echtIntro}</div>
+    ${window._echtInvoer ? `<div style="display:flex;gap:8px;margin-bottom:8px;">
+      <input id="set-code-echt" class="instel-input" placeholder="${t.codeInvoeren}" autocomplete="off" autocapitalize="off" spellcheck="false" style="flex:1;min-width:0;max-width:none;font-family:monospace;font-size:12px;">
+      <button class="instel-knop" onclick="instelKoppelInvoeren('echt')">${t.koppelen}</button></div>` : ''}
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button class="instel-knop" onclick="instelEchtToonInvoer()">${t.echtHeeftCode}</button>
+      <button class="instel-knop" onclick="instelEchtMaak()">${t.echtMaakCode}</button>
+    </div></div>`;
+}
+function instelEchtToonInvoer(){ window._echtInvoer = !window._echtInvoer; renderInstellingen(); }
+function instelEchtMaak(){
+  const t = setT();
+  if (laadKoppels().some(k => koppelType(k) === 'echt')) { if (window.toonToast) toonToast(t.maarEenEcht); return; }
+  window._echtWacht = genereerKoppelCode();
+  window._echtInvoer = false;
+  renderInstellingen();
+}
+function instelEchtAnnuleer(){ window._echtWacht = null; renderInstellingen(); }
+function instelEchtKopieer(){
+  navigator.clipboard?.writeText(window._echtWacht || '').catch(() => {});
+  if (window.toonToast) toonToast('✓');
+}
+function instelEchtWhatsApp(){
+  const t = setT();
+  const naam = localStorage.getItem('wmm_naam') || '';
+  const tekst = t.echtWa.replace('{naam}', naam).replace('{code}', window._echtWacht || '');
+  window.open('https://wa.me/?text=' + encodeURIComponent(tekst), '_blank');
+}
+function instelEchtBevestig(){
+  const code = window._echtWacht;
+  if (!code) return;
+  const koppels = laadKoppels();
+  if (koppels.some(k => koppelType(k) === 'echt') || koppels.length >= MAX_KOPPELS) { window._echtWacht = null; renderInstellingen(); return; }
+  koppels.push({ code, aangemaakt: new Date().toISOString(), type: 'echt' });
+  slaKoppelsOp(koppels);
+  window._echtWacht = null;
+  if (window.koppelAanNieuweCode) window.koppelAanNieuweCode(code);
+  renderInstellingen();
+  if (window.renderPartner) renderPartner();
+}
+// Ontkoppelen met bevestiging in de app-dialoog (niet de browser-confirm)
+async function instelOntkoppel(code){
+  const t = setT();
+  const d = SET_TEKST[huidigtaal] || SET_TEKST.nl;
+  if (!(await vraagBevestiging(d.echtOntkTitel, d.echtOntkTekst, d.echtOntkKnop, true))) return;
+  slaKoppelsOp(laadKoppels().filter(k => k.code !== code));
+  if (window._partnerDataMap) delete window._partnerDataMap[code];
+  renderInstellingen();
+  if (window.renderPartner) renderPartner();
+}
+// Avatar: alleen geldige JPEG-data-URL's, anders een cirkel met de voorletter
+function avatarHTML(src, naam, px){
+  const st = `width:${px}px;height:${px}px;border-radius:50%;flex:none;overflow:hidden;display:flex;align-items:center;justify-content:center;`;
+  if (src && /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(src)) {
+    return `<img src="${src}" alt="" style="${st}object-fit:cover;">`;
+  }
+  const letter = (String(naam || '?').trim().charAt(0) || '?').toUpperCase();
+  return `<div style="${st}background:#0a1e35;border:1px solid #2a5275;color:#f0a500;font-weight:700;font-size:${Math.round(px*0.42)}px;">${setEsc(letter)}</div>`;
+}
+function fotoLokaal(){ try { return localStorage.getItem('wmm_foto') || null; } catch { return null; } }
+function renderDiscAvatar(){
+  const el = document.getElementById('disc-avatar');
+  if (!el) return;
+  const nm0 = document.getElementById('disc-naam');
+  if (localStorage.getItem('wmm_foto_disc') === '0') { el.innerHTML = ''; if (nm0) nm0.textContent = localStorage.getItem('wmm_naam') || ''; return; }
+  const naam = localStorage.getItem('wmm_naam') || '';
+  el.innerHTML = avatarHTML(fotoLokaal(), naam, 80);
+  const nm = document.getElementById('disc-naam');
+  if (nm) nm.textContent = naam;
+}
+// Foto die vrienden/partners zien: alleen als "foto tonen bij vriend/vriendin" aan staat
+function fotoPubliek(){
+  try { if (localStorage.getItem('wmm_foto_vriend') === '0') return null; return localStorage.getItem('wmm_foto') || null; }
+  catch { return null; }
+}
+function publiceerFotoNaarKoppels(){
+  if (!window.cloudZetFoto) return;
+  const f = fotoPubliek();
+  laadKoppels().forEach(k => window.cloudZetFoto(k.code, f));
+}
+// Instellingen die alleen een vlag zetten; daarna het Vandaag- en Voortgang-scherm bijwerken
+function instelZet(sleutel, aan, herlaadVoortgang){
+  try { if (aan) localStorage.setItem(sleutel, '1'); else localStorage.setItem(sleutel, '0'); } catch {}
+  if (sleutel === 'wmm_echt_aan' || sleutel === 'wmm_periode_aan' || sleutel === 'wmm_foto_disc' || sleutel === 'wmm_foto_vriend') {
+    try { renderVragen(loadDay(todayKey())); } catch {}
+  }
+  if (sleutel === 'wmm_foto_disc') { renderDiscAvatar(); }
+  if (sleutel === 'wmm_foto_vriend') { publiceerFotoNaarKoppels(); }
+  if (herlaadVoortgang) { try { renderVoortgang(); } catch {} }
+  try { if (window.renderPartner) renderPartner(); } catch {}
+}
+function instelSlaap(v){
+  try { localStorage.setItem('wmm_slaap_min', String(parseInt(v, 10))); } catch {}
+  try { renderVragen(loadDay(todayKey())); } catch {}
+}
+// Herinnering: dezelfde knop als op Vandaag, dus één bron van waarheid
+function instelHerinn(aan){
+  const nt = document.getElementById('notif-toggle');
+  if (nt) { nt.checked = aan; toggleNotification(); }
+}
+function instelHerinnTijd(v){
+  const tijd = document.getElementById('notif-time');
+  if (tijd) { tijd.value = v; updateNotifTime(); }
+}
+// Type van een koppeling: oude koppelingen zonder type zijn vriend/vriendin
+function koppelType(k){ return k && k.type === 'echt' ? 'echt' : 'vriend'; }
+function instelKoppelBlok(type){
+  const t = setT();
+  return `<div class="instel-rij" style="flex-wrap:wrap;">
+      <input id="set-code-${type}" class="instel-input" placeholder="${t.codeInvoeren}" autocomplete="off" autocapitalize="off" spellcheck="false" style="flex:1;min-width:0;max-width:none;font-family:monospace;font-size:12px;">
+      <button class="instel-knop" onclick="instelKoppelInvoeren('${type}')">${t.koppelen}</button>
+    </div>
+    <div class="instel-rij"><span></span>
+      <button class="instel-knop" onclick="instelNieuweCode('${type}')">${t.nieuweCode}</button>
+    </div>`;
+}
+// Bestaande code invoeren: valideren, opslaan en synchroniseren
+// Oude koppelcodes die al bestonden vóór het wmm-formaat (hoofdlettergevoelig, blijven werken)
+const LEGACY_KOPPELCODES = ['Wandelmetmij'];
+function instelKoppelInvoeren(type){
+  const t = setT();
+  const veld = document.getElementById('set-code-' + type);
+  const ruweCode = (veld ? veld.value : '').trim();
+  const code = LEGACY_KOPPELCODES.includes(ruweCode) ? ruweCode : ruweCode.toLowerCase();
+  if (!LEGACY_KOPPELCODES.includes(code) && !/^wmm-[a-z0-9]{6}$/.test(code)) { if (window.toonToast) toonToast(t.codeOngeldig); return; }
+  const koppels = laadKoppels();
+  if (koppels.some(k => k.code === code)) { if (window.toonToast) toonToast(t.codeBestaat); return; }
+  if (koppels.length >= MAX_KOPPELS) { if (window.toonToast) toonToast(t.vol); return; }
+  if (type === 'echt' && koppels.some(k => koppelType(k) === 'echt')) { if (window.toonToast) toonToast(t.maarEenEcht); return; }
+  koppels.push({ code, aangemaakt: new Date().toISOString(), type });
+  slaKoppelsOp(koppels);
+  try { if (window.initFirebaseKoppel) window.initFirebaseKoppel(code, localStorage.getItem('wmm_naam') || 'Partner'); } catch {}
+  renderInstellingen();
+  if (window.renderPartner) renderPartner();
+}
+// Nieuwe code maken voor echtgenoot of vriend: type onthouden tot de code is opgeslagen
+function instelNieuweCode(type){
+  const t = setT();
+  if (type === 'echt' && laadKoppels().some(k => koppelType(k) === 'echt')) { if (window.toonToast) toonToast(t.maarEenEcht); return; }
+  window._nieuwType = type;
+  instelKoppelToevoegen();
+}
+function instelKoppelToevoegen(){
+  sluitInstellingen();
+  showPage('voortgang', document.querySelectorAll('.tab')[1]);
+  setTimeout(() => { try { openAanmakenPanel(); } catch {} }, 80);
+}
+// Foto: middenuitsnede, 256×256, JPEG 0,8. Opslag lokaal (cloud-sync volgt).
+function fotoKiezen(e){
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  const url = URL.createObjectURL(f);
+  const img = new Image();
+  img.onload = () => {
+    const kant = Math.min(img.width, img.height);
+    const c = document.createElement('canvas');
+    c.width = 256; c.height = 256;
+    c.getContext('2d').drawImage(img, (img.width-kant)/2, (img.height-kant)/2, kant, kant, 0, 0, 256, 256);
+    URL.revokeObjectURL(url);
+    try { localStorage.setItem('wmm_foto', c.toDataURL('image/jpeg', 0.8)); renderInstellingen(); renderDiscAvatar(); publiceerFotoNaarKoppels(); }
+    catch { if (window.toonToast) toonToast('Foto kon niet worden opgeslagen'); }
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); if (window.toonToast) toonToast('Dit bestand is geen afbeelding'); };
+  img.src = url;
+  e.target.value = '';
+}
+// Eén dialoog: wacht op OK of Annuleren
+function vraagBevestiging(titel, tekst, okTekst, gevaar){
+  return new Promise(resolve => {
+    const o = document.getElementById('set-dialoog');
+    const ok = document.getElementById('set-dialoog-ok');
+    const an = document.getElementById('set-dialoog-annuleer');
+    document.getElementById('set-dialoog-titel').textContent = titel;
+    document.getElementById('set-dialoog-tekst').textContent = tekst;
+    ok.textContent = okTekst;
+    ok.style.background = gevaar ? '#c0392b' : '#f0a500';
+    ok.style.color = gevaar ? '#fff' : '#0a2238';
+    an.textContent = (DIALOOG_TEKST[huidigtaal] || DIALOOG_TEKST.nl).annuleer;
+    const klaar = v => { o.classList.remove('open'); ok.onclick = null; an.onclick = null; resolve(v); };
+    ok.onclick = () => klaar(true);
+    an.onclick = () => klaar(false);
+    o.classList.add('open');
+  });
+}
+// Dubbele bevestiging: eerst "doorgaan?", dan "weet je het zeker?"
+async function dubbelBevestigen(soort){
+  const d = DIALOOG_TEKST[huidigtaal] || DIALOOG_TEKST.nl;
+  const acc = soort === 'acc';
+  if (!(await vraagBevestiging(acc ? d.accTitel : d.wisTitel, acc ? d.accTekst : d.wisTekst, d.doorgaan, false))) return false;
+  return await vraagBevestiging(d.zekerTitel, acc ? d.accZeker : d.wisZeker, acc ? d.accKnop : d.wisKnop, true);
+}
+function wisAlleLokaleData(){
+  try {
+    const keys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && (k.startsWith('wmm_') || k.startsWith('fsy_'))) keys.push(k);
+    }
+    keys.forEach(k => localStorage.removeItem(k));
+  } catch {}
+  location.reload();
+}
+async function wisLokaleData(){
+  if (!(await dubbelBevestigen('wis'))) return;
+  wisAlleLokaleData();
+}
+// Eén dialoog met invoerveld voor de 6-cijferige code. Geeft de code of null.
+function vraagCode(titel, tekst, okTekst, foutTekst){
+  return new Promise(resolve => {
+    const o = document.getElementById('set-dialoog');
+    const ok = document.getElementById('set-dialoog-ok');
+    const an = document.getElementById('set-dialoog-annuleer');
+    const veld = document.getElementById('set-dialoog-code');
+    document.getElementById('set-dialoog-titel').textContent = titel;
+    document.getElementById('set-dialoog-tekst').textContent = tekst;
+    ok.textContent = okTekst;
+    ok.style.background = '#c0392b';
+    ok.style.color = '#fff';
+    an.textContent = (DIALOOG_TEKST[huidigtaal] || DIALOOG_TEKST.nl).annuleer;
+    veld.value = '';
+    veld.style.display = 'block';
+    const klaar = v => { o.classList.remove('open'); veld.style.display = 'none'; ok.onclick = null; an.onclick = null; resolve(v); };
+    ok.onclick = () => {
+      const c = veld.value.trim();
+      if (!/^\d{6}$/.test(c)) { if (window.toonToast) toonToast(foutTekst); return; }
+      klaar(c);
+    };
+    an.onclick = () => klaar(null);
+    o.classList.add('open');
+    setTimeout(() => veld.focus(), 100);
+  });
+}
+const ACCOUNT_DELETE_URL = window.location.hostname === 'localhost'
+  ? 'http://127.0.0.1:5001/fsy-prep/us-central1/deleteAccount'
+  : 'https://us-central1-fsy-prep.cloudfunctions.net/deleteAccount';
+async function accountVerwijderenOpServer(email, code){
+  try {
+    const r = await fetch(ACCOUNT_DELETE_URL, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, code })
+    });
+    const d = await r.json().catch(() => ({}));
+    return r.ok && d.success === true;
+  } catch { return false; }
+}
+// AVG: eerst bevestigen met de code (bij e-mailaccount), dan account in de cloud, dan koppeldata, dan alles op dit toestel
+async function verwijderAccount(){
+  if (!(await dubbelBevestigen('acc'))) return;
+  const t = ACC_CODE_TEKST[huidigtaal] || ACC_CODE_TEKST.nl;
+  const email = (window.AuthLibrary && AuthLibrary.isEmailAuthenticated()) ? AuthLibrary.getEmailSession() : null;
+  if (email) {
+    const verstuurd = await AuthLibrary.sendCode(email);
+    if (!verstuurd || !verstuurd.success) { if (window.toonToast) toonToast((verstuurd && verstuurd.message) || t.fout); return; }
+    const code = await vraagCode(t.titel, t.tekst, t.knop, t.codeFout);
+    if (!code) return;
+    if (!(await accountVerwijderenOpServer(email, code))) { if (window.toonToast) toonToast(t.fout); return; }
+  }
+  for (const k of laadKoppels()) {
+    try { if (window.cloudVerwijderEigenData) await window.cloudVerwijderEigenData(k.code); } catch {}
+  }
+  wisAlleLokaleData();
+}
+function fotoWis(){
+  try { localStorage.removeItem('wmm_foto'); } catch {}
+  renderInstellingen(); renderDiscAvatar(); publiceerFotoNaarKoppels();
+}
+
 // ── WELKOMSTSCHERM ───────────────────────────────────────────
 let welkomTaal = 'nl';
+const WELKOM_HINT = {
+  nl:"💡 Je kunt later een partner toevoegen: een echtgenoot, vriend of vriendin. Dat doe je via Instellingen.",
+  en:"💡 You can add a partner later: a spouse or a friend. You do this in Settings.",
+  fr:"💡 Tu pourras ajouter un partenaire plus tard : un conjoint, un ami ou une amie. Fais-le dans les Paramètres.",
+  de:"💡 Einen Partner kannst du später hinzufügen: einen Ehepartner, einen Freund oder eine Freundin. Das geht unter Einstellungen.",
+  es:"💡 Más adelante podrás añadir una pareja: un cónyuge, un amigo o una amiga. Hazlo en Ajustes."
+};
+// Toestemming voor de verwerking van gezondheids- en geloofsgegevens (AVG art. 9)
+const TOEST_TEKST = {
+  nl:{titel:"Jouw toestemming",tekst:"Wandel met Mij bewaart je voortgang en, als je dat kiest, je koppelingen en berichten in de cloud. Voor gezondheidsgegevens (slaap, eten, beweging, terugval en periode) en je geloofsovertuiging vragen we je uitdrukkelijke toestemming. Die kun je altijd intrekken door je gegevens te wissen via Instellingen.",vink:"Ik geef toestemming voor het verwerken van mijn gegevens zoals hierboven beschreven.",knop:"Akkoord en doorgaan",fout:"Vink het akkoord aan om verder te gaan."},
+  en:{titel:"Your consent",tekst:"Wandel met Mij stores your progress in the cloud and, if you choose, your links and messages. For health data (sleep, food, exercise, setback and period) and your religious conviction we ask for your explicit consent. You can always withdraw it by clearing your data in Settings.",vink:"I consent to the processing of my data as described above.",knop:"Agree and continue",fout:"Tick the box to agree before continuing."},
+  fr:{titel:"Ton consentement",tekst:"Wandel met Mij conserve ta progression dans le cloud et, si tu le choisis, tes liens et messages. Pour les données de santé (sommeil, alimentation, activité, rechute et période) et ta conviction religieuse, nous demandons ton consentement explicite. Tu peux le retirer à tout moment en effaçant tes données dans les Paramètres.",vink:"Je consens au traitement de mes données tel que décrit ci-dessus.",knop:"J'accepte et continuer",fout:"Coche la case pour accepter avant de continuer."},
+  de:{titel:"Deine Einwilligung",tekst:"Wandel met Mij speichert deinen Fortschritt in der Cloud und, wenn du es wählst, deine Verbindungen und Nachrichten. Für Gesundheitsdaten (Schlaf, Essen, Bewegung, Rückfall und Periode) und deine religiöse Überzeugung bitten wir um ausdrückliche Einwilligung. Du kannst sie jederzeit widerrufen, indem du deine Daten in den Einstellungen löschst.",vink:"Ich willige in die Verarbeitung meiner Daten ein, wie oben beschrieben.",knop:"Zustimmen und weiter",fout:"Bitte stimme zu, um fortzufahren."},
+  es:{titel:"Tu consentimiento",tekst:"Wandel met Mij guarda tu progreso en la nube y, si lo eliges, tus vínculos y mensajes. Para los datos de salud (sueño, alimentación, ejercicio, recaída y periodo) y tu convicción religiosa pedimos tu consentimiento explícito. Puedes retirarlo en cualquier momento borrando tus datos en Ajustes.",vink:"Doy mi consentimiento para el tratamiento de mis datos como se describe arriba.",knop:"Acepto y continuar",fout:"Marca la casilla para aceptar y continuar."}
+};
+function toestemmingGegeven(){ try { return !!localStorage.getItem('wmm_toestemming'); } catch { return false; } }
+const PRIVACY_TEKST = {"nl": {"knop": "Privacyverklaring", "titel": "Privacyverklaring", "sluit": "Sluiten", "inhoud": "\n<p><i>Concept: laat deze tekst controleren door een jurist voordat de app live gaat.</i></p>\n<p>Deze verklaring beschrijft hoe Wandel met Mij met je gegevens omgaat.</p>\n<p><b>Wie is verantwoordelijk?</b><br>Stichting RealGood, Grotewallerweg 11, 1742 NM Schagen. Contact: info@realgood.nl.</p>\n<p><b>Welke gegevens we verwerken</b></p>\n<ul><li>Account: je e-mailadres en de inlogcode die we je sturen (alleen bij inloggen met e-mail).</li>\n<li>Profiel: je naam, je app-taal en, als je dat kiest, je foto.</li>\n<li>Dagelijkse invoer: je antwoorden op de vragen, slaap (ja/nee), terugval en periode.</li>\n<li>Koppelingen: je koppelcodes en het type (echtgenoot of vriend/vriendin).</li>\n<li>Berichten die je naar een koppeling stuurt, met tijdstip en tekst.</li>\n<li>Land: bij het eerste gebruik zoekt de app je land op via ipapi.co, om de taal voor te stellen.</li></ul>\n<p><b>Wat je koppeling ziet</b><br>Een vriend of vriendin ziet alleen je percentages en XP, je niveau en je foto als je die toont. Je antwoorden zelf zien zij niet. Bij een echtgenoot-koppeling delen jullie de gezamenlijke echtgenotenvragen. Je notities, markeringen en bladwijzers worden nooit gedeeld en blijven op je toestel.</p>\n<p><b>Waarom we ze verwerken</b></p>\n<ul><li>Inloggen en je account beheren.</li><li>Je dagelijkse voortgang bijhouden en tonen.</li><li>Je koppelingen je voortgang laten zien, binnen de grenzen die je zelf instelt.</li><li>Dagelijkse herinneringen sturen vanaf je eigen toestel.</li></ul>\n<p><b>Grondslag</b><br>Toestemming (artikel 6, lid 1, sub a AVG). Voor gezondheidsgegevens zoals slaap, eten, beweging, terugval en periode: uitdrukkelijke toestemming (artikel 9, lid 2, sub a AVG).</p>\n<p><b>Ontvangers</b></p>\n<ul><li>Google (Firebase): database, inloggen, cloudfuncties en hosting.</li><li>Resend: verzending van inlogcodes per e-mail.</li><li>ipapi.co: landdetectie bij het eerste gebruik.</li></ul>\n<p><b>Bewaartermijn</b><br>Cloudgegevens zolang je account bestaat. Verwijder je je account in de app, dan worden je cloudgegevens verwijderd. Gegevens op je toestel blijven tot je ze wist.</p>\n<p><b>Je rechten</b><br>Je hebt recht op inzage, correctie, verwijdering, beperking, bezwaar en overdraagbaarheid. Stuur een verzoek naar info@realgood.nl. Je kunt ook een klacht indienen bij de Autoriteit Persoonsgegevens.</p>"}, "en": {"knop": "Privacy statement", "titel": "Privacy statement", "sluit": "Close", "inhoud": "\n<p><i>Draft: have a lawyer check this text before the app goes live.</i></p>\n<p>This statement describes how Wandel met Mij handles your data.</p>\n<p><b>Who is responsible?</b><br>Stichting RealGood, Grotewallerweg 11, 1742 NM Schagen, the Netherlands. Contact: info@realgood.nl.</p>\n<p><b>What data we process</b></p>\n<ul><li>Account: your email address and the login code we send you (only when you log in by email).</li>\n<li>Profile: your name, your app language and, if you choose, your photo.</li>\n<li>Daily entries: your answers to the questions, sleep (yes/no), setback and period.</li>\n<li>Connections: your connection codes and their type (spouse or friend).</li>\n<li>Messages you send to a connection, with time and text.</li>\n<li>Country: on first use the app looks up your country via ipapi.co to suggest a language.</li></ul>\n<p><b>What your connection sees</b><br>A friend sees only your percentages and XP, your level and your photo if you show it. They never see your answers. With a spouse connection you share the joint spouse questions. Your notes, highlights and bookmarks are never shared and stay on your device.</p>\n<p><b>Why we process it</b></p>\n<ul><li>Logging in and managing your account.</li><li>Keeping track of and showing your daily progress.</li><li>Letting your connections see your progress, within the limits you set.</li><li>Sending daily reminders from your own device.</li></ul>\n<p><b>Legal basis</b><br>Consent (Article 6(1)(a) GDPR). For health data such as sleep, food, exercise, setback and period: explicit consent (Article 9(2)(a) GDPR).</p>\n<p><b>Recipients</b></p>\n<ul><li>Google (Firebase): database, login, cloud functions and hosting.</li><li>Resend: sending login codes by email.</li><li>ipapi.co: country detection on first use.</li></ul>\n<p><b>Retention</b><br>Cloud data for as long as your account exists. If you delete your account in the app, your cloud data is deleted. Data on your device stays until you erase it.</p>\n<p><b>Your rights</b><br>You have the right to access, rectification, erasure, restriction, objection and data portability. Send a request to info@realgood.nl. You can also file a complaint with the Dutch Data Protection Authority (Autoriteit Persoonsgegevens).</p>"}, "fr": {"knop": "Déclaration de confidentialité", "titel": "Déclaration de confidentialité", "sluit": "Fermer", "inhoud": "\n<p><i>Projet : faites vérifier ce texte par un juriste avant la mise en ligne de l'application.</i></p>\n<p>Cette déclaration décrit comment Wandel met Mij traite vos données.</p>\n<p><b>Qui est responsable ?</b><br>Stichting RealGood, Grotewallerweg 11, 1742 NM Schagen, Pays-Bas. Contact : info@realgood.nl.</p>\n<p><b>Les données que nous traitons</b></p>\n<ul><li>Compte : votre adresse e-mail et le code de connexion que nous vous envoyons (uniquement si vous vous connectez par e-mail).</li>\n<li>Profil : votre nom, la langue de l'application et, si vous le souhaitez, votre photo.</li>\n<li>Saisies quotidiennes : vos réponses aux questions, le sommeil (oui/non), la rechute et la période.</li>\n<li>Liens : vos codes de liaison et leur type (conjoint ou ami).</li>\n<li>Messages que vous envoyez à un lien, avec l'heure et le texte.</li>\n<li>Pays : à la première utilisation, l'application recherche votre pays via ipapi.co pour proposer une langue.</li></ul>\n<p><b>Ce que voit votre lien</b><br>Un ami ne voit que vos pourcentages et XP, votre niveau et votre photo si vous la montrez. Il ne voit jamais vos réponses. Avec un lien conjugal, vous partagez les questions conjugales communes. Vos notes, surlignages et marque-pages ne sont jamais partagés et restent sur votre appareil.</p>\n<p><b>Pourquoi nous les traitons</b></p>\n<ul><li>Se connecter et gérer votre compte.</li><li>Suivre et afficher votre progression quotidienne.</li><li>Permettre à vos liens de voir votre progression, dans les limites que vous fixez.</li><li>Envoyer des rappels quotidiens depuis votre appareil.</li></ul>\n<p><b>Base juridique</b><br>Consentement (article 6, paragraphe 1, point a RGPD). Pour les données de santé comme le sommeil, l'alimentation, l'activité, la rechute et la période : consentement explicite (article 9, paragraphe 2, point a RGPD).</p>\n<p><b>Destinataires</b></p>\n<ul><li>Google (Firebase) : base de données, connexion, fonctions cloud et hébergement.</li><li>Resend : envoi des codes de connexion par e-mail.</li><li>ipapi.co : détection du pays à la première utilisation.</li></ul>\n<p><b>Durée de conservation</b><br>Données cloud tant que votre compte existe. Si vous supprimez votre compte dans l'application, vos données cloud sont supprimées. Les données sur votre appareil restent jusqu'à ce que vous les effaciez.</p>\n<p><b>Vos droits</b><br>Vous avez le droit d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité. Envoyez votre demande à info@realgood.nl. Vous pouvez aussi introduire une réclamation auprès de l'Autoriteit Persoonsgegevens (autorité néerlandaise de protection des données).</p>"}, "de": {"knop": "Datenschutzerklärung", "titel": "Datenschutzerklärung", "sluit": "Schließen", "inhoud": "\n<p><i>Entwurf: Lassen Sie diesen Text von einem Juristen prüfen, bevor die App live geht.</i></p>\n<p>Diese Erklärung beschreibt, wie Wandel met Mij mit Ihren Daten umgeht.</p>\n<p><b>Wer ist verantwortlich?</b><br>Stichting RealGood, Grotewallerweg 11, 1742 NM Schagen, Niederlande. Kontakt: info@realgood.nl.</p>\n<p><b>Welche Daten wir verarbeiten</b></p>\n<ul><li>Konto: Ihre E-Mail-Adresse und der Anmeldecode, den wir Ihnen senden (nur bei Anmeldung per E-Mail).</li>\n<li>Profil: Ihr Name, Ihre App-Sprache und, falls Sie es wählen, Ihr Foto.</li>\n<li>Tägliche Eingaben: Ihre Antworten auf die Fragen, Schlaf (ja/nein), Rückfall und Periode.</li>\n<li>Verbindungen: Ihre Verbindungscodes und deren Art (Ehepartner oder Freund/in).</li>\n<li>Nachrichten, die Sie an eine Verbindung senden, mit Zeitpunkt und Text.</li>\n<li>Land: Bei der ersten Nutzung ermittelt die App Ihr Land über ipapi.co, um eine Sprache vorzuschlagen.</li></ul>\n<p><b>Was Ihre Verbindung sieht</b><br>Ein Freund oder eine Freundin sieht nur Ihre Prozentwerte und XP, Ihr Level und Ihr Foto, wenn Sie es zeigen. Ihre Antworten sieht man nie. Bei einer Ehepartner-Verbindung teilen Sie die gemeinsamen Ehefragen. Ihre Notizen, Markierungen und Lesezeichen werden nie geteilt und bleiben auf Ihrem Gerät.</p>\n<p><b>Warum wir sie verarbeiten</b></p>\n<ul><li>Anmelden und Ihr Konto verwalten.</li><li>Ihren täglichen Fortschritt verfolgen und anzeigen.</li><li>Ihren Verbindungen Ihren Fortschritt zeigen, im Rahmen der von Ihnen gesetzten Grenzen.</li><li>Tägliche Erinnerungen von Ihrem eigenen Gerät senden.</li></ul>\n<p><b>Rechtsgrundlage</b><br>Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Für Gesundheitsdaten wie Schlaf, Ernährung, Bewegung, Rückfall und Periode: ausdrückliche Einwilligung (Art. 9 Abs. 2 lit. a DSGVO).</p>\n<p><b>Empfänger</b></p>\n<ul><li>Google (Firebase): Datenbank, Anmeldung, Cloud-Funktionen und Hosting.</li><li>Resend: Versand der Anmeldecodes per E-Mail.</li><li>ipapi.co: Länderermittlung bei der ersten Nutzung.</li></ul>\n<p><b>Speicherdauer</b><br>Cloud-Daten, solange Ihr Konto besteht. Wenn Sie Ihr Konto in der App löschen, werden Ihre Cloud-Daten gelöscht. Daten auf Ihrem Gerät bleiben, bis Sie sie löschen.</p>\n<p><b>Ihre Rechte</b><br>Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch und Datenübertragbarkeit. Senden Sie Ihre Anfrage an info@realgood.nl. Sie können sich auch bei der niederländischen Datenschutzbehörde (Autoriteit Persoonsgegevens) beschweren.</p>"}, "es": {"knop": "Declaración de privacidad", "titel": "Declaración de privacidad", "sluit": "Cerrar", "inhoud": "\n<p><i>Borrador: pida a un abogado que revise este texto antes de publicar la aplicación.</i></p>\n<p>Esta declaración describe cómo Wandel met Mij trata tus datos.</p>\n<p><b>¿Quién es responsable?</b><br>Stichting RealGood, Grotewallerweg 11, 1742 NM Schagen, Países Bajos. Contacto: info@realgood.nl.</p>\n<p><b>Qué datos tratamos</b></p>\n<ul><li>Cuenta: tu correo electrónico y el código de acceso que te enviamos (solo si inicias sesión por correo).</li>\n<li>Perfil: tu nombre, el idioma de la app y, si lo eliges, tu foto.</li>\n<li>Registros diarios: tus respuestas a las preguntas, sueño (sí/no), recaída y periodo.</li>\n<li>Conexiones: tus códigos de conexión y su tipo (pareja o amigo/a).</li>\n<li>Mensajes que envías a una conexión, con hora y texto.</li>\n<li>País: en el primer uso, la app busca tu país con ipapi.co para sugerir un idioma.</li></ul>\n<p><b>Lo que ve tu conexión</b><br>Un amigo o amiga solo ve tus porcentajes y XP, tu nivel y tu foto si la muestras. Nunca ve tus respuestas. Con una conexión de pareja compartís las preguntas de pareja. Tus notas, marcas y marcadores nunca se comparten y se quedan en tu dispositivo.</p>\n<p><b>Por qué los tratamos</b></p>\n<ul><li>Iniciar sesión y gestionar tu cuenta.</li><li>Llevar y mostrar tu progreso diario.</li><li>Que tus conexiones vean tu progreso, dentro de los límites que tú fijas.</li><li>Enviar recordatorios diarios desde tu propio dispositivo.</li></ul>\n<p><b>Base jurídica</b><br>Consentimiento (artículo 6, apartado 1, letra a RGPD). Para datos de salud como sueño, alimentación, ejercicio, recaída y periodo: consentimiento explícito (artículo 9, apartado 2, letra a RGPD).</p>\n<p><b>Destinatarios</b></p>\n<ul><li>Google (Firebase): base de datos, inicio de sesión, funciones en la nube y alojamiento.</li><li>Resend: envío de códigos de acceso por correo.</li><li>ipapi.co: detección del país en el primer uso.</li></ul>\n<p><b>Conservación</b><br>Datos en la nube mientras exista tu cuenta. Si eliminas tu cuenta en la app, tus datos en la nube se borran. Los datos en tu dispositivo se quedan hasta que los borres.</p>\n<p><b>Tus derechos</b><br>Tienes derecho de acceso, rectificación, supresión, limitación, oposición y portabilidad. Envía tu solicitud a info@realgood.nl. También puedes presentar una reclamación ante la Autoriteit Persoonsgegevens (autoridad neerlandesa de protección de datos).</p>"}};
+function openPrivacy(){
+  const t = PRIVACY_TEKST[huidigtaal] || PRIVACY_TEKST.nl;
+  document.getElementById('priv-titel').textContent = t.titel;
+  document.getElementById('priv-tekst').innerHTML = t.inhoud;
+  document.getElementById('priv-ok').textContent = t.sluit;
+  document.getElementById('privacy-overlay').classList.add('open');
+}
+function sluitPrivacy(){ document.getElementById('privacy-overlay').classList.remove('open'); }
+function toestemmingVraag(taal){
+  const t = TOEST_TEKST[taal] || TOEST_TEKST.nl;
+  document.getElementById('toest-titel').textContent = t.titel;
+  document.getElementById('toest-tekst').textContent = t.tekst;
+  const pv = PRIVACY_TEKST[taal] || PRIVACY_TEKST.nl;
+  document.getElementById('toest-priv').innerHTML = `<button class="instel-knop" type="button" onclick="openPrivacy()"><i class="ti ti-shield-lock"></i> ${pv.knop}</button>`;
+  document.getElementById('toest-vinktekst').textContent = t.vink;
+  document.getElementById('toest-ok').textContent = t.knop;
+  document.getElementById('toest-err').textContent = '';
+  document.getElementById('toest-vink').checked = false;
+  document.getElementById('toestemming-overlay').classList.add('open');
+}
+function toestemmingBevestig(){
+  const t = TOEST_TEKST[huidigtaal] || TOEST_TEKST.nl;
+  if (!document.getElementById('toest-vink').checked) { document.getElementById('toest-err').textContent = t.fout; return; }
+  try { localStorage.setItem('wmm_toestemming', JSON.stringify({ versie: '1', tijd: new Date().toISOString() })); } catch {}
+  document.getElementById('toestemming-overlay').classList.remove('open');
+}
 const LAND_TAAL = {
   NL:'nl',BE:'nl',SR:'nl',AW:'nl',CW:'nl',SX:'nl',
   GB:'en',US:'en',AU:'en',CA:'en',NZ:'en',IE:'en',ZA:'en',IN:'en',SG:'en',NG:'en',
@@ -6340,6 +7211,10 @@ function renderWelcomeTexts(code) {
   if(daysEl)daysEl.textContent='Elke dag een stap vooruit 🙏';
   const kiesEl=document.getElementById('welcome-kies-label');if(kiesEl)kiesEl.textContent=t.welkomKiesTaal||'Kies je taal';
   const startEl=document.getElementById('welcome-stap1-btn');if(startEl)startEl.textContent='Volgende →';
+  const kh=document.getElementById('welcome-koppel-hint');if(kh)kh.textContent=(WELKOM_HINT[code]||WELKOM_HINT.nl);
+  const tt=TOEST_TEKST[code]||TOEST_TEKST.nl;
+  const uit=document.getElementById('welcome-toest-uitleg');if(uit)uit.textContent=tt.tekst;
+  const vink=document.getElementById('welcome-toest-vink');if(vink)vink.textContent=tt.vink;
 }
 function welcomeSelectLang(code,btn) {
   welkomTaal=code;
@@ -6355,14 +7230,22 @@ function welcomeNaarStap2() {
   document.getElementById('welcome-stap2').classList.add('active');
   stelTaalIn(welkomTaal);
 }
+function welcomeInloggen() {
+  // Open de email auth modal — bij succesvolle restore wordt alle data (incl. naam) geladen
+  if (window.EmailAuthUI) {
+    EmailAuthUI.open();
+  } else {
+    alert('Email login is nog niet geladen. Vul je naam in om te beginnen.');
+  }
+}
 function welcomeStart() {
   const naam = (document.getElementById('welcome-naam').value || '').trim();
-  const code = (document.getElementById('welcome-code').value || '').trim();
   const err = document.getElementById('welcome-err');
   if (!naam) { err.textContent = 'Voer je naam in.'; return; }
-  if (!code) { err.textContent = 'Voer een koppelcode in.'; return; }
+  if (!document.getElementById('welcome-toestemming').checked) { err.textContent = (TOEST_TEKST[welkomTaal] || TOEST_TEKST.nl).fout; return; }
+  localStorage.setItem('wmm_toestemming', JSON.stringify({ versie: '1', tijd: new Date().toISOString() }));
   localStorage.setItem('wmm_naam', naam);
-  localStorage.setItem('wmm_koppelcode', code);
+  // Geen verplichte koppelcode meer; later via instellingen toevoegbaar
   // Sla startdatum op als die er nog niet is
   if (!localStorage.getItem('wmm_startdatum')) {
     localStorage.setItem('wmm_startdatum', new Date().toISOString());
@@ -6370,7 +7253,6 @@ function welcomeStart() {
   stelTaalIn(welkomTaal);
   localStorage.setItem('wmm_welcome_done','1');
   document.getElementById('welcome-overlay').classList.add('hidden');
-  if (window.initFirebaseKoppel) window.initFirebaseKoppel(code, naam);
 }
 async function detectLandEnToon() {
   let code='nl';
@@ -6386,7 +7268,7 @@ async function detectLandEnToon() {
 function initWelcome() {
   const done=localStorage.getItem('wmm_welcome_done');
   const overlay=document.getElementById('welcome-overlay');
-  if(done){overlay.classList.add('hidden');return;}
+  if(done){overlay.classList.add('hidden'); if(!toestemmingGegeven()) toestemmingVraag(huidigtaal||'nl'); return;}
   renderWelcomeTexts('nl');
   detectLandEnToon();
 }
@@ -6541,7 +7423,7 @@ function init() {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, getDocs, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 const firebaseConfig = {
   apiKey: "AIzaSyD-1LlsASNy9_YKdQ0-dBByk_PecRHVE-E",
@@ -6589,11 +7471,30 @@ signInAnonymously(auth).catch((e) => {
 
 let _huidigeKoppelCode = null;
 let _mijnNaam = null;
-let _partnerListenerActief = null; // naam van partner waar we nu naar luisteren
+const _actieveListeners = new Set(); // koppel_partner-sleutels waar al naar geluisterd wordt
 
 function vandaagKey() {
   const d = new Date();
   return `wmm_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
+}
+
+// Echtgenoot-velden (e0, e1, eb) en periode (p) gaan alleen naar een echtgenoot-koppeling.
+// Vriend-koppelingen krijgen ze als null, zodat ze nooit de echtgenoot-gegevens zien.
+const ECHT_VELDEN = ['e0', 'e1', 'eb', 'p', '_t_e0', '_t_e1', '_t_eb', '_t_p'];
+function voorKoppel(data, k) {
+  if (!data || typeof data !== 'object') return data;
+  const c = { ...data };
+  // De koppeling krijgt alleen percentages en XP; de losse antwoorden blijven op je toestel
+  if (Object.keys(data).some(x => /^\d$|^l\d$|^doel_/.test(x))) {
+    c.gerPct = pctFromData(data);
+    c.lichPct = lichPctFromData(data);
+    c.xpDag = xpFromData(data);
+  }
+  ['0', '1', '2', '3', 'l0', 'l1', 'l2'].forEach(f => { c[f] = null; });
+  Object.keys(data).filter(f => f.startsWith('doel_')).forEach(f => { c[f] = null; });
+  if (koppelType(k) === 'echt') return c;
+  ECHT_VELDEN.forEach(f => { c[f] = null; });
+  return c;
 }
 
 window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
@@ -6612,8 +7513,16 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
     const koppelRef = collection(db, 'koppels', code, 'gebruikers');
     const mijnRef   = doc(db, 'koppels', code, 'gebruikers', mijnNaam);
     try {
-      await setDoc(mijnRef, {naam: mijnNaam, actief: true, laatstActief: new Date().toISOString()}, {merge: true});
-      window._wmm_koppelStatus.verbonden = true;
+      const apparaat = localStorage.getItem('wmm_apparaat') || (() => { const v = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('wmm_apparaat', v); return v; })();
+      const bestaand = await getDoc(mijnRef);
+      const bezetDoorAnder = bestaand.exists() && bestaand.data().apparaat && bestaand.data().apparaat !== apparaat;
+      if (bezetDoorAnder) {
+        window._wmm_naamBotst = true;
+        window._wmm_koppelStatus.foutmelding = 'Deze naam wordt al door een ander toestel in deze koppeling gebruikt. Start opnieuw met een andere naam.';
+      } else {
+        await setDoc(mijnRef, {naam: mijnNaam, actief: true, laatstActief: new Date().toISOString(), apparaat, foto: (typeof fotoPubliek === 'function' ? fotoPubliek() : null)}, {merge: true});
+        window._wmm_koppelStatus.verbonden = true;
+      }
     } catch(e) {
       window._wmm_koppelStatus.foutmelding = 'Verbindingsfout: ' + e.message;
     }
@@ -6626,8 +7535,9 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
         localStorage.setItem('wmm_partner_naam', partnerNaam);
         window._wmm_koppelStatus.partnerGevonden = true;
         if (window.updateDebugStatus) window.updateDebugStatus();
-        if (_partnerListenerActief !== code + '_' + partnerNaam) {
-          _partnerListenerActief = code + '_' + partnerNaam;
+        const sleutel = code + '_' + partnerNaam;
+        if (!_actieveListeners.has(sleutel)) {
+          _actieveListeners.add(sleutel);
           koppelPartnerListeners(code, partnerNaam);
         }
       });
@@ -6639,9 +7549,10 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
 
   // Sync upload functie — stuurt data naar alle gekoppelde codes
   window.cloudSave = async function(key, data) {
+    if (window._wmm_naamBotst) return;
     const koppels = laadKoppels();
     for (const k of koppels) {
-      try { await setDoc(doc(db,'koppels',k.code,'gebruikers',mijnNaam,'data',key), data, {merge:true}); } catch(e) {}
+      try { await setDoc(doc(db,'koppels',k.code,'gebruikers',mijnNaam,'data',key), voorKoppel(data, k), {merge:true}); } catch(e) {}
     }
   };
   window.cloudSaveTerugval = async function(isTerugval) {
@@ -6666,6 +7577,21 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
   // Bericht sturen: ik schrijf naar MIJN eigen document een lijst van
   // uitgaande berichten. De partner leest die en filtert op berichten na
   // zijn laatst-gelezen tijdstip. Dit past binnen de bestaande security-regels.
+  window.cloudZetFoto = async function(koppelCode, foto) {
+    try {
+      const mijnRef = doc(db, 'koppels', koppelCode, 'gebruikers', mijnNaam);
+      await setDoc(mijnRef, { foto: foto || null }, {merge:true});
+    } catch(e) { console.warn('Foto synchroniseren mislukt:', e); }
+  };
+  // AVG: verwijder jouw eigen gebruikersdocument en de dagdata daaronder uit deze koppel
+  window.cloudVerwijderEigenData = async function(koppelCode) {
+    try {
+      const dagen = await getDocs(collection(db, 'koppels', koppelCode, 'gebruikers', mijnNaam, 'data'));
+      for (const d of dagen.docs) { try { await deleteDoc(d.ref); } catch(e) {} }
+    } catch(e) { console.warn('Dagdata verwijderen mislukt:', e); }
+    try { await deleteDoc(doc(db, 'koppels', koppelCode, 'gebruikers', mijnNaam)); }
+    catch(e) { console.warn('Gebruikersdocument verwijderen mislukt:', e); }
+  };
   window.cloudStuurBericht = async function(koppelCode, bericht) {
     try {
       const mijnRef = doc(db, 'koppels', koppelCode, 'gebruikers', mijnNaam);
@@ -6674,6 +7600,7 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
       // Bewaar max 30 recente berichten
       const nieuw = [...bestaand, bericht].slice(-30);
       await setDoc(mijnRef, { uitgaandeBerichten: nieuw }, {merge:true});
+      if (window.streakIkVerstuurd) window.streakIkVerstuurd(koppelCode, nieuw);
       window._wmm_laatsteBerichtStatus = 'verzonden ✓ (' + new Date().toLocaleTimeString('nl-NL') + ')';
       if (window.updateDebugStatus) window.updateDebugStatus();
       return true;
@@ -6704,7 +7631,7 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
         const d = new Date(now); d.setDate(now.getDate()-i);
         const key = `wmm_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
         const local = JSON.parse(localStorage.getItem(key)||'null');
-        if (local) await setDoc(doc(db,'koppels',code,'gebruikers',mijnNaam,'data',key), local, {merge:true});
+        if (local) await setDoc(doc(db,'koppels',code,'gebruikers',mijnNaam,'data',key), voorKoppel(local, laadKoppels().find(k => k.code === code) || {code}), {merge:true});
       }
     } catch(e) {}
   };
@@ -6730,7 +7657,7 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
       const local = JSON.parse(localStorage.getItem(key)||'null');
       if (local) {
         for (const k of koppelsNu) {
-          try { await setDoc(doc(db,'koppels',k.code,'gebruikers',mijnNaam,'data',key), local, {merge:true}); } catch(e) {}
+          try { await setDoc(doc(db,'koppels',k.code,'gebruikers',mijnNaam,'data',key), voorKoppel(local, k), {merge:true}); } catch(e) {}
         }
         gesync++;
       }
@@ -6738,10 +7665,47 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
     window._wmm_koppelStatus.dagenGesynchroniseerd = gesync;
     if (window.updateDebugStatus) window.updateDebugStatus();
   } catch(e) {}
+
+  // Eenmalig: echt- en periodevelden die eerder naar vriend-koppelingen zijn gestuurd, wissen
+  try {
+    if (!localStorage.getItem('wmm_echt_gewist_v1')) {
+      const vriendKoppels = laadKoppels().filter(k => koppelType(k) !== 'echt');
+      const dagKeys = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!/^wmm_\d{4}_\d+_\d+$/.test(key)) continue;
+        const local = JSON.parse(localStorage.getItem(key) || 'null') || {};
+        if (ECHT_VELDEN.some(f => local[f] !== undefined && local[f] !== null)) dagKeys.push(key);
+      }
+      for (const k of vriendKoppels) {
+        for (const key of dagKeys) {
+          try { await setDoc(doc(db,'koppels',k.code,'gebruikers',mijnNaam,'data',key), voorKoppel({}, k), {merge:true}); } catch(e) {}
+        }
+      }
+      localStorage.setItem('wmm_echt_gewist_v1', '1');
+    }
+  } catch(e) {}
 };
 
 // Live listeners op de partner: profieldocument + huidige week data
 function koppelPartnerListeners(koppelCode, partnerNaam) {
+  if (!window._fotoGesynct) { window._fotoGesynct = true; setTimeout(publiceerFotoNaarKoppels, 1500); }
+  // Echtgenoot: alle dagdata van de partner, voor de echt-grafiek en de periode
+  if (laadKoppels().some(k => k.code === koppelCode && koppelType(k) === 'echt')) {
+    window._echtPartnerNaam = partnerNaam;
+    renderEchtKaart();
+    window._partnerDagen = window._partnerDagen || {};
+    window._partnerDagen[koppelCode] = window._partnerDagen[koppelCode] || {};
+    onSnapshot(collection(db, 'koppels', koppelCode, 'gebruikers', partnerNaam, 'data'), (snap) => {
+      snap.docChanges().forEach(ch => {
+        if (ch.type === 'removed') delete window._partnerDagen[koppelCode][ch.doc.id];
+        else window._partnerDagen[koppelCode][ch.doc.id] = ch.doc.data();
+      });
+      const body = document.getElementById('echt-body');
+      if (body && body.style.display === 'block' && window.renderEchtHistory) renderEchtHistory();
+      if (window.renderVragen) renderVragen(loadDay(todayKey()));
+    }, (err) => console.warn('Echt-data partner mislukt:', err));
+  }
   const partnerDocRef = doc(db, 'koppels', koppelCode, 'gebruikers', partnerNaam);
   const vandaagDocRef = doc(db, 'koppels', koppelCode, 'gebruikers', partnerNaam, 'data', vandaagKey());
 
@@ -6777,6 +7741,9 @@ function koppelPartnerListeners(koppelCode, partnerNaam) {
   let laatsteVandaag = {};
   const weekData = {}; // key -> data
 
+  const gerP = d => (d && typeof d.gerPct === 'number') ? d.gerPct : pctFromData(d || {});
+  const lichP = d => (d && typeof d.lichPct === 'number') ? d.lichPct : lichPctFromData(d || {});
+  const xpP = d => (d && typeof d.xpDag === 'number') ? d.xpDag : xpFromData(d || {});
   function updatePartnerData() {
     const data = laatsteVandaag || {};
     const vragen = ['0','1','2','3'];
@@ -6785,8 +7752,8 @@ function koppelPartnerListeners(koppelCode, partnerNaam) {
     const doelKeys = Object.keys(data).filter(k => k.startsWith('doel_'));
     const doelJa = doelKeys.filter(k => data[k]==='ja').length;
     const bonusPct = doelKeys.length > 0 ? Math.min(30, doelJa * 10) : 0;
-    const pct = Math.min(130, basisPct + bonusPct);
-    const xpVandaag = ja;
+    const pct = gerP(data);
+    const xpVandaag = xpP(data);
     const hasTvVandaag = data['terugval'] === 'ja';
     const hasTvViaProfiel = laatsteProfiel.laatsteTerugvalDag === vandaagKey();
 
@@ -6795,9 +7762,11 @@ function koppelPartnerListeners(koppelCode, partnerNaam) {
       const d = weekData[key] || {};
       const heeftData = Object.keys(d).length > 0;
       const vJa = vragen.filter(k => d[k]==='ja').length;
-      const dagPct = heeftData ? Math.round((vJa/4)*100) : null;
+      const dagPct = heeftData ? gerP(d) : null;
       const isTv = d['terugval'] === 'ja';
-      return { datum, pct: dagPct, isTv, heeftData };
+      return { datum, pct: dagPct, isTv, heeftData,
+        ger: heeftData ? gerP(d) : null,
+        lich: heeftData ? lichP(d) : null };
     });
 
     // Totaal XP en level berekenen uit alle bekende dagen van de partner
@@ -6805,9 +7774,7 @@ function koppelPartnerListeners(koppelCode, partnerNaam) {
     let vroegsteDatumMetData = null;
     Object.entries(alleDagenData).forEach(([key, d]) => {
       if (Object.keys(d).length === 0) return;
-      const vraagXP = Object.entries(d).filter(([k,v]) => !k.startsWith('doel_') && v==='ja').length;
-      const doelXP  = Object.entries(d).filter(([k,v]) => k.startsWith('doel_') && v==='ja').length * 2;
-      totaalXP += vraagXP + doelXP;
+      totaalXP += xpP(d);
       // Datum uit de key herleiden (wmm_JJJJ_M_D) om vroegste dag te bepalen
       const parts = key.split('_');
       if (parts.length >= 4) {
@@ -6836,23 +7803,32 @@ function koppelPartnerListeners(koppelCode, partnerNaam) {
       dagenDoelbewust = Math.max(0, Math.floor((nu - vanafDatum) / 86400000) + 1);
     }
 
+    checkPartnerTerugval(koppelCode, partnerNaam, laatsteProfiel.laatsteTerugvalTijdstip || null);
     window._partnerDataMap[koppelCode] = {
       naam: partnerNaam,
       pct,
       xp: xpVandaag,
+      lichPct: lichP(data),
       totaalXP,
       levelNaam,
       levelIdx,
       vandaagTerugval: hasTvVandaag || hasTvViaProfiel,
       dagenDoelbewust,
       week,
+      foto: laatsteProfiel.foto || null,
     };
     if (window.renderPartner) window.renderPartner();
   }
 
+  getDoc(doc(db, 'koppels', koppelCode, 'gebruikers', _mijnNaam || localStorage.getItem('wmm_naam') || 'Partner')).then(snap => {
+    if (snap.exists() && snap.data().uitgaandeBerichten) window.streakIkVerstuurd(koppelCode, snap.data().uitgaandeBerichten);
+    if (window.renderPartner) renderPartner();
+  }).catch(() => {});
+
   onSnapshot(partnerDocRef, (docSnap) => {
     laatsteProfiel = docSnap.exists() ? docSnap.data() : {};
     updatePartnerData();
+    try { if (window.renderVoortgang) renderVoortgang(); } catch {}
     // Inkomende berichten van deze partner verzamelen
     if (laatsteProfiel.uitgaandeBerichten && window._verzamelBerichten) {
       window._verzamelBerichten(laatsteProfiel.uitgaandeBerichten);
@@ -6930,10 +7906,11 @@ setTimeout(startApp, 3000); // absoluut vangnet: na 3s start de app sowieso
 <!-- Features: login, logout, upgrade anonymous, recovery, polished UI -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <style>
-  /* Modal overlay */
+  /* Modal overlay — fonts match app */
+  .wmm-auth-modal, .wmm-auth-modal * { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
   .wmm-auth-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px; backdrop-filter: blur(4px); }
   .wmm-auth-modal.active { display: flex; }
-  .wmm-auth-content { background: #0c1f31; padding: 32px; border-radius: 16px; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(240,165,0,0.2); position: relative; animation: wmmFadeIn 0.3s ease-out; }
+  .wmm-auth-content { background: #0c1f31; padding: 32px; border-radius: 16px; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(240,165,0,0.2); position: relative; animation: wmmFadeIn 0.3s ease-out; color: #e8f4f8; }
   @keyframes wmmFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
   /* Header */
@@ -6970,13 +7947,15 @@ setTimeout(startApp, 3000); // absoluut vangnet: na 3s start de app sowieso
   .wmm-auth-timer { color: #7ab8d4; font-size: 13px; text-align: center; margin: 8px 0; }
 
   /* Account button (vervangt "Upgrade to Email") */
-  .wmm-account-btn { position: fixed; top: 12px; right: 12px; padding: 8px 14px; border-radius: 20px; border: 1px solid rgba(240,165,0,0.3); background: rgba(12,31,49,0.9); color: #f0a500; font-size: 13px; font-weight: 600; cursor: pointer; z-index: 999; display: flex; align-items: center; gap: 6px; transition: all 0.2s; backdrop-filter: blur(10px); }
+  .wmm-account-btn { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; position: fixed; top: 12px; right: 12px; padding: 8px 14px; border-radius: 20px; border: 1px solid rgba(240,165,0,0.3); background: rgba(12,31,49,0.9); color: #f0a500; font-size: 13px; font-weight: 600; cursor: pointer; z-index: 999; display: flex; align-items: center; gap: 6px; transition: all 0.2s; backdrop-filter: blur(10px); }
+  /* Account-beheer staat in Instellingen, niet meer zwevend op de pagina */
+  #wmmAccountBtn, #wmmAccountDropdown { display: none !important; }
   .wmm-account-btn:hover { background: rgba(12,31,49,1); transform: translateY(-1px); }
   .wmm-account-btn.logged-in { background: rgba(40,167,69,0.15); border-color: rgba(40,167,69,0.4); color: #7fdd92; }
   @media (max-width: 480px) { .wmm-account-btn { top: 8px; right: 8px; font-size: 12px; padding: 6px 12px; } }
 
   /* Account dropdown */
-  .wmm-account-dropdown { position: fixed; top: 50px; right: 12px; background: #0c1f31; border: 1px solid rgba(240,165,0,0.2); border-radius: 10px; padding: 8px; z-index: 999; display: none; min-width: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+  .wmm-account-dropdown { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; position: fixed; top: 50px; right: 12px; background: #0c1f31; border: 1px solid rgba(240,165,0,0.2); border-radius: 10px; padding: 8px; z-index: 999; display: none; min-width: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
   .wmm-account-dropdown.active { display: block; }
   .wmm-account-dropdown-email { padding: 10px 12px; color: #7ab8d4; font-size: 12px; border-bottom: 1px solid rgba(122,184,212,0.1); margin-bottom: 4px; word-break: break-all; }
   .wmm-account-dropdown button { width: 100%; text-align: left; padding: 10px 12px; background: transparent; border: none; color: #e8f4f8; cursor: pointer; border-radius: 6px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
@@ -7009,7 +7988,11 @@ setTimeout(startApp, 3000); // absoluut vangnet: na 3s start de app sowieso
         <small>Check ook je spam-folder.</small>
       </div>
       <label class="wmm-auth-label" for="wmmCode">6-cijferige code</label>
-      <input type="text" id="wmmCode" class="wmm-auth-input code" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
+      <div style="position:relative;">
+        <input type="text" id="wmmCode" class="wmm-auth-input code" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code" style="padding-right:52px;">
+        <button type="button" onclick="EmailAuthUI.plakCode()" title="Plak code uit klembord"
+          style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:#f0a500;color:#0c1f31;border:none;border-radius:6px;padding:6px 10px;font-size:14px;cursor:pointer;font-weight:700;">📋</button>
+      </div>
       <div class="wmm-auth-timer" id="wmmTimer"></div>
       <button class="wmm-auth-button" id="wmmVerifyBtn" onclick="EmailAuthUI.verifyCode()">Verifieer code</button>
       <button class="wmm-auth-button secondary" onclick="EmailAuthUI.resendCode()">Nieuwe code aanvragen</button>
@@ -7151,6 +8134,29 @@ const EmailAuthUI = {
     }
   },
 
+  async plakCode() {
+    try {
+      if (!navigator.clipboard?.readText) {
+        this._showStatus('wmmStep2Status', 'Je browser ondersteunt plakken niet. Type de code handmatig.', 'error');
+        return;
+      }
+      const text = await navigator.clipboard.readText();
+      // Pak de eerste 6 cijfers uit het geplakte stuk
+      const match = text.match(/\d{6}/);
+      if (!match) {
+        this._showStatus('wmmStep2Status', 'Geen 6-cijferige code gevonden in klembord', 'error');
+        return;
+      }
+      const field = document.getElementById('wmmCode');
+      field.value = match[0];
+      this._showStatus('wmmStep2Status', '✅ Code geplakt', 'success');
+      // Automatisch verifiëren na succesvolle plak
+      setTimeout(() => this.verifyCode(), 500);
+    } catch (err) {
+      this._showStatus('wmmStep2Status', 'Kon klembord niet lezen. Type de code handmatig.', 'error');
+    }
+  },
+
   async resendCode() {
     const email = AuthLibrary.getPendingEmail();
     if (!email) {
@@ -7210,12 +8216,10 @@ const EmailAuthUI = {
     }
   },
 
-  logout() {
-    const msg = 'Weet je zeker dat je wilt uitloggen?\n\n' +
-                '✓ Je data blijft op dit toestel\n' +
-                '✓ Je data blijft in de cloud (herstelbaar bij opnieuw inloggen)\n' +
-                '✓ Je blijft doorwerken als anonieme gebruiker';
-    if (!confirm(msg)) return;
+  async logout() {
+    const d = SET_TEKST[huidigtaal] || SET_TEKST.nl;
+    const ok = await vraagBevestiging(d.uitlogTitel, d.uitlogTekst, d.uitloggen, false);
+    if (!ok) return;
 
     // Laatste sync voor uitloggen (voor de zekerheid)
     AuthLibrary.syncToCloud({ force: true }).finally(() => {
@@ -7236,6 +8240,7 @@ const EmailAuthUI = {
 
   // ─── Update button bovenin ────────────────────────────────────
   _updateAccountButton() {
+    if (document.getElementById('instel-overlay')?.classList.contains('open') && window.renderInstellingen) renderInstellingen();
     const btn = document.getElementById('wmmAccountBtn');
     const icon = document.getElementById('wmmAccountIcon');
     const label = document.getElementById('wmmAccountLabel');

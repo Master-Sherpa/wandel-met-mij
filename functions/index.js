@@ -5,6 +5,7 @@ const { Resend } = require('resend');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 admin.initializeApp();
 
@@ -12,6 +13,21 @@ const resendApiKey = defineSecret('RESEND_API_KEY');
 const isEmulator = process.env.FUNCTIONS_EMULATOR === 'true';
 const storageFile = path.join(__dirname, '.firebase-auth-storage.json');
 const corsHandler = cors({ origin: true });
+
+// Sessiegeheim: bij inloggen krijgt de app een geheim; alleen de hash staat op de server.
+function maakSessieGeheim() { return crypto.randomBytes(32).toString('hex'); }
+function hashGeheim(g) { return crypto.createHash('sha256').update(String(g)).digest('hex'); }
+async function controleerSessie(normalizedEmail, geheim) {
+  if (!geheim || typeof geheim !== 'string') return false;
+  const verwacht = hashGeheim(geheim);
+  if (isEmulator) {
+    const st = loadStorage();
+    const acc = st.accounts && st.accounts[normalizedEmail];
+    return !!(acc && acc.sessionHash && acc.sessionHash === verwacht);
+  }
+  const doc = await admin.firestore().collection('accounts').doc(normalizedEmail).get();
+  return doc.exists && doc.data().sessionHash === verwacht;
+}
 
 function loadStorage() {
   try {
@@ -35,26 +51,61 @@ function saveStorage(data) {
 const db = admin.firestore();
 
 function buildEmailHtml(code) {
-  return `
-<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html>
 <head>
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px; }
-    .container { max-width: 500px; margin: 0 auto; background: #0c1f31; border-radius: 12px; padding: 40px; color: #fff; text-align: center; }
-    h1 { color: #f0a500; margin-bottom: 10px; }
-    .code { font-size: 42px; font-weight: bold; letter-spacing: 8px; color: #f0a500; background: rgba(240, 165, 0, 0.1); padding: 20px; border-radius: 8px; margin: 30px 0; }
-    .footer { color: #7ab8d4; font-size: 14px; margin-top: 20px; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jouw inlogcode</title>
 </head>
-<body>
-  <div class="container">
-    <h1>🚶 Wandel met Mij</h1>
-    <p>Je inlogcode:</p>
-    <div class="code">${code}</div>
-    <p>Deze code is 10 minuten geldig.</p>
-    <p class="footer">Deel deze code met niemand.<br>Als je deze email niet verwacht, kun je hem negeren.</p>
-  </div>
+<body style="margin:0; padding:0; background:#0a1e35; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#0a1e35; padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:500px; background:#0c1f31; border-radius:16px; border:1px solid rgba(240,165,0,0.2); overflow:hidden;">
+          <!-- Header -->
+          <tr>
+            <td style="padding:32px 40px 16px; text-align:center;">
+              <h1 style="color:#f0a500; margin:0 0 4px; font-size:24px; font-weight:700;">🚶 Wandel met Mij</h1>
+              <p style="color:#7ab8d4; margin:0; font-size:14px;">Je inlogcode</p>
+            </td>
+          </tr>
+          <!-- Code (makkelijk te selecteren) -->
+          <tr>
+            <td style="padding:12px 40px 24px; text-align:center;">
+              <div style="background:rgba(240,165,0,0.08); border:1px solid rgba(240,165,0,0.3); border-radius:12px; padding:28px 20px;">
+                <div style="font-family:'Courier New',Monaco,monospace; font-size:44px; font-weight:700; letter-spacing:12px; color:#f0a500; user-select:all; -webkit-user-select:all;">${code}</div>
+              </div>
+              <p style="color:#e8f4f8; margin:16px 0 0; font-size:14px;">Tik op de code om te selecteren en kopiëren</p>
+            </td>
+          </tr>
+          <!-- Info -->
+          <tr>
+            <td style="padding:0 40px 32px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="padding:12px 16px; background:rgba(122,184,212,0.08); border-radius:8px; color:#e8f4f8; font-size:13px; line-height:1.6;">
+                    ⏱️ Deze code is <strong>10 minuten geldig</strong>.<br>
+                    🔒 Deel deze code met niemand.<br>
+                    ❓ Niet aangevraagd? Negeer deze mail.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td style="padding:20px 40px; border-top:1px solid rgba(122,184,212,0.1); text-align:center;">
+              <p style="color:#7ab8d4; margin:0; font-size:12px;">
+                Verzonden door <strong style="color:#f0a500;">Wandel met Mij</strong><br>
+                Een project van realgood.nl
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>`;
 }
@@ -164,18 +215,21 @@ exports.verifyCode = functions.https.onRequest((req, res) => {
           saveStorage(storage);
           res.status(400).json({ error: 'Invalid code' }); return;
         }
+        const sessieGeheim = maakSessieGeheim();
         if (storage.accounts[normalizedEmail]) {
+          storage.accounts[normalizedEmail].sessionHash = hashGeheim(sessieGeheim);
           delete storage.codes[normalizedEmail];
           saveStorage(storage);
-          res.json({ success: true, isNewAccount: false, email: normalizedEmail });
+          res.json({ success: true, isNewAccount: false, email: normalizedEmail, sessionSecret: sessieGeheim });
           return;
         }
         storage.accounts[normalizedEmail] = {
-          email: normalizedEmail, createdAt: new Date().toISOString(), status: 'active', linkedAnonymousId: anonymousId || null
+          email: normalizedEmail, createdAt: new Date().toISOString(), status: 'active', linkedAnonymousId: anonymousId || null,
+          sessionHash: hashGeheim(sessieGeheim)
         };
         delete storage.codes[normalizedEmail];
         saveStorage(storage);
-        res.json({ success: true, isNewAccount: true, email: normalizedEmail });
+        res.json({ success: true, isNewAccount: true, email: normalizedEmail, sessionSecret: sessieGeheim });
       } else {
         const codeRef = db.collection('authCodes').doc(normalizedEmail);
         const codeDoc = await codeRef.get();
@@ -192,16 +246,19 @@ exports.verifyCode = functions.https.onRequest((req, res) => {
         }
         const accountRef = db.collection('accounts').doc(normalizedEmail);
         const accountDoc = await accountRef.get();
+        const sessieGeheim = maakSessieGeheim();
         if (accountDoc.exists) {
+          await accountRef.update({ sessionHash: hashGeheim(sessieGeheim) });
           await codeRef.delete();
-          res.json({ success: true, isNewAccount: false, email: normalizedEmail });
+          res.json({ success: true, isNewAccount: false, email: normalizedEmail, sessionSecret: sessieGeheim });
           return;
         }
         await accountRef.set({
-          email: normalizedEmail, createdAt: new Date(), status: 'active', linkedAnonymousId: anonymousId || null
+          email: normalizedEmail, createdAt: new Date(), status: 'active', linkedAnonymousId: anonymousId || null,
+          sessionHash: hashGeheim(sessieGeheim)
         });
         await codeRef.delete();
-        res.json({ success: true, isNewAccount: true, email: normalizedEmail });
+        res.json({ success: true, isNewAccount: true, email: normalizedEmail, sessionSecret: sessieGeheim });
       }
     } catch (error) {
       console.error('verifyCode error:', error);
@@ -250,7 +307,7 @@ exports.syncData = functions.https.onRequest((req, res) => {
     if (req.method === 'OPTIONS') { res.status(200).send(''); return; }
     if (req.method !== 'POST') { res.status(400).json({ error: 'POST required' }); return; }
 
-    const { email, storage } = req.body;
+    const { email, storage, sessionSecret } = req.body;
     if (!email) { res.status(400).json({ error: 'Email required' }); return; }
     if (!storage || typeof storage !== 'object') {
       res.status(400).json({ error: 'storage object required' }); return;
@@ -260,6 +317,9 @@ exports.syncData = functions.https.onRequest((req, res) => {
     const now = Date.now();
 
     try {
+      if (!(await controleerSessie(normalizedEmail, sessionSecret))) {
+        res.status(401).json({ error: 'Session invalid. Login again.' }); return;
+      }
       // Size check - prevent abuse (1 MB limit for safety)
       const storageJson = JSON.stringify(storage);
       if (storageJson.length > 900000) {
@@ -323,11 +383,14 @@ exports.restoreData = functions.https.onRequest((req, res) => {
     if (req.method === 'OPTIONS') { res.status(200).send(''); return; }
     if (req.method !== 'POST') { res.status(400).json({ error: 'POST required' }); return; }
 
-    const { email } = req.body;
+    const { email, sessionSecret } = req.body;
     if (!email) { res.status(400).json({ error: 'Email required' }); return; }
     const normalizedEmail = email.toLowerCase().trim();
 
     try {
+      if (!(await controleerSessie(normalizedEmail, sessionSecret))) {
+        res.status(401).json({ error: 'Session invalid. Login again.' }); return;
+      }
       if (isEmulator) {
         const fileStorage = loadStorage();
         if (!fileStorage.accounts[normalizedEmail]) {
@@ -370,6 +433,68 @@ exports.restoreData = functions.https.onRequest((req, res) => {
       }
     } catch (error) {
       console.error('restoreData error:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════
+// deleteAccount - verwijdert het e-mailaccount en alle cloudgegevens (AVG)
+// POST { email, code }. De 6-cijferige code uit de mail is het bewijs
+// dat de eigenaar van het adres dit vraagt. Zonder geldige code gebeurt niets.
+// ═══════════════════════════════════════════════════════════════
+exports.deleteAccount = functions.https.onRequest((req, res) => {
+  corsHandler(req, res, async () => {
+    if (req.method === 'OPTIONS') { res.status(200).send(''); return; }
+    if (req.method !== 'POST') { res.status(400).json({ error: 'POST required' }); return; }
+
+    const { email, code } = req.body || {};
+    if (!email || !code) { res.status(400).json({ error: 'Email and code required' }); return; }
+    const normalizedEmail = String(email).toLowerCase().trim();
+    const codeInput = String(code).trim();
+
+    try {
+      if (isEmulator) {
+        const storage = loadStorage();
+        const codeData = storage.codes[normalizedEmail];
+        if (!codeData || codeData.expiresAt < Date.now()) {
+          res.status(400).json({ error: 'Code expired or missing' }); return;
+        }
+        if (codeData.attempts >= 5) { res.status(429).json({ error: 'Too many attempts' }); return; }
+        if (codeData.code !== codeInput) {
+          codeData.attempts++;
+          saveStorage(storage);
+          res.status(400).json({ error: 'Invalid code' }); return;
+        }
+        delete storage.accounts[normalizedEmail];
+        if (storage.syncData) delete storage.syncData[normalizedEmail];
+        delete storage.codes[normalizedEmail];
+        saveStorage(storage);
+        res.json({ success: true });
+        return;
+      }
+
+      const codeRef = db.collection('authCodes').doc(normalizedEmail);
+      const codeDoc = await codeRef.get();
+      if (!codeDoc.exists) { res.status(400).json({ error: 'Code expired or missing' }); return; }
+      const codeData = codeDoc.data();
+      if (codeData.expiresAt < Date.now()) {
+        await codeRef.delete();
+        res.status(400).json({ error: 'Code expired' }); return;
+      }
+      if (codeData.attempts >= 5) { res.status(429).json({ error: 'Too many attempts' }); return; }
+      if (codeData.code !== codeInput) {
+        await codeRef.update({ attempts: codeData.attempts + 1 });
+        res.status(400).json({ error: 'Invalid code' }); return;
+      }
+
+      // Account + alle subcollecties (data/storage met de volledige lokale back-up)
+      await db.recursiveDelete(db.collection('accounts').doc(normalizedEmail));
+      await codeRef.delete();
+      console.log(`[PRODUCTION] Account deleted for ${normalizedEmail}`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error('deleteAccount error:', error);
       res.status(500).json({ error: error.message });
     }
   });
