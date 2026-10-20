@@ -570,6 +570,92 @@
     .bat-track{height:10px;background:#0a1e35;border-radius:999px;overflow:hidden;margin:2px 0 10px;}
     .bat-fill{height:100%;border-radius:999px;transition:width .3s;}
 
+    /* ── BORSTPLAAT (Exodus 28) ── */
+    .borstplaat-card { background: linear-gradient(160deg,#0d2d4a,#0a2238); border-radius:14px; border:0.5px solid #1a3f5c; padding:18px; margin-bottom:20px; display:none; }
+
+    /* Verticaal meegroeiend venster: 1 rij bij 1-3 stenen, 2 bij 4-6, enz. */
+    .borstplaat-venster { position:relative; border-radius:12px; border:3px solid #c9a94a;
+      box-shadow:0 0 0 2px #8a6d2a, inset 0 2px 12px rgba(0,0,0,0.2); overflow:hidden; }
+    .borstplaat-grid-scroll { overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch;
+      transition:max-height 0.6s cubic-bezier(.4,0,.2,1); padding:14px 10px; }
+    .borstplaat-grid-scroll::-webkit-scrollbar { width:5px; }
+    .borstplaat-grid-scroll::-webkit-scrollbar-track { background:rgba(0,0,0,0.12); border-radius:10px; }
+    .borstplaat-grid-scroll::-webkit-scrollbar-thumb { background:#8a6d2a; border-radius:10px; }
+    .borstplaat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px 8px; }
+    /* --rij = hoogte van één rij (steen + marge + naam) */
+    .borstplaat-grid-scroll { --rij:124px; max-height:calc(1 * var(--rij) + 28px); }
+    .borstplaat-grid-scroll.rijen-2 { max-height:calc(2 * var(--rij) + 28px); }
+    .borstplaat-grid-scroll.rijen-3 { max-height:calc(3 * var(--rij) + 28px); }
+    .borstplaat-grid-scroll.rijen-4 { max-height:calc(4 * var(--rij) + 28px); }
+
+    /* Vouwschaduw onderaan, verdwijnt als alles zichtbaar is */
+    .borstplaat-vouw { position:absolute; left:0; right:0; bottom:0; height:38px; pointer-events:none;
+      background:linear-gradient(transparent, rgba(40,32,16,0.45)); transition:opacity .35s; }
+    .borstplaat-grid-scroll.rijen-4 + .borstplaat-vouw { opacity:0; }
+    .borstplaat-hint { text-align:center; font-size:10px; color:#7ab8d4; margin-top:8px;
+      display:flex; align-items:center; justify-content:center; gap:4px; }
+
+    /* Reeks-regel onderaan, overgenomen van de (nu verborgen) sleutelhangers */
+    .borstplaat-reeks { font-size:11px; color:#7ab8d4; line-height:1.5; text-align:center;
+      margin-top:12px; padding-top:12px; border-top:1px solid rgba(122,184,212,0.18); }
+    .borstplaat-reeks:empty { display:none; }
+
+    /* Schakelaar: meegroeiend venster (deels) of de hele borstplaat ineens */
+    .bp-kop { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .bp-schakel { display:inline-flex; background:#0a1c30; border:1px solid #1a3f5c;
+      border-radius:999px; padding:2px; gap:2px; flex-shrink:0; }
+    .bp-schakel-knop { border:none; background:none; color:#7ab8d4; font-family:inherit;
+      font-size:10px; font-weight:600; letter-spacing:0.02em; padding:5px 11px; min-height:28px;
+      border-radius:999px; cursor:pointer; transition:background .2s, color .2s; }
+    .bp-schakel-knop.actief { background:#f0a500; color:#0a2238; }
+
+    .borstplaat-steen { display:flex; flex-direction:column; align-items:center; text-align:center; }
+    .borstplaat-steen.vervaagd { opacity:0.38; }
+    .borstplaat-steen.vervaagd .bp-flip { filter:grayscale(0.35); }
+    /* De eerstvolgende steen blijft leesbaar: de ring telt daar af */
+    .borstplaat-steen.volgende { opacity:0.72; }
+    .borstplaat-steen.volgende .bp-flip { filter:grayscale(0.15); }
+
+    .bp-flip { width:82px; height:82px; perspective:600px; cursor:pointer; margin-bottom:9px; position:relative; }
+    .bp-flip-inner { position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d; }
+    .bp-flip.geflipt .bp-flip-inner { transform:rotateY(180deg); }
+    .bp-face { position:absolute; top:0; left:0; width:82px; height:82px;
+      -webkit-backface-visibility:hidden; backface-visibility:hidden;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      border-radius:8px; overflow:hidden; }
+    .bp-front { z-index:2; border:3px solid; box-shadow:inset 0 3px 10px rgba(0,0,0,0.35),0 2px 6px rgba(0,0,0,0.3); }
+    .bp-front::after { content:''; position:absolute; inset:5px; border-radius:6px; border:1px solid rgba(255,255,255,0.2); }
+    .bp-glans { position:absolute; top:9px; left:20px; width:26px; height:16px; border-radius:50%;
+      background:rgba(255,255,255,0.28); filter:blur(3px); transform:rotate(-25deg); }
+    .bp-back { transform:rotateY(180deg); background:#0a1626; border:2px solid #1a3f5c; padding:7px; z-index:1; }
+    .bp-back-tekst { width:100%; font-size:7.5px; line-height:1.35; color:#f0e8d0; font-style:italic; text-align:center; overflow:hidden; }
+    .bp-tijd { font-size:18px; font-weight:700; line-height:1; }
+    .bp-tijd-lbl { font-size:8px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; margin-top:1px; opacity:0.9; }
+    .bp-kern { font-size:8px; font-style:italic; margin-top:2px; opacity:0.95; }
+    /* Steennaam: donkerblauw van de app, leest rustig op het linnen */
+    .bp-steen-naam { font-size:9px; font-weight:700; color:#0a2238; letter-spacing:0.02em; line-height:1.2; }
+    /* Aftelling: zelfde blauw als de steennaam, maar kleiner en lichter,
+       zodat de naam het label blijft en dit de bijregel. */
+    .bp-dagen-resterend { font-size:7px; font-weight:500; color:#0a2238; opacity:0.72; margin-top:2px; letter-spacing:0.01em; }
+    /* Behaald-vinkje: bolling door de radiale verloop + glans erboven,
+       en een zachte halo die langzaam ademt zodat hij "aan" staat. */
+    .bp-check { position:absolute; bottom:-3px; right:-3px; width:21px; height:21px; border-radius:50%;
+      background:radial-gradient(circle at 35% 28%, #6fd8a4, #3d9170 55%, #1d5c44);
+      /* Doorzichtige ring: padding-box houdt de groene vulling binnen de rand,
+         anders schijnt het groen er doorheen in plaats van het linnen eronder. */
+      background-clip:padding-box;
+      border:2px solid rgba(255,255,255,0.42); display:flex; align-items:center; justify-content:center;
+      color:#fff; font-size:11px; z-index:10; text-shadow:0 1px 2px rgba(0,0,0,0.35);
+      box-shadow:0 0 6px rgba(45,122,90,0.5), inset 0 1px 2px rgba(255,255,255,0.4), inset 0 -2px 3px rgba(0,0,0,0.3); }
+    .bp-check::before { content:''; position:absolute; inset:-4px; border-radius:50%; z-index:-1;
+      background:radial-gradient(circle, rgba(61,145,112,0.5), rgba(61,145,112,0) 70%);
+      animation:vinkGloed 3.2s ease-in-out infinite; }
+    @keyframes vinkGloed { 0%,100%{opacity:0.25;transform:scale(0.96);} 50%{opacity:0.6;transform:scale(1.06);} }
+    @media (prefers-reduced-motion: reduce) { .bp-check::before, .badge-check::before { animation:none; opacity:0.7; } }
+    .bp-lock { position:absolute; bottom:-3px; right:-3px; width:21px; height:21px; border-radius:50%;
+      background:#1a3f5c; border:2px solid #e8e2d4; display:flex; align-items:center; justify-content:center;
+      color:#7ab8d4; font-size:10px; z-index:10; }
+
     /* ── SLEUTELHANGERS (edelstenen badges) ── */
     .sleutel-scroll{display:flex;gap:16px;overflow-x:auto;padding:6px 2px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;}
     .sleutel-scroll::-webkit-scrollbar{height:5px;}
@@ -586,7 +672,8 @@
     .badge-kern{font-size:8px;font-style:italic;margin-top:2px;opacity:0.95;z-index:1;}
     .sleutel-steen{font-size:9px;color:#c8a400;font-weight:600;margin-bottom:2px;letter-spacing:0.03em;}
     .sleutel-vers{font-size:9px;color:#7ab8d4;line-height:1.35;font-style:italic;padding:0 2px;}
-    .badge-check{position:absolute;bottom:-3px;right:-3px;width:21px;height:21px;border-radius:50%;background:#4fa882;border:2px solid #0a2238;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;z-index:10;}
+    .badge-check{position:absolute;bottom:-3px;right:-3px;width:21px;height:21px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#6fd8a4,#3d9170 55%,#1d5c44);background-clip:padding-box;border:2px solid rgba(255,255,255,0.42);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;z-index:10;text-shadow:0 1px 2px rgba(0,0,0,0.35);box-shadow:0 0 6px rgba(45,122,90,0.5),inset 0 1px 2px rgba(255,255,255,0.4),inset 0 -2px 3px rgba(0,0,0,0.3);}
+    .badge-check::before{content:'';position:absolute;inset:-4px;border-radius:50%;z-index:-1;background:radial-gradient(circle,rgba(61,145,112,0.5),rgba(61,145,112,0) 70%);animation:vinkGloed 3.2s ease-in-out infinite;}
     .badge-lock{position:absolute;bottom:-3px;right:-3px;width:21px;height:21px;border-radius:50%;background:#1a3f5c;border:2px solid #0a2238;display:flex;align-items:center;justify-content:center;color:#7ab8d4;font-size:10px;z-index:10;}
 
     /* ── FLIP BADGE ── */
@@ -843,6 +930,14 @@
       <div class="progress-wrap"><div class="progress-bar" id="xp-bar" style="width:0%"></div></div>
       <div class="progress-labels"><span id="xp-next-label"></span><span id="xp-next-val"></span></div>
     </div>
+    <div class="card">
+      <div class="card-label"><i class="ti ti-trending-up"></i> <span id="gem-label">Gemiddeld</span></div>
+      <div class="avg-row">
+        <div class="avg-box"><div class="avg-num" id="avg-pct">–</div><div class="avg-lbl" id="avg-lbl-bat">Gem. batterij</div></div>
+        <div class="avg-box"><div class="avg-num" id="streak-count">0</div><div class="avg-lbl" id="avg-lbl-days">Sereen en doelbewust</div></div>
+        <div class="avg-box"><div class="avg-num" id="best-day">–</div><div class="avg-lbl" id="avg-lbl-best">Beste dag</div></div>
+      </div>
+    </div>
     <!-- SLEUTELHANGERS -->
     <div class="card" id="sleutelhangers-card">
       <div class="card-label" style="display:flex;align-items:center;justify-content:space-between;">
@@ -853,14 +948,30 @@
       <div id="sleutelhangers-scroll" class="sleutel-scroll"></div>
       <div id="sleutelhangers-sub" style="font-size:11px;color:#7ab8d4;line-height:1.5;margin-top:2px;"></div>
     </div>
-    <div class="card">
-      <div class="card-label"><i class="ti ti-trending-up"></i> <span id="gem-label">Gemiddeld</span></div>
-      <div class="avg-row">
-        <div class="avg-box"><div class="avg-num" id="avg-pct">–</div><div class="avg-lbl" id="avg-lbl-bat">Gem. batterij</div></div>
-        <div class="avg-box"><div class="avg-num" id="streak-count">0</div><div class="avg-lbl" id="avg-lbl-days">Sereen en doelbewust</div></div>
-        <div class="avg-box"><div class="avg-num" id="best-day">–</div><div class="avg-lbl" id="avg-lbl-best">Beste dag</div></div>
+
+    <!-- BORSTPLAAT SECTIE: Square stones with flip -->
+    <div class="borstplaat-card" id="borstplaat-card">
+      <div class="bp-kop">
+        <div>
+          <div style="font-size:16px;font-weight:700;color:#e8f4f8;display:flex;align-items:center;gap:10px;margin-bottom:6px;"><i class="ti ti-diamond" style="color:#f0a500;"></i> Mijn borstplaat</div>
+          <div style="font-size:11px;color:#7ab8d4;line-height:1.5;">Naar de borstplaat van de hogepriester — Exodus 28</div>
+        </div>
+        <div class="bp-schakel" role="group" aria-label="Weergave borstplaat">
+          <button type="button" class="bp-schakel-knop" id="bp-knop-deels" onclick="zetBorstplaatWeergave('deels')">Deels</button>
+          <button type="button" class="bp-schakel-knop" id="bp-knop-volledig" onclick="zetBorstplaatWeergave('volledig')">Volledig</button>
+        </div>
       </div>
+      <div style="height:16px;"></div>
+      <div class="borstplaat-venster">
+        <div class="borstplaat-grid-scroll" id="borstplaat-grid-scroll">
+          <div class="borstplaat-grid" id="borstplaat-grid"></div>
+        </div>
+        <div class="borstplaat-vouw"></div>
+      </div>
+      <div class="borstplaat-hint" id="borstplaat-hint"><i class="ti ti-chevron-down"></i> Scroll voor de stenen die nog komen</div>
+      <div class="borstplaat-reeks" id="borstplaat-reeks"></div>
     </div>
+
     <div class="card">
       <div class="card-label"><i class="ti ti-calendar"></i> <span id="week-label">Alle weken</span></div>
       <div id="week-history-list" class="week-history-scroll"></div>
@@ -2370,6 +2481,28 @@ function clearTerugval() {
   if (window.cloudSaveTerugval) window.cloudSaveTerugval(false);
   renderTerugval();
 }
+// ── HOOGSTE REEKS OOIT ───────────────────────────────────────
+// Stond eerder in renderSleutelhangers(), waardoor je piek alleen werd
+// vastgelegd als je het Voortgang-tabblad opende. Nu hangt het aan
+// getDagenDoelbewust(), die vanuit de hele app wordt aangeroepen.
+// De waarde wordt in het geheugen gehouden zodat niet elke aanroep
+// localStorage hoeft aan te raken.
+let _hoogsteReeks = null;
+function hoogsteReeksOoit() {
+  if (_hoogsteReeks === null) {
+    try { _hoogsteReeks = parseInt(localStorage.getItem('wmm_hoogste_reeks') || '0', 10) || 0; }
+    catch { _hoogsteReeks = 0; }
+  }
+  return _hoogsteReeks;
+}
+function onthoudHoogsteReeks(dagen) {
+  if (dagen > hoogsteReeksOoit()) {
+    _hoogsteReeks = dagen;
+    try { localStorage.setItem('wmm_hoogste_reeks', String(dagen)); } catch {}
+  }
+  return dagen;
+}
+
 function getDagenDoelbewust() {
   // Startdatum = eerste gebruik van de app (opgeslagen bij welcomeStart)
   const startDatumStr = localStorage.getItem('wmm_startdatum');
@@ -2386,10 +2519,14 @@ function getDagenDoelbewust() {
     }
   }
   const now = new Date();
-  return Math.max(0, Math.floor((now - vanafDatum) / 86400000) + 1);
+  return onthoudHoogsteReeks(Math.max(0, Math.floor((now - vanafDatum) / 86400000) + 1));
 }
 
 // ── SLEUTELHANGERS (edelstenen mijlpalen) ────────────────────
+// Sleutelhangers tijdelijk verborgen. Zet op true om ze weer te tonen;
+// de kaart en alle code blijven gewoon staan, alleen de weergave is uit.
+const TOON_SLEUTELHANGERS = false;
+
 // Elke mijlpaal: dagen, label, tijd-getal, tijd-eenheid, kernwoord, steen, vers, kleuren
 const SLEUTELHANGERS = [
   {dagen:1,    tijd:'1',  eenheid:'dag',   kern:'Rein',       steen:'Wit linnen', achter:'"Al waren uw zonden als scharlaken, zij zullen wit worden als sneeuw" — Jesaja 1:18', grad:['#ffffff','#c8d0d8'], border:'#ffffff', txt:'#3a4a5a'},
@@ -2424,18 +2561,195 @@ function alleSleutelhangers() {
   return lijst;
 }
 
+// ──────────────────────────────
+// BORSTPLAAT - 12 stenen (Exodus 28)
+// Gevoed door SLEUTELHANGERS zodat drempels,
+// kernwoorden, verzen en kleuren nooit uiteenlopen.
+// ──────────────────────────────
+
+const BP_INDEXEN = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13];
+const BP_PER_RIJ = 3;
+
+function bpStenen() {
+  return BP_INDEXEN.map(i => SLEUTELHANGERS[i]).filter(Boolean);
+}
+
+// Vierkante voortgangsring om de eerstvolgende steen.
+// Zelfde idee als de ring op de sleutelhangers, maar dan als
+// afgeronde rechthoek zodat hij de vorm van de steen volgt.
+function bpRing(pct) {
+  const w = 82, r = 10, x = 4;
+  const omtrek = 2 * (w + w) - 8 * r + 2 * Math.PI * r;
+  const offset = omtrek * (1 - pct / 100);
+  return `<svg width="90" height="90" viewBox="0 0 90 90"
+     style="position:absolute;top:-4px;left:-4px;pointer-events:none;z-index:5;">
+    <rect x="${x}" y="${x}" width="${w}" height="${w}" rx="${r}" fill="none" stroke="#1a3f5c" stroke-width="3"/>
+    <rect x="${x}" y="${x}" width="${w}" height="${w}" rx="${r}" fill="none" stroke="#f0a500" stroke-width="3"
+      stroke-linecap="round" stroke-dasharray="${omtrek.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"
+      transform="rotate(-90 45 45)" style="transition:stroke-dashoffset .6s;"/>
+  </svg>`;
+}
+
+function renderBorstplaat() {
+  const grid = document.getElementById('borstplaat-grid');
+  if (!grid) return;
+  const dagen = getDagenDoelbewust();
+  const stenen = bpStenen();
+  const behaaldAantal = stenen.filter(s => dagen >= s.dagen).length;
+  // De ring hoort bij de mijlpaal die in dagen het eerst komt, niet bij de
+  // eerstvolgende in het raster: de volgorde (1 dag, 40 dgn, 1 mnd) loopt niet op.
+  // Zo telt hij hetzelfde af als de ring op de sleutelhangers.
+  let volgendeIdx = -1;
+  stenen.forEach((s, i) => {
+    if (dagen < s.dagen && (volgendeIdx === -1 || s.dagen < stenen[volgendeIdx].dagen)) volgendeIdx = i;
+  });
+  // Waar de ring vandaan vertrekt: de hoogste al behaalde mijlpaal.
+  const vorigeDrempel = stenen.reduce((m, s) => (dagen >= s.dagen && s.dagen > m ? s.dagen : m), 0);
+
+  grid.innerHTML = stenen.map((s, i) => {
+    const behaald = dagen >= s.dagen;
+    const isVolgende = i === volgendeIdx;
+    const eenheid = s.eenheid === 'dag' ? 'dag'
+                  : s.eenheid === 'dagen' ? 'dgn'
+                  : s.eenheid === 'maand' ? 'mnd'
+                  : s.eenheid === 'jaar' ? 'jaar' : s.eenheid;
+
+    // Ring + aftelling op de eerstvolgende steen
+    let ring = '', onder = '';
+    if (isVolgende) {
+      const nodig = s.dagen - vorigeDrempel;
+      const gehaald = Math.max(0, dagen - vorigeDrempel);
+      ring = bpRing(Math.max(0, Math.min(100, Math.round(gehaald / nodig * 100))));
+      const rest = s.dagen - dagen;
+      onder = `<div class="bp-dagen-resterend">nog ${rest} ${rest === 1 ? 'dag' : 'dagen'}</div>`;
+    }
+
+    const klasse = behaald ? '' : (isVolgende ? ' volgende' : ' vervaagd');
+
+    return `
+      <div class="borstplaat-steen${klasse}">
+        <div class="bp-flip" id="bpflip-${i}">
+          ${ring}
+          <div class="bp-flip-inner">
+            <div class="bp-face bp-front" style="background:radial-gradient(circle at 40% 35%,${s.grad[0]},${s.grad[1]});border-color:${s.border};color:${s.txt};">
+              <div class="bp-glans"></div>
+              <div class="bp-tijd">${s.tijd}</div>
+              <div class="bp-tijd-lbl">${eenheid}</div>
+              <div class="bp-kern">${s.kern}</div>
+            </div>
+            <div class="bp-face bp-back"><div class="bp-back-tekst">${s.achter}</div></div>
+          </div>
+          <div class="${behaald ? 'bp-check' : 'bp-lock'}"><i class="ti ti-${behaald ? 'check' : 'lock'}"></i></div>
+        </div>
+        <div class="bp-steen-naam">${s.steen}</div>
+        ${onder}
+      </div>`;
+  }).join('');
+
+  stenen.forEach((_, i) => {
+    const flip = document.getElementById('bpflip-' + i);
+    if (flip) flip.addEventListener('click', function (e) {
+      e.stopPropagation();
+      this.classList.toggle('geflipt');
+    });
+  });
+
+  return behaaldAantal;
+}
+
+// Weergave: 'deels' (venster groeit mee) of 'volledig' (hele borstplaat).
+// localStorage werkt niet op file:// , dus de keuze leeft primair in het geheugen
+// en wordt alleen bewaard als de opslag beschikbaar is.
+function bpWeergave() {
+  if (window._bpWeergave) return window._bpWeergave;
+  try {
+    const v = localStorage.getItem('wmm_bp_weergave');
+    if (v === 'volledig' || v === 'deels') return (window._bpWeergave = v);
+  } catch {}
+  return 'deels';
+}
+function zetBorstplaatWeergave(modus) {
+  window._bpWeergave = modus === 'volledig' ? 'volledig' : 'deels';
+  try { localStorage.setItem('wmm_bp_weergave', window._bpWeergave); } catch {}
+  updateBorstplaatColors();
+}
+window.zetBorstplaatWeergave = zetBorstplaatWeergave;
+
+function updateBorstplaatColors() {
+  const card = document.getElementById('borstplaat-card');
+  if (!card) return;
+  const dagen = getDagenDoelbewust();
+  const stenen = bpStenen();
+  const behaald = stenen.filter(s => dagen >= s.dagen).length;
+
+  card.style.display = dagen > 0 ? 'block' : 'none';
+  renderBorstplaat();
+
+  // Het venster groeit mee: 1 rij bij 1-3 stenen, 2 bij 4-6, 3 bij 7-9, 4 bij 10-12.
+  // Op "volledig" staat de hele borstplaat open, los van wat er behaald is.
+  const volledig = bpWeergave() === 'volledig';
+  const scroll = document.getElementById('borstplaat-grid-scroll');
+  const rijen = volledig ? 4 : Math.min(4, Math.max(1, Math.ceil(behaald / BP_PER_RIJ)));
+  const knopD = document.getElementById('bp-knop-deels');
+  const knopV = document.getElementById('bp-knop-volledig');
+  if (knopD) knopD.classList.toggle('actief', !volledig);
+  if (knopV) knopV.classList.toggle('actief', volledig);
+  if (scroll) {
+    scroll.classList.remove('rijen-2', 'rijen-3', 'rijen-4');
+    if (rijen > 1) scroll.classList.add('rijen-' + rijen);
+
+    // Draden: goud, blauw, purper en scharlaken komen geleidelijk op
+    const lagen = [];
+    const f = behaald / stenen.length;
+    lagen.push(`repeating-linear-gradient(90deg, rgba(201,169,74,${(f*0.5).toFixed(3)}) 0 1px, transparent 1px 5px)`);
+    if (behaald >= 4)  lagen.push(`repeating-linear-gradient(90deg, rgba(58,106,208,${(Math.min((behaald-3)/5,1)*0.35).toFixed(3)}) 2px 3px, transparent 3px 9px)`);
+    if (behaald >= 7)  lagen.push(`repeating-linear-gradient(90deg, rgba(160,58,106,${(Math.min((behaald-6)/4,1)*0.30).toFixed(3)}) 5px 6px, transparent 6px 12px)`);
+    if (behaald >= 10) lagen.push(`repeating-linear-gradient(90deg, rgba(224,90,80,${(Math.min((behaald-9)/3,1)*0.30).toFixed(3)}) 8px 9px, transparent 9px 14px)`);
+    lagen.push('linear-gradient(#e8e2d4, #d8d0bc)');
+    scroll.style.backgroundImage = lagen.join(', ');
+  }
+
+  const hint = document.getElementById('borstplaat-hint');
+  if (hint) hint.style.display = rijen >= 4 ? 'none' : 'flex';
+
+  // Eigen regel, in termen van de borstplaat zelf. Niet overgenomen van de
+  // sleutelhangers: die spreken over vervaagde badges, wat hier niets betekent.
+  const reeksEl = document.getElementById('borstplaat-reeks');
+  if (reeksEl) {
+    const totaal = stenen.length;
+    const vet = t => `<b style="color:#e8f4f8;">${t}</b>`;
+    const dagTxt = `${dagen} ${dagen === 1 ? 'dag' : 'dagen'}`;
+    // Hoogste reeks ooit -> hoeveel stenen stonden er toen? Zo kunnen we na een
+    // terugval laten zien hoe ver de borstplaat al was.
+    const h = hoogsteReeksOoit();
+    const ooitStenen = stenen.filter(s => h >= s.dagen).length;
+
+    if (behaald === 0) {
+      reeksEl.innerHTML = 'Het linnen wacht op je eerste steen.';
+    } else if (behaald >= totaal) {
+      reeksEl.innerHTML = `${vet('Alle ' + totaal + ' stenen')} gezet \u2014 je borstplaat is compleet, na ${dagTxt}`;
+    } else {
+      let tekst = `Huidige reeks: ${vet(dagTxt)} \u2014 ${vet(behaald + ' van de ' + totaal)} stenen gezet`;
+      if (ooitStenen > behaald) tekst += ` \u00b7 eerder stond je op ${ooitStenen}`;
+      reeksEl.innerHTML = tekst;
+    }
+  }
+
+}
+window.updateBorstplaatColors = updateBorstplaatColors;
+
 function renderSleutelhangers() {
   const scroll = document.getElementById('sleutelhangers-scroll');
   const sub = document.getElementById('sleutelhangers-sub');
   if (!scroll) return;
 
+  // De kaart blijft bestaan en wordt gewoon gevuld; alleen verborgen.
+  const slKaart = document.getElementById('sleutelhangers-card');
+  if (slKaart) slKaart.style.display = TOON_SLEUTELHANGERS ? '' : 'none';
+
   const huidigeDagen = getDagenDoelbewust();
-  // Hoogste ooit behaalde reeks bijhouden (voor vervaagde herinnering na terugval)
-  let hoogsteOoit = parseInt(localStorage.getItem('wmm_hoogste_reeks') || '0');
-  if (huidigeDagen > hoogsteOoit) {
-    hoogsteOoit = huidigeDagen;
-    localStorage.setItem('wmm_hoogste_reeks', String(hoogsteOoit));
-  }
+  // Bijhouden gebeurt in getDagenDoelbewust(); hier alleen uitlezen.
+  const hoogsteOoit = hoogsteReeksOoit();
 
   const alle = alleSleutelhangers();
   const behaald = alle.filter(s => huidigeDagen >= s.dagen).sort((a,b) => b.dagen - a.dagen);
@@ -2546,6 +2860,8 @@ function renderSleutelhangers() {
       sub.innerHTML = `Huidige reeks: <b style="color:#e8f4f8;">${huidigeDagen} ${huidigeDagen===1?'dag':'dagen'} sereen en doelbewust</b>`;
     }
   }
+
+  updateBorstplaatColors();
 }
 window.renderSleutelhangers = renderSleutelhangers;
 
@@ -2677,7 +2993,7 @@ function renderEchtKaart() {
 }
 
 // ── KLEUR, GLOED EN STAVEN ───────────────────────────────────
-const BAT_RGB = {ger:'240,165,0', lich:'122,184,212', echt:'200,162,255', laag:'231,76,60'};
+const BAT_RGB = {ger:'240,165,0', lich:'122,184,212', echt:'200,162,255', laag:'231,76,60', terugval:'192,57,43'};
 // Kleur wordt feller én gloeiender naarmate het percentage stijgt
 function glowStijl(v, schaal, rgb) {
   const f = Math.min(1, Math.max(0, (v || 0) / schaal));
@@ -2701,8 +3017,13 @@ function bcWeekHTML(dagen, schaal, reeksen, ticks) {
     const staven = reeksen.map(r => {
       const v = dag.waarden[r.key];
       if (v === null || v === undefined) return '<div class="bc-bar" style="height:2px;background:#1a3f5c;"></div>';
-      const kleur = v < 35 ? BAT_RGB.laag : r.rgb;
-      return `<div class="bc-bar" style="height:${Math.max(2, pos(v))}px;${glowStijl(v, schaal, kleur)}"><span>${Math.round(v)}</span></div>`;
+      // Terugvaldag: staven volledig rood, los van de batterijstand.
+      // Niet via glowStijl, want die laat de dekking met de hoogte meelopen,
+      // waardoor een lage staaf vaagrood zou worden in plaats van rood.
+      const stijl = dag.isTv
+        ? `background:rgba(${BAT_RGB.terugval},1);box-shadow:0 0 8px rgba(${BAT_RGB.terugval},0.65);`
+        : glowStijl(v, schaal, v < 35 ? BAT_RGB.laag : r.rgb);
+      return `<div class="bc-bar" style="height:${Math.max(2, pos(v))}px;${stijl}"><span>${Math.round(v)}</span></div>`;
     }).join('');
     return `<div class="bc-day"><div class="bc-bars">${staven}</div><div class="bc-lbl${dag.isTv ? ' tv' : ''}">${dag.naam}</div></div>`;
   }).join('');
