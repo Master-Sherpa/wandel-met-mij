@@ -2871,7 +2871,10 @@ function updateBorstplaatColors() {
       if (vanX !== null && (Math.abs(e.clientX - vanX) > 5 || Math.abs(e.clientY - vanY) > 5)) geveegd = true;
     });
     linnen.addEventListener('click', e => {
-      if (e.target.closest('#borstplaat-grid-scroll, #bp-orakel')) return;
+      // Alleen het stenenvenster is uitgesloten: daar wil je scrollen.
+      // De bovenband met Urim en Tummim draait de plaat wel om; de ovalen
+      // zelf vangen hun tik al af met stopPropagation.
+      if (e.target.closest('#borstplaat-grid-scroll')) return;
       if (geveegd) return;
       plaat.classList.toggle('geflipt');
     });
