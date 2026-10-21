@@ -2842,22 +2842,39 @@ function updateBorstplaatColors() {
     const dagTxt = `${dagen} ${dagen === 1 ? 'dag' : 'dagen'}`;
     const h = hoogsteReeksOoit();
     const ooitStenen = stenen.filter(s => h >= s.dagen).length;
+    // Hoever je ooit kwam. h is nooit lager dan de huidige reeks, dus
+    // alleen tonen als er echt een hogere stand is geweest.
+    const record = h > dagen
+      ? ` · je langste reeks was ${h} ${h === 1 ? 'dag' : 'dagen'}`
+        + (ooitStenen > 0 ? ` (${ooitStenen} ${ooitStenen === 1 ? 'steen' : 'stenen'})` : '')
+      : '';
     if (behaald === 0) {
-      reeksEl.innerHTML = `Huidige reeks: ${vet(dagTxt)} — het linnen is gelegd`;
+      reeksEl.innerHTML = `Huidige reeks: ${vet(dagTxt)} — het linnen is gelegd` + record;
     } else if (behaald >= totaal) {
       reeksEl.innerHTML = `${vet('Alle ' + totaal + ' stenen')} gezet — je borstplaat is compleet, na ${dagTxt}`;
     } else {
-      let tekst = `Huidige reeks: ${vet(dagTxt)} — ${vet(behaald + ' van de ' + totaal)} stenen gezet`;
-      if (ooitStenen > behaald) tekst += ` · eerder stond je op ${ooitStenen}`;
-      reeksEl.innerHTML = tekst;
+      reeksEl.innerHTML = `Huidige reeks: ${vet(dagTxt)} — ${vet(behaald + ' van de ' + totaal)} stenen gezet` + record;
     }
   }
 
-  // Klik op het linnen draait de hele plaat om.
+  // Tik op de linnen rand draait de hele plaat om. Twee voorwaarden, allebei
+  // nodig om scrollen niet te breken:
+  //  1. niet binnen het stenenvenster of de ovalen - daar wil je scrollen en flippen;
+  //  2. geen veeg: een gebaar onder de tikdrempel van de browser telt als klik,
+  //     dus een korte scrollpoging draaide de plaat anders om.
   const plaat = document.getElementById('bp-plaat');
   if (linnen && plaat && !linnen._flipSetup) {
     linnen._flipSetup = true;
-    linnen.addEventListener('click', () => plaat.classList.toggle('geflipt'));
+    let vanX = null, vanY = null, geveegd = false;
+    linnen.addEventListener('pointerdown', e => { vanX = e.clientX; vanY = e.clientY; geveegd = false; });
+    linnen.addEventListener('pointermove', e => {
+      if (vanX !== null && (Math.abs(e.clientX - vanX) > 5 || Math.abs(e.clientY - vanY) > 5)) geveegd = true;
+    });
+    linnen.addEventListener('click', e => {
+      if (e.target.closest('#borstplaat-grid-scroll, #bp-orakel')) return;
+      if (geveegd) return;
+      plaat.classList.toggle('geflipt');
+    });
     const achterkant = document.getElementById('bp-achter');
     if (achterkant) achterkant.addEventListener('click', () => plaat.classList.remove('geflipt'));
   }
