@@ -575,12 +575,20 @@
 
     /* De plaat kan als geheel omdraaien (klik op het linnen) */
     .bp-plaat { position:relative; perspective:1400px; }
-    .bp-plaat-inner { position:relative; transition:transform .6s cubic-bezier(.4,0,.2,1); transform-style:preserve-3d; }
+    /* De 3D-laag staat alleen aan tijdens en na het draaien. In rust is er
+       geen 3D-context, want een scrollbaar vak daarbinnen laat zich op
+       mobiele browsers niet met de vinger scrollen. */
+    .bp-plaat-inner { position:relative; transition:transform .6s cubic-bezier(.4,0,.2,1); }
+    .bp-plaat.in3d .bp-plaat-inner { transform-style:preserve-3d; }
     .bp-plaat.geflipt .bp-plaat-inner { transform:rotateY(180deg); }
     .bp-zijde { -webkit-backface-visibility:hidden; backface-visibility:hidden; border-radius:12px;
       border:3px solid #c9a94a; box-shadow:0 0 0 2px #8a6d2a, inset 0 2px 12px rgba(0,0,0,0.2); }
     /* Achterkant: de ongebleekte stof zelf. Twee kruisende strepenpatronen
        geven het weefsel, met een zachte schaduw in de hoeken zodat het doek lijkt. */
+    /* Zonder 3D-context verbergt backface-visibility de achterkant niet,
+       dus in rust halen we hem met visibility weg. */
+    .bp-achter { visibility:hidden; }
+    .bp-plaat.in3d .bp-achter { visibility:visible; }
     .bp-achter { position:absolute; inset:0; transform:rotateY(180deg); display:flex;
       align-items:center; justify-content:center; padding:26px;
       background-color:#f8f5ee;
@@ -634,7 +642,7 @@
     .bp-ovaal-wrap.vervaagd { opacity:0.3; }
 
     /* Venster met de twaalf stenen */
-    .borstplaat-grid-scroll { overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch;
+    .borstplaat-grid-scroll { overflow-y:auto; overflow-x:hidden;
       /* pan-y claimt de verticale veeg expliciet voor dit venster, contain
          voorkomt dat de pagina de beweging overneemt zodra je onderaan bent. */
       touch-action:pan-y; overscroll-behavior:contain;
@@ -2873,15 +2881,33 @@ function updateBorstplaatColors() {
     linnen.addEventListener('pointermove', e => {
       if (vanX !== null && (Math.abs(e.clientX - vanX) > 5 || Math.abs(e.clientY - vanY) > 5)) geveegd = true;
     });
+    // De 3D-laag pas aanzetten op het moment dat je draait, en weer uit
+    // zodra de plaat terug is. Anders kun je het stenenvenster op een
+    // telefoon niet scrollen.
+    const draai = naarAchter => {
+      const inner = plaat.querySelector('.bp-plaat-inner');
+      if (naarAchter) {
+        plaat.classList.add('in3d');
+        requestAnimationFrame(() => plaat.classList.add('geflipt'));
+      } else {
+        plaat.classList.remove('geflipt');
+        const klaar = () => {
+          plaat.classList.remove('in3d');
+          if (inner) inner.removeEventListener('transitionend', klaar);
+        };
+        if (inner) inner.addEventListener('transitionend', klaar);
+        setTimeout(klaar, 800);   // vangnet als transitionend uitblijft
+      }
+    };
     linnen.addEventListener('click', e => {
       // Overal op het linnen draait de plaat om, ook achter de stenen.
       // Alleen een veeg niet: die is bedoeld om te scrollen. Stenen en
       // ovalen vangen hun eigen tik al af met stopPropagation.
       if (geveegd) return;
-      plaat.classList.toggle('geflipt');
+      draai(!plaat.classList.contains('geflipt'));
     });
     const achterkant = document.getElementById('bp-achter');
-    if (achterkant) achterkant.addEventListener('click', () => plaat.classList.remove('geflipt'));
+    if (achterkant) achterkant.addEventListener('click', () => draai(false));
   }
 }
 window.updateBorstplaatColors = updateBorstplaatColors;
