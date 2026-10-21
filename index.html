@@ -635,6 +635,9 @@
 
     /* Venster met de twaalf stenen */
     .borstplaat-grid-scroll { overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch;
+      /* pan-y claimt de verticale veeg expliciet voor dit venster, contain
+         voorkomt dat de pagina de beweging overneemt zodra je onderaan bent. */
+      touch-action:pan-y; overscroll-behavior:contain;
       transition:max-height 0.6s cubic-bezier(.4,0,.2,1); padding:2px 0 4px; background:transparent; }
     .borstplaat-grid-scroll::-webkit-scrollbar { width:5px; }
     .borstplaat-grid-scroll::-webkit-scrollbar-track { background:rgba(0,0,0,0.10); border-radius:10px; }
@@ -2871,10 +2874,9 @@ function updateBorstplaatColors() {
       if (vanX !== null && (Math.abs(e.clientX - vanX) > 5 || Math.abs(e.clientY - vanY) > 5)) geveegd = true;
     });
     linnen.addEventListener('click', e => {
-      // Alleen het stenenvenster is uitgesloten: daar wil je scrollen.
-      // De bovenband met Urim en Tummim draait de plaat wel om; de ovalen
-      // zelf vangen hun tik al af met stopPropagation.
-      if (e.target.closest('#borstplaat-grid-scroll')) return;
+      // Overal op het linnen draait de plaat om, ook achter de stenen.
+      // Alleen een veeg niet: die is bedoeld om te scrollen. Stenen en
+      // ovalen vangen hun eigen tik al af met stopPropagation.
       if (geveegd) return;
       plaat.classList.toggle('geflipt');
     });
