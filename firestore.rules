@@ -70,8 +70,23 @@ service cloud.firestore {
 
     // ── KOPPELINGEN ───────────────────────────────────────────
     match /koppels/{koppelCode} {
-      // Het koppeldocument zelf gebruikt de app niet.
-      allow read, write: if false;
+      // Het koppeldocument bevat precies één veld: `gestart`, de datum waarop
+      // deze koppeling in de app is gemaakt. Daar beginnen de gezamenlijke
+      // grafieken. De datum mag alleen naar VROEGER worden bijgesteld, nooit
+      // naar later: zo kan een nieuwe telefoon of een herkoppeling de
+      // geschiedenis niet per ongeluk afkappen, en kan niemand hem oprekken.
+      allow get: if isLid(koppelCode);
+      allow list: if false;
+      allow create: if isLid(koppelCode)
+                    && request.resource.data.keys().hasOnly(['gestart'])
+                    && request.resource.data.gestart is string
+                    && request.resource.data.gestart.size() <= 40;
+      allow update: if isLid(koppelCode)
+                    && request.resource.data.keys().hasOnly(['gestart'])
+                    && request.resource.data.gestart is string
+                    && request.resource.data.gestart.size() <= 40
+                    && request.resource.data.gestart < resource.data.gestart;
+      allow delete: if false;
 
       // Lidmaatschap: je komt alleen bij je eigen document, en de ledenlijst
       // is niet op te vragen. Niemand kan dus zien wie er in een koppeling

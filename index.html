@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-10-23 01:05 -->
+<!-- WMM-BUILD: 2026-10-23 01:40 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -881,7 +881,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-10-23 01:05";</script>
+<script>window.WMM_BUILD = "2026-10-23 01:40";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -3758,7 +3758,33 @@ function renderWeekHistory() {
 // Echtgenoot-voortgang: staven (schaal 150%) + periode-curve
 // Echtgenoot-voortgang per week: jouw blokjes en die van je echtgenoot (alleen bij een echtgenoot-koppeling)
 function echtKoppelCode(){ const k = laadKoppels().find(k => koppelType(k) === 'echt'); return k ? k.code : null; }
-function echtPartnerDag(key){ const code = echtKoppelCode(); const m = code && window._partnerDagen && window._partnerDagen[code]; return (m && m[key]) || null; }
+// Startdatum van een koppeling, uit het geheugen of anders uit de opslag.
+// Alles van voor deze dag hoort niet bij de gezamenlijke geschiedenis.
+function koppelStart(code){
+  if (!code) return null;
+  const uitGeheugen = window._koppelStart && window._koppelStart[code];
+  if (uitGeheugen) return uitGeheugen;
+  try { return localStorage.getItem('wmm_koppelstart_' + code) || null; } catch { return null; }
+}
+// Datum van een dagsleutel (wmm_2026_9_23) als Date, of null.
+function dagUitKey(key){
+  const p = String(key||'').split('_');
+  if (p.length < 4) return null;
+  const d = new Date(parseInt(p[1]), parseInt(p[2]), parseInt(p[3]));
+  return isNaN(d) ? null : d;
+}
+// Valt deze dag op of na de koppeldatum? Zonder bekende datum: ja, tonen.
+function naKoppeling(code, key){
+  const start = koppelStart(code);
+  if (!start) return true;
+  const d = dagUitKey(key), s = new Date(start);
+  if (!d || isNaN(s)) return true;
+  s.setHours(0,0,0,0);
+  return d >= s;
+}
+function echtPartnerDag(key){ const code = echtKoppelCode();
+  if (!naKoppeling(code, key)) return null;
+  const m = code && window._partnerDagen && window._partnerDagen[code]; return (m && m[key]) || null; }
 // Gezamenlijke batterij: een vraag telt als ja zodra een van beiden hem met ja beantwoordt
 // Het laatst gegeven antwoord (ja of nee) geldt voor beiden
 function echtKies(k, eigen, partner) {
@@ -3802,6 +3828,9 @@ function renderEchtHistory() {
         waarden: {echt: toonEcht && h ? echtPctFromData(m, prevEb) : null}});
     }
     if (wi !== 0 && !heeftData) return;
+    // Weken die helemaal voor de koppeling liggen horen niet in de
+    // gezamenlijke geschiedenis, ook al heb jij er zelf gegevens staan.
+    if (!naKoppeling(echtKoppelCode(), dayKey(zondag))) return;
     getoond++;
     const blok = document.createElement('div');
     blok.className = 'week-hist-block' + (wi === 0 ? ' huidige-week' : '');
@@ -8617,6 +8646,38 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
   if (window.updateDebugStatus) window.updateDebugStatus();
 
   // Initialiseer één koppelcode (herbruikbaar voor meerdere codes)
+  // De startdatum van een koppeling: de dag waarop hij in de app is gemaakt.
+  // Hij staat bij de koppeling zelf in Firestore, zodat beide partners dezelfde
+  // datum zien en hij een nieuwe telefoon of herinstallatie overleeft.
+  // Hij mag alleen naar vroeger verschuiven, nooit naar later.
+  async function bepaalKoppelStart(code) {
+    window._koppelStart = window._koppelStart || {};
+    const lokaal = (laadKoppels().find(k => k.code === code) || {}).aangemaakt || null;
+    const ref = doc(db, 'koppels', code);
+    try {
+      const snap = await getDoc(ref);
+      const inCloud = snap.exists() ? (snap.data().gestart || null) : null;
+      if (!inCloud) {
+        // Nog niet vastgelegd: neem de datum uit je eigen koppellijst, niet
+        // vandaag. Zo krijgt een koppeling die al bestond de juiste dag.
+        const start = lokaal || new Date().toISOString();
+        try { await setDoc(ref, {gestart: start}); } catch(e) {}
+        window._koppelStart[code] = start;
+      } else if (lokaal && lokaal < inCloud) {
+        // Jouw kant weet een vroegere datum: corrigeer naar voren.
+        try { await setDoc(ref, {gestart: lokaal}); } catch(e) {}
+        window._koppelStart[code] = lokaal;
+      } else {
+        window._koppelStart[code] = inCloud;
+      }
+    } catch(e) {
+      window._koppelStart[code] = lokaal;   // offline of geen rechten: val terug
+    }
+    try { localStorage.setItem('wmm_koppelstart_' + code, window._koppelStart[code] || ''); } catch {}
+    if (window.renderEchtHistory) { try { renderEchtHistory(); } catch {} }
+    if (window.renderPartner) { try { renderPartner(); } catch {} }
+  }
+
   async function initEenKoppel(code) {
     const koppelRef = collection(db, 'koppels', code, 'gebruikers');
     const mijnRef   = doc(db, 'koppels', code, 'gebruikers', mijnNaam);
@@ -8632,10 +8693,16 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
       // tegenhouden, dus een mislukking hier is geen fout.
       if (uid) {
         try {
-          await setDoc(doc(db, 'koppels', code, 'leden', uid),
-            {naam: mijnNaam, sinds: new Date().toISOString()}, {merge: true});
+          const lidRef = doc(db, 'koppels', code, 'leden', uid);
+          const lid = await getDoc(lidRef);
+          // `sinds` alleen bij het aanmaken zetten, anders zou het bij elke
+          // start van de app opschuiven en "laatst geopend" gaan betekenen.
+          const velden = {naam: mijnNaam};
+          if (!lid.exists()) velden.sinds = new Date().toISOString();
+          await setDoc(lidRef, velden, {merge: true});
         } catch(e) { /* oude regels: lidmaatschap nog niet toegestaan */ }
       }
+      await bepaalKoppelStart(code);
       const bestaand = await getDoc(mijnRef);
       const d = bestaand.exists() ? bestaand.data() : null;
       // Een naam is bezet als een andere gebruiker hem heeft geclaimd. Voor
@@ -8762,15 +8829,14 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
   // Koppel nieuwe code aanmaken vanuit de UI
   window.koppelAanNieuweCode = async function(code) {
     await initEenKoppel(code);
-    // Sync eigen data ook naar nieuwe code
+    // Alleen de dag van vandaag meesturen. Eerder werden hier 90 dagen
+    // geschiedenis geupload, waardoor een verse koppeling meteen maanden
+    // "gedeelde" gegevens had die van voor de koppeling stamden.
     try {
-      const now = new Date();
-      for (let i=0; i<90; i++) {
-        const d = new Date(now); d.setDate(now.getDate()-i);
-        const key = `wmm_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
-        const local = JSON.parse(localStorage.getItem(key)||'null');
-        if (local) await setDoc(doc(db,'koppels',code,'gebruikers',mijnNaam,'data',key), voorKoppel(local, laadKoppels().find(k => k.code === code) || {code}), {merge:true});
-      }
+      const key = vandaagKey();
+      const local = JSON.parse(localStorage.getItem(key)||'null');
+      if (local) await setDoc(doc(db,'koppels',code,'gebruikers',mijnNaam,'data',key),
+        voorKoppel(local, laadKoppels().find(k => k.code === code) || {code}), {merge:true});
     } catch(e) {}
   };
 
@@ -8897,7 +8963,8 @@ function koppelPartnerListeners(koppelCode, partnerNaam) {
 
     // Week-overzicht samenstellen
     const week = weekKeys.map(({key, datum}) => {
-      const d = weekData[key] || {};
+      // Dagen van voor de koppeling tellen niet mee als gedeelde geschiedenis.
+      const d = naKoppeling(koppelCode, key) ? (weekData[key] || {}) : {};
       const heeftData = Object.keys(d).length > 0;
       const vJa = vragen.filter(k => d[k]==='ja').length;
       const dagPct = heeftData ? gerP(d) : null;
