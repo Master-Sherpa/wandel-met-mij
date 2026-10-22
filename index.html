@@ -610,10 +610,18 @@
       text-shadow:0 1px 2px rgba(0,0,0,0.35);
       box-shadow:0 0 6px rgba(45,122,90,0.5), inset 0 1px 2px rgba(255,255,255,0.4); }
     .bp-linnen.behaald .bp-linnen-vink { display:flex; }
+    /* Naamkaartje van het linnen: dit is de mijlpaal van dag 1. Gecentreerd
+       boven Urim en Tummim, met ruimte opzij voor het vinkje — zo kan het in
+       geen enkele taal tegen iets aan lopen. */
+    .bp-linnen-label { text-align:center; margin:1px 28px 2px; font-size:8px; line-height:1.4; }
+    .bp-linnen-label .nm { display:inline; font-size:8px; font-weight:700; color:#0a2238;
+      letter-spacing:0.02em; }
+    .bp-linnen-label .kn { display:inline; font-size:8px; color:#0a2238; opacity:0.72; }
+    .bp-linnen-label .kn::before { content:'\00a0\00b7\00a0'; opacity:0.6; }
+    .bp-linnen:not(.behaald) .bp-linnen-label { opacity:0.42; }
 
     /* Urim en Tummim */
     .bp-orakel { display:flex; justify-content:center; gap:20px; padding:6px 0 12px; min-height:4px; }
-    .bp-orakel:empty { display:none; }
     .bp-ovaal-wrap { display:flex; flex-direction:column; align-items:center; }
     .bp-ovaal-flip { width:76px; height:60px; perspective:500px; cursor:pointer; position:relative; }
     .bp-ovaal-inner { position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d; }
@@ -992,6 +1000,7 @@
           <div class="bp-zijde" id="bp-voor">
             <div class="bp-linnen" id="bp-linnen" title="Tik op het linnen voor de tekst">
               <div class="bp-linnen-vink"><i class="ti ti-check"></i></div>
+              <div class="bp-linnen-label" id="bp-linnen-label"></div>
               <div class="bp-orakel" id="bp-orakel"></div>
               <div class="borstplaat-grid-scroll" id="borstplaat-grid-scroll">
                 <div class="borstplaat-grid" id="borstplaat-grid"></div>
@@ -2620,11 +2629,12 @@ const BP_TAAL = {
    "vanDe": "van de",
    "stenenGezet": "stenen gezet",
    "alle": "Alle",
-   "compleet": "stenen gezet — je borstplaat is compleet, na",
+   "compleet": "gezet — je borstplaat is compleet, na",
    "langste": "je langste reeks was",
    "nog": "nog",
    "dag": "dag",
    "dagen": "dagen",
+   "dagenNa": "dagen",
    "steenEnk": "steen",
    "steenMv": "stenen",
    "eDag": "dag",
@@ -2738,11 +2748,12 @@ const BP_TAAL = {
    "vanDe": "of",
    "stenenGezet": "stones set",
    "alle": "All",
-   "compleet": "stones set — your breastplate is complete, after",
+   "compleet": "set — your breastplate is complete, after",
    "langste": "your longest streak was",
    "nog": "still",
    "dag": "day",
    "dagen": "days",
+   "dagenNa": "days",
    "steenEnk": "stone",
    "steenMv": "stones",
    "eDag": "day",
@@ -2856,11 +2867,12 @@ const BP_TAAL = {
    "vanDe": "sur",
    "stenenGezet": "pierres posées",
    "alle": "Toutes les",
-   "compleet": "pierres posées — votre pectoral est complet, après",
+   "compleet": "posées — votre pectoral est complet, après",
    "langste": "ta plus longue série était de",
    "nog": "encore",
    "dag": "jour",
    "dagen": "jours",
+   "dagenNa": "jours",
    "steenEnk": "pierre",
    "steenMv": "pierres",
    "eDag": "jour",
@@ -2974,11 +2986,12 @@ const BP_TAAL = {
    "vanDe": "von",
    "stenenGezet": "Steine gesetzt",
    "alle": "Alle",
-   "compleet": "Steine gesetzt — dein Brustschild ist vollständig, nach",
+   "compleet": "gesetzt — dein Brustschild ist vollständig, nach",
    "langste": "deine längste Serie war",
    "nog": "noch",
    "dag": "Tag",
    "dagen": "Tage",
+   "dagenNa": "Tagen",
    "steenEnk": "Stein",
    "steenMv": "Steine",
    "eDag": "Tag",
@@ -3092,11 +3105,12 @@ const BP_TAAL = {
    "vanDe": "de",
    "stenenGezet": "piedras colocadas",
    "alle": "Todas las",
-   "compleet": "piedras colocadas — tu pectoral está completo, tras",
+   "compleet": "colocadas — tu pectoral está completo, tras",
    "langste": "tu racha más larga fue de",
    "nog": "aún",
    "dag": "día",
    "dagen": "días",
+   "dagenNa": "días",
    "steenEnk": "piedra",
    "steenMv": "piedras",
    "eDag": "día",
@@ -3270,7 +3284,6 @@ function renderOrakel(dagen) {
   rij.innerHTML = BP_ORAKEL.map((o0, i) => {
     const o = Object.assign({}, o0, to[i]);
     const behaald = dagen >= o.dagen;
-    if (!behaald && dagen < 2) return '';
     return `
       <div class="bp-ovaal-wrap${behaald ? '' : ' vervaagd'}">
         <div class="bp-ovaal-flip" id="bporakel-${i}">
@@ -3423,6 +3436,8 @@ function updateBorstplaatColors() {
   const kD = document.getElementById('bp-knop-deels'), kV = document.getElementById('bp-knop-volledig');
   if (kD) kD.textContent = ui.deels;
   if (kV) kV.textContent = ui.volledig;
+  const lin = bpT().linnen, linLabel = document.getElementById('bp-linnen-label');
+  if (linLabel) linLabel.innerHTML = `<div class="nm">${lin.naam}</div><div class="kn">${lin.kern}</div>`;
 
   // Achterkant van de hele plaat
   const achter = document.getElementById('bp-achter-tekst');
@@ -3446,7 +3461,7 @@ function updateBorstplaatColors() {
     if (behaald === 0) {
       reeksEl.innerHTML = `${u.reeks}: ${vet(dagTxt)} — ${u.linnenGelegd}` + record;
     } else if (behaald >= totaal) {
-      reeksEl.innerHTML = `${vet(u.alle + ' ' + totaal + ' ' + u.steenMv)} ${u.compleet} ${dagTxt}`;
+      reeksEl.innerHTML = `${vet(u.alle + ' ' + totaal + ' ' + u.steenMv)} ${u.compleet} ${dagen} ${dagen === 1 ? u.dag : u.dagenNa}`;
     } else {
       reeksEl.innerHTML = `${u.reeks}: ${vet(dagTxt)} — ${vet(behaald + ' ' + u.vanDe + ' ' + totaal)} ${u.stenenGezet}` + record;
     }
@@ -8200,20 +8215,12 @@ function welcomeNaarStap2() {
   stelTaalIn(welkomTaal);
 }
 function welcomeInloggen() {
-  // Open de email auth modal — wacht tot EmailAuthUI geladen is (max 3s)
-  let tries = 0;
-  const maxTries = 30;
-  const tryOpen = () => {
-    if (window.EmailAuthUI && typeof window.EmailAuthUI.open === 'function') {
-      window.EmailAuthUI.open();
-    } else if (tries < maxTries) {
-      tries++;
-      setTimeout(tryOpen, 100);
-    } else {
-      alert('Email login kon niet geladen worden. Vernieuw de pagina (sleep omlaag) en probeer opnieuw.');
-    }
-  };
-  tryOpen();
+  // Open de email auth modal — bij succesvolle restore wordt alle data (incl. naam) geladen
+  if (window.EmailAuthUI) {
+    EmailAuthUI.open();
+  } else {
+    alert('Email login is nog niet geladen. Vul je naam in om te beginnen.');
+  }
 }
 function welcomeStart() {
   const naam = (document.getElementById('welcome-naam').value || '').trim();
@@ -9328,36 +9335,6 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('wmmAccountDropdown').classList.remove('active');
     }
   });
-
-  // ✨ Deep-link uit email: ?authcode=123456&email=...
-  // Als user de knop in de email tapt, opent de app direct met code ingevuld
-  try {
-    const url = new URL(window.location.href);
-    const authcode = url.searchParams.get('authcode');
-    const emailFromLink = url.searchParams.get('email');
-    if (authcode && /^\d{6}$/.test(authcode)) {
-      // Haal URL params weg (schone URL voor history)
-      url.searchParams.delete('authcode');
-      url.searchParams.delete('email');
-      window.history.replaceState({}, '', url.pathname + (url.search || '') + url.hash);
-      // Als email ook meegegeven → zet die als pending
-      if (emailFromLink && emailFromLink.includes('@')) {
-        try { localStorage.setItem('wmm_email_auth', emailFromLink.toLowerCase().trim()); } catch(e) {}
-      }
-      // Open modal, spring direct naar stap 2, vul code in, verifieer
-      setTimeout(() => {
-        EmailAuthUI.open();
-        document.getElementById('wmmStep1').style.display = 'none';
-        document.getElementById('wmmStep2').style.display = 'block';
-        document.getElementById('wmmSentTo').textContent = emailFromLink || AuthLibrary.getPendingEmail() || '';
-        document.getElementById('wmmCode').value = authcode;
-        // Direct verifiëren
-        EmailAuthUI.verifyCode();
-      }, 500);
-    }
-  } catch (e) {
-    console.warn('deep-link parsing failed:', e);
-  }
 
   console.log('[EmailAuthUI] Initialized. Logged in:', AuthLibrary.isEmailAuthenticated());
 });
