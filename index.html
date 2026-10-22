@@ -8660,15 +8660,38 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
   async function initEenKoppel(code) {
     const koppelRef = collection(db, 'koppels', code, 'gebruikers');
     const mijnRef   = doc(db, 'koppels', code, 'gebruikers', mijnNaam);
+    const uid = (auth.currentUser && auth.currentUser.uid) || window._wmm_authUid || null;
     try {
       const apparaat = localStorage.getItem('wmm_apparaat') || (() => { const v = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('wmm_apparaat', v); return v; })();
+      // Lidmaatschap eerst vastleggen. De Firestore-regels gebruiken dit
+      // document om te bepalen of dit toestel deze koppeling mag lezen.
+      // Zonder lidmaatschap is de hele koppeling onzichtbaar, ook met een
+      // geldige code.
+      // Eigen try: zolang de nieuwe regels nog niet zijn uitgerold mag dit
+      // pad niet beschreven worden. Dat mag de rest van de koppeling niet
+      // tegenhouden, dus een mislukking hier is geen fout.
+      if (uid) {
+        try {
+          await setDoc(doc(db, 'koppels', code, 'leden', uid),
+            {naam: mijnNaam, sinds: new Date().toISOString()}, {merge: true});
+        } catch(e) { /* oude regels: lidmaatschap nog niet toegestaan */ }
+      }
       const bestaand = await getDoc(mijnRef);
-      const bezetDoorAnder = bestaand.exists() && bestaand.data().apparaat && bestaand.data().apparaat !== apparaat;
+      const d = bestaand.exists() ? bestaand.data() : null;
+      // Een naam is bezet als een andere gebruiker hem heeft geclaimd. Voor
+      // documenten van vóór de eigenaar-regel valt de app terug op het
+      // toestel-kenmerk, zoals voorheen.
+      const bezetDoorAnder = !!d && (
+        (d.eigenaar && d.eigenaar !== uid) ||
+        (!d.eigenaar && d.apparaat && d.apparaat !== apparaat)
+      );
       if (bezetDoorAnder) {
         window._wmm_naamBotst = true;
         window._wmm_koppelStatus.foutmelding = 'Deze naam wordt al door een ander toestel in deze koppeling gebruikt. Start opnieuw met een andere naam.';
       } else {
-        await setDoc(mijnRef, {naam: mijnNaam, actief: true, laatstActief: new Date().toISOString(), apparaat, foto: (typeof fotoPubliek === 'function' ? fotoPubliek() : null)}, {merge: true});
+        const mijnData = {naam: mijnNaam, actief: true, laatstActief: new Date().toISOString(), apparaat, foto: (typeof fotoPubliek === 'function' ? fotoPubliek() : null)};
+        if (uid) mijnData.eigenaar = uid;   // claimt deze naam binnen de koppeling
+        await setDoc(mijnRef, mijnData, {merge: true});
         window._wmm_koppelStatus.verbonden = true;
       }
     } catch(e) {
@@ -8739,6 +8762,13 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
     } catch(e) { console.warn('Dagdata verwijderen mislukt:', e); }
     try { await deleteDoc(doc(db, 'koppels', koppelCode, 'gebruikers', mijnNaam)); }
     catch(e) { console.warn('Gebruikersdocument verwijderen mislukt:', e); }
+    // Als laatste het lidmaatschap opzeggen: daarna is de koppeling voor dit
+    // toestel niet meer leesbaar, dus dit moet na de twee stappen hierboven.
+    const uidWeg = (auth.currentUser && auth.currentUser.uid) || window._wmm_authUid || null;
+    if (uidWeg) {
+      try { await deleteDoc(doc(db, 'koppels', koppelCode, 'leden', uidWeg)); }
+      catch(e) { console.warn('Lidmaatschap verwijderen mislukt:', e); }
+    }
   };
   window.cloudStuurBericht = async function(koppelCode, bericht) {
     try {

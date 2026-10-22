@@ -1,0 +1,118 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── HULPFUNCTIES ──────────────────────────────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isEmailUser(email) {
+      return request.auth.uid == email;
+    }
+    function isAnonymousUser(anonymousId) {
+      return request.auth.uid == anonymousId;
+    }
+
+    // Lid van een koppeling. Dit toestel heeft een eigen lidmaatschaps-
+    // document onder de koppelcode. Wie de code kent kan dat aanmaken — de
+    // code blijft dus het geheim. Het verschil met de oude regels is dat
+    // lidmaatschap nu per gebruiker vastligt: zonder dat document zie je
+    // niets, ook niet met een geldige code die je nooit hebt gebruikt.
+    function isLid(code) {
+      return isAuthenticated()
+        && exists(/databases/$(database)/documents/koppels/$(code)/leden/$(request.auth.uid));
+    }
+
+    // Eigenaar van een naam. Een document zonder eigenaar-veld stamt van
+    // vóór deze regels en mag nog één keer worden geclaimd; zodra het veld
+    // er staat kan niemand anders die naam meer overschrijven of wissen.
+    function magSchrijvenAls(gegevens) {
+      return !('eigenaar' in gegevens) || gegevens.eigenaar == request.auth.uid;
+    }
+
+    // Zelfde controle, maar voor de dagdata één niveau lager: daar moeten we
+    // het bovenliggende gebruikersdocument opvragen.
+    function isEigenaarVan(code, naam) {
+      return exists(/databases/$(database)/documents/koppels/$(code)/gebruikers/$(naam))
+        && magSchrijvenAls(
+             get(/databases/$(database)/documents/koppels/$(code)/gebruikers/$(naam)).data
+           );
+    }
+
+    // ── ACCOUNTS (e-mail + code) ──────────────────────────────
+    match /accounts/{accountId} {
+      allow read: if isEmailUser(accountId) || isAnonymousUser(accountId);
+      allow create: if request.auth.uid == accountId && request.resource.data.email == accountId;
+      allow update: if isEmailUser(accountId) || isAnonymousUser(accountId);
+      allow delete: if false;
+      match /mijnData/{document=**} {
+        allow read, write: if isEmailUser(accountId) || isAnonymousUser(accountId);
+      }
+      match /partners/{document=**} {
+        allow read, write: if isEmailUser(accountId) || isAnonymousUser(accountId);
+      }
+      match /settings/{document=**} {
+        allow read, write: if isEmailUser(accountId) || isAnonymousUser(accountId);
+      }
+      match /preferences/{document=**} {
+        allow read, write: if isEmailUser(accountId) || isAnonymousUser(accountId);
+      }
+    }
+
+    // Inlogcodes en snelheidsbegrenzing: alleen de Cloud Functions komen
+    // hierbij. Die gebruiken de admin-SDK en gaan buiten deze regels om.
+    match /authCodes/{email} {
+      allow read, write: if false;
+    }
+    match /rateLimit/{email} {
+      allow read, write: if false;
+    }
+
+    // ── KOPPELINGEN ───────────────────────────────────────────
+    match /koppels/{koppelCode} {
+      // Het koppeldocument zelf gebruikt de app niet.
+      allow read, write: if false;
+
+      // Lidmaatschap: je komt alleen bij je eigen document, en de ledenlijst
+      // is niet op te vragen. Niemand kan dus zien wie er in een koppeling
+      // zit zonder er zelf lid van te zijn.
+      match /leden/{lidId} {
+        allow get: if isAuthenticated() && request.auth.uid == lidId;
+        allow list: if false;
+        allow create, update: if isAuthenticated()
+                              && request.auth.uid == lidId
+                              && request.resource.data.naam is string
+                              && request.resource.data.naam.size() > 0
+                              && request.resource.data.naam.size() <= 60;
+        allow delete: if isAuthenticated() && request.auth.uid == lidId;
+      }
+
+      // Gebruikers binnen een koppeling. Lezen mag ieder lid — partners
+      // moeten elkaars voortgang kunnen zien. Schrijven mag alleen de
+      // eigenaar van die naam.
+      match /gebruikers/{naam} {
+        allow read: if isLid(koppelCode);
+
+        allow create: if isLid(koppelCode)
+                      && request.resource.data.eigenaar == request.auth.uid;
+
+        allow update: if isLid(koppelCode)
+                      && magSchrijvenAls(resource.data)
+                      && request.resource.data.eigenaar == request.auth.uid;
+
+        allow delete: if isLid(koppelCode) && magSchrijvenAls(resource.data);
+
+        // Dagdata hangt onder de naam en volgt dus dezelfde eigenaar.
+        match /data/{dag} {
+          allow read: if isLid(koppelCode);
+          allow write: if isLid(koppelCode) && isEigenaarVan(koppelCode, naam);
+        }
+      }
+    }
+
+    // Al het overige is dicht.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
