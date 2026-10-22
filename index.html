@@ -717,41 +717,10 @@
       background:radial-gradient(circle, rgba(61,145,112,0.5), rgba(61,145,112,0) 70%);
       animation:vinkGloed 3.2s ease-in-out infinite; }
     @keyframes vinkGloed { 0%,100%{opacity:0.25;transform:scale(0.96);} 50%{opacity:0.6;transform:scale(1.06);} }
-    @media (prefers-reduced-motion: reduce) { .bp-check::before, .badge-check::before { animation:none; opacity:0.7; } }
+    @media (prefers-reduced-motion: reduce) { .bp-check::before { animation:none; opacity:0.7; } }
     .bp-lock { position:absolute; bottom:-3px; right:-3px; width:21px; height:21px; border-radius:50%;
       background:#1a3f5c; border:2px solid rgba(255,255,255,0.42); display:flex; align-items:center; justify-content:center;
       color:#7ab8d4; font-size:10px; z-index:10; }
-
-    /* ── SLEUTELHANGERS (edelstenen badges) ── */
-    .sleutel-scroll{display:flex;gap:16px;overflow-x:auto;padding:6px 2px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;}
-    .sleutel-scroll::-webkit-scrollbar{height:5px;}
-    .sleutel-scroll::-webkit-scrollbar-track{background:#0d2d4a;border-radius:10px;}
-    .sleutel-scroll::-webkit-scrollbar-thumb{background:#2a4a6a;border-radius:10px;}
-    .sleutel{flex-shrink:0;width:100px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;text-align:center;}
-    .sleutel.vervaagd{opacity:0.38;}
-    .sleutel.vervaagd .badge-steen{filter:grayscale(0.35);}
-    .badge-steen{width:82px;height:82px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;border:3px solid;box-shadow:inset 0 3px 10px rgba(0,0,0,0.35),0 2px 6px rgba(0,0,0,0.3);}
-    .badge-glans{position:absolute;top:9px;left:20px;width:26px;height:16px;border-radius:50%;background:rgba(255,255,255,0.28);filter:blur(3px);transform:rotate(-25deg);}
-    .badge-ring{position:absolute;inset:5px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);}
-    .badge-tijd{font-size:18px;font-weight:700;line-height:1;z-index:1;}
-    .badge-tijd-lbl{font-size:8px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-top:1px;opacity:0.9;z-index:1;}
-    .badge-kern{font-size:8px;font-style:italic;margin-top:2px;opacity:0.95;z-index:1;}
-    .sleutel-steen{font-size:9px;color:#c8a400;font-weight:600;margin-bottom:2px;letter-spacing:0.03em;}
-    .sleutel-vers{font-size:9px;color:#7ab8d4;line-height:1.35;font-style:italic;padding:0 2px;}
-    .badge-check{position:absolute;bottom:-3px;right:-3px;width:21px;height:21px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#6fd8a4,#3d9170 55%,#1d5c44);background-clip:padding-box;border:2px solid rgba(255,255,255,0.42);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;z-index:10;text-shadow:0 1px 2px rgba(0,0,0,0.35);box-shadow:0 0 6px rgba(45,122,90,0.5),inset 0 1px 2px rgba(255,255,255,0.4),inset 0 -2px 3px rgba(0,0,0,0.3);}
-    .badge-check::before{content:'';position:absolute;inset:-4px;border-radius:50%;z-index:-1;background:radial-gradient(circle,rgba(61,145,112,0.5),rgba(61,145,112,0) 70%);animation:vinkGloed 3.2s ease-in-out infinite;}
-    .badge-lock{position:absolute;bottom:-3px;right:-3px;width:21px;height:21px;border-radius:50%;background:#1a3f5c;border:2px solid #0a2238;display:flex;align-items:center;justify-content:center;color:#7ab8d4;font-size:10px;z-index:10;}
-
-    /* ── FLIP BADGE ── */
-    .badge-flip{width:82px;height:82px;perspective:600px;cursor:pointer;margin-bottom:9px;position:relative;overflow:visible;}
-    .badge-flip-inner{position:relative;width:100%;height:100%;transition:transform 0.5s;transform-style:preserve-3d;}
-    .badge-flip.geflipt .badge-flip-inner{transform:rotateY(180deg);}
-    .badge-face{position:absolute;top:0;left:0;width:82px;height:82px;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:50%;display:flex;align-items:center;justify-content:center;}
-    .badge-front{z-index:2;}
-    .badge-back{transform:rotateY(180deg);background:#0a1626;border:2px solid #1a3f5c;padding:9px;box-shadow:inset 0 2px 10px rgba(0,0,0,0.6);z-index:1;overflow:hidden;}
-    /* Extra volle ondoorzichtige laag achter de tekst zodat de voorkant niet doorschijnt */
-    .badge-back::before{content:'';position:absolute;inset:0;border-radius:50%;background:#0a1626;z-index:0;}
-    .badge-back-tekst{position:relative;z-index:1;font-size:7.5px;line-height:1.35;color:#f0e8d0;font-style:italic;text-align:center;white-space:pre-line;overflow:hidden;}
 
     /* ── SCROLLBARE CONTAINERS (alle weken + postvak) ── */
     .week-history-scroll{max-height:240px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
@@ -1003,16 +972,6 @@
         <div class="avg-box"><div class="avg-num" id="streak-count">0</div><div class="avg-lbl" id="avg-lbl-days">Sereen en doelbewust</div></div>
         <div class="avg-box"><div class="avg-num" id="best-day">–</div><div class="avg-lbl" id="avg-lbl-best">Beste dag</div></div>
       </div>
-    </div>
-    <!-- SLEUTELHANGERS -->
-    <div class="card" id="sleutelhangers-card">
-      <div class="card-label" style="display:flex;align-items:center;justify-content:space-between;">
-        <span><i class="ti ti-diamond"></i> Mijn sleutelhangers</span>
-        <span style="font-size:10px;color:#3a6a8c;font-weight:400;">langste eerst →</span>
-      </div>
-      <div style="font-size:11px;color:#7ab8d4;margin-bottom:12px;font-style:italic;">Naar de borstplaat van de hogepriester — Exodus 28</div>
-      <div id="sleutelhangers-scroll" class="sleutel-scroll"></div>
-      <div id="sleutelhangers-sub" style="font-size:11px;color:#7ab8d4;line-height:1.5;margin-top:2px;"></div>
     </div>
 
     <!-- BORSTPLAAT SECTIE -->
@@ -2581,7 +2540,7 @@ function clearTerugval() {
   renderTerugval();
 }
 // ── HOOGSTE REEKS OOIT ───────────────────────────────────────
-// Stond eerder in renderSleutelhangers(), waardoor je piek alleen werd
+// Stond eerder in de sleutelhangers-weergave, waardoor je piek alleen werd
 // vastgelegd als je het Voortgang-tabblad opende. Nu hangt het aan
 // getDagenDoelbewust(), die vanuit de hele app wordt aangeroepen.
 // De waarde wordt in het geheugen gehouden zodat niet elke aanroep
@@ -2621,10 +2580,11 @@ function getDagenDoelbewust() {
   return onthoudHoogsteReeks(Math.max(0, Math.floor((now - vanafDatum) / 86400000) + 1));
 }
 
-// ── SLEUTELHANGERS (edelstenen mijlpalen) ────────────────────
-// Sleutelhangers tijdelijk verborgen. Zet op true om ze weer te tonen;
-// de kaart en alle code blijven gewoon staan, alleen de weergave is uit.
-const TOON_SLEUTELHANGERS = false;
+// ── MIJLPALEN ────────────────────────────────────────────────
+// Deze lijst heette "sleutelhangers" toen de mijlpalen nog als ronde
+// badges werden getoond. Die weergave is eruit (de code staat in
+// "x-oude documenten/code voor sleutelhangers.md"); de lijst zelf is
+// gebleven, want de borstplaat haalt er zijn kernwoorden en teksten uit.
 
 // Elke mijlpaal: dagen, label, tijd-getal, tijd-eenheid, kernwoord, steen, vers, kleuren
 const SLEUTELHANGERS = [
@@ -2645,20 +2605,6 @@ const SLEUTELHANGERS = [
   {dagen:395,  tijd:'1j 1m', eenheid:'',   kern:'Gewijd',     steen:'Purperen wol',achter:'"Gij zijt een uitverkoren geslacht, God ten eigendom" — 1 Petrus 2:9', grad:['#a03a6a','#5a1a3a'], border:'#c85a8a', txt:'#ffe8f2'},
 ];
 
-// Genereer jaarlijkse gouden mijlpalen vanaf 2 jaar (t/m 10 jaar)
-function alleSleutelhangers() {
-  const lijst = [...SLEUTELHANGERS];
-  for (let jr = 2; jr <= 10; jr++) {
-    const achter = jr === 2
-      ? '"De Heer is mijn kracht en mijn lied; Hij is mij tot heil geworden" — Exodus 15:2'
-      : '"Wie volhardt, ontvangt de belofte" — Hebreeën 10:36';
-    lijst.push({
-      dagen: 365*jr, tijd:String(jr), eenheid:'jaar', kern:'Trouw', steen:'Goud',
-      achter, grad:['#ffd94a','#b8860b'], border:'#ffe87a', txt:'#3a2a00'
-    });
-  }
-  return lijst;
-}
 
 const BP_TAAL = {
  "nl": {
@@ -3550,132 +3496,7 @@ function updateBorstplaatColors() {
 }
 window.updateBorstplaatColors = updateBorstplaatColors;
 
-function renderSleutelhangers() {
-  const scroll = document.getElementById('sleutelhangers-scroll');
-  const sub = document.getElementById('sleutelhangers-sub');
-  if (!scroll) return;
 
-  // De kaart blijft bestaan en wordt gewoon gevuld; alleen verborgen.
-  const slKaart = document.getElementById('sleutelhangers-card');
-  if (slKaart) slKaart.style.display = TOON_SLEUTELHANGERS ? '' : 'none';
-
-  const huidigeDagen = getDagenDoelbewust();
-  // Bijhouden gebeurt in getDagenDoelbewust(); hier alleen uitlezen.
-  const hoogsteOoit = hoogsteReeksOoit();
-
-  const alle = alleSleutelhangers();
-  const behaald = alle.filter(s => huidigeDagen >= s.dagen).sort((a,b) => b.dagen - a.dagen);
-  const ooitBehaald = alle.filter(s => huidigeDagen < s.dagen && hoogsteOoit >= s.dagen).sort((a,b) => b.dagen - a.dagen);
-  const nogTeGaan = alle.filter(s => hoogsteOoit < s.dagen).sort((a,b) => a.dagen - b.dagen);
-
-  scroll.innerHTML = '';
-
-  let flipTeller = 0;
-  function maakBadge(s, staat, vorigeDrempel) {
-    // staat: 'behaald' | 'ooit' | 'todo'
-    const isTodo = staat === 'todo';
-    const flipId = 'flip-' + (flipTeller++);
-
-    let hoekIcoon = '';
-    if (staat === 'behaald') hoekIcoon = '<div class="badge-check"><i class="ti ti-check"></i></div>';
-    else if (staat === 'ooit') hoekIcoon = '<div class="badge-check" style="background:#7a6a8a;"><i class="ti ti-check"></i></div>';
-    else hoekIcoon = '<div class="badge-lock"><i class="ti ti-lock"></i></div>';
-
-    const badgeStyle = isTodo
-      ? 'background:#0d2035;border-color:#1a3f5c;color:#3a6a8c;'
-      : `background:radial-gradient(circle at 38% 30%,${s.grad[0]},${s.grad[1]});border-color:${s.border};color:${s.txt};`;
-    const glans = isTodo ? '' : '<div class="badge-glans"></div>';
-
-    // Voortgangsring op de eerstvolgende te behalen badge
-    let ringHTML = '';
-    if (isTodo && vorigeDrempel !== null) {
-      const totaalNodig = s.dagen - vorigeDrempel;
-      const alGehaald = Math.max(0, huidigeDagen - vorigeDrempel);
-      const pct = Math.max(0, Math.min(100, Math.round((alGehaald / totaalNodig) * 100)));
-      // SVG voortgangsring — net buiten de badgerand
-      const r = 42, omtrek = 2 * Math.PI * r;
-      const offset = omtrek * (1 - pct/100);
-      ringHTML = `<svg width="90" height="90" viewBox="0 0 90 90" style="position:absolute;top:-4px;left:-4px;transform:rotate(-90deg);pointer-events:none;z-index:5;">
-        <circle cx="45" cy="45" r="${r}" fill="none" stroke="#1a3f5c" stroke-width="3"/>
-        <circle cx="45" cy="45" r="${r}" fill="none" stroke="#f0a500" stroke-width="3" stroke-linecap="round" stroke-dasharray="${omtrek.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}" style="transition:stroke-dashoffset 0.6s;"/>
-      </svg>`;
-    }
-
-    // Achterkant-tekst
-    let achterTekst = s.achter || '';
-    if (isTodo) {
-      const resterend = s.dagen - huidigeDagen;
-      achterTekst = resterend > 0 ? `Nog ${resterend} ${resterend === 1 ? 'dag' : 'dagen'} te gaan tot deze sleutelhanger` : s.achter;
-    }
-    if (staat === 'ooit') {
-      achterTekst = s.achter + '\n\n(Ooit behaald — een teken van kracht)';
-    }
-
-    // Voorkant onderschrift
-    let onderVers = '';
-    let versKleur = '#7ab8d4';
-    if (isTodo) {
-      const resterend = s.dagen - huidigeDagen;
-      onderVers = resterend > 0 ? `Nog ${resterend} ${resterend === 1 ? 'dag' : 'dagen'}` : 'Bijna!';
-      versKleur = '#3a6a8c';
-    } else if (staat === 'ooit') {
-      onderVers = 'Ooit behaald';
-    } else {
-      onderVers = 'Tik voor de tekst';
-    }
-
-    const eenheidHTML = s.eenheid ? `<div class="badge-tijd-lbl">${s.eenheid}</div>` : '';
-    const tijdFontSize = s.tijd.length > 2 ? 'font-size:13px;' : '';
-
-    const sleutel = document.createElement('div');
-    sleutel.className = 'sleutel' + (staat === 'ooit' ? ' vervaagd' : '');
-    sleutel.innerHTML = `
-      <div class="badge-flip" id="${flipId}" onclick="this.classList.toggle('geflipt')">
-        ${ringHTML}
-        <div class="badge-flip-inner">
-          <div class="badge-face badge-front">
-            <div class="badge-steen" style="${badgeStyle}">
-              ${glans}<div class="badge-ring"></div>
-              <div class="badge-tijd" style="${tijdFontSize}">${s.tijd}</div>
-              ${eenheidHTML}
-              <div class="badge-kern">${s.kern}</div>
-            </div>
-          </div>
-          <div class="badge-face badge-back" style="border-color:${isTodo?'#1a3f5c':s.border};">
-            <div class="badge-back-tekst">${achterTekst}</div>
-          </div>
-        </div>
-        ${hoekIcoon}
-      </div>
-      <div class="sleutel-steen" style="${isTodo?'color:#3a6a8c;':''}">${s.steen}</div>
-      <div class="sleutel-vers" style="color:${versKleur};">${onderVers}</div>`;
-    return sleutel;
-  }
-
-  // Bepaal vorige drempel voor de voortgangsring op eerstvolgende badge
-  const behaaldeDrempels = alle.filter(s => huidigeDagen >= s.dagen).map(s => s.dagen);
-  const vorigeDrempel = behaaldeDrempels.length > 0 ? Math.max(...behaaldeDrempels) : 0;
-
-  behaald.forEach(s => scroll.appendChild(maakBadge(s, 'behaald', null)));
-  ooitBehaald.forEach(s => scroll.appendChild(maakBadge(s, 'ooit', null)));
-  // Eerstvolgende krijgt de voortgangsring; de 2 daarna niet
-  nogTeGaan.slice(0, 3).forEach((s, idx) => {
-    scroll.appendChild(maakBadge(s, 'todo', idx === 0 ? vorigeDrempel : null));
-  });
-
-  if (sub) {
-    if (behaald.length === 0 && ooitBehaald.length === 0) {
-      sub.innerHTML = `Je huidige reeks: <b style="color:#e8f4f8;">${huidigeDagen} ${huidigeDagen===1?'dag':'dagen'} sereen en doelbewust</b>. Je eerste sleutelhanger komt eraan!`;
-    } else if (ooitBehaald.length > 0) {
-      sub.innerHTML = `Huidige reeks: <b style="color:#e8f4f8;">${huidigeDagen} ${huidigeDagen===1?'dag':'dagen'}</b> — vervaagde stenen tonen wat je al bereikte`;
-    } else {
-      sub.innerHTML = `Huidige reeks: <b style="color:#e8f4f8;">${huidigeDagen} ${huidigeDagen===1?'dag':'dagen'} sereen en doelbewust</b>`;
-    }
-  }
-
-  updateBorstplaatColors();
-}
-window.renderSleutelhangers = renderSleutelhangers;
 
 // ── VOORTGANG ────────────────────────────────────────────────
 function renderVoortgang() {
@@ -3731,7 +3552,7 @@ function renderVoortgang() {
 
   renderWeekHistory();
   renderEchtKaart();
-  renderSleutelhangers();
+  updateBorstplaatColors();
   renderPartner();
   updateDebugStatus();
 }
@@ -8379,12 +8200,20 @@ function welcomeNaarStap2() {
   stelTaalIn(welkomTaal);
 }
 function welcomeInloggen() {
-  // Open de email auth modal — bij succesvolle restore wordt alle data (incl. naam) geladen
-  if (window.EmailAuthUI) {
-    EmailAuthUI.open();
-  } else {
-    alert('Email login is nog niet geladen. Vul je naam in om te beginnen.');
-  }
+  // Open de email auth modal — wacht tot EmailAuthUI geladen is (max 3s)
+  let tries = 0;
+  const maxTries = 30;
+  const tryOpen = () => {
+    if (window.EmailAuthUI && typeof window.EmailAuthUI.open === 'function') {
+      window.EmailAuthUI.open();
+    } else if (tries < maxTries) {
+      tries++;
+      setTimeout(tryOpen, 100);
+    } else {
+      alert('Email login kon niet geladen worden. Vernieuw de pagina (sleep omlaag) en probeer opnieuw.');
+    }
+  };
+  tryOpen();
 }
 function welcomeStart() {
   const naam = (document.getElementById('welcome-naam').value || '').trim();
@@ -8509,7 +8338,7 @@ function scheduleNotification(time) {
   document.addEventListener('touchstart',e=>{
     startX=e.changedTouches[0].clientX;startY=e.changedTouches[0].clientY;swiping=false;
     // Negeer tab-swipe als de aanraking begint in een horizontaal scrollbaar gebied
-    binnenScroll = !!(e.target.closest && e.target.closest('.sleutel-scroll, .badge-flip, .bericht-wrap, .biblio-plank, .lezer-overlay'));
+    binnenScroll = !!(e.target.closest && e.target.closest('.bericht-wrap, .biblio-plank, .lezer-overlay'));
   },{passive:true});
   document.addEventListener('touchmove',e=>{const dx=Math.abs(e.changedTouches[0].clientX-startX),dy=Math.abs(e.changedTouches[0].clientY-startY);if(dx>dy&&dx>10)swiping=true;},{passive:true});
   document.addEventListener('touchend',e=>{
@@ -9499,6 +9328,36 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('wmmAccountDropdown').classList.remove('active');
     }
   });
+
+  // ✨ Deep-link uit email: ?authcode=123456&email=...
+  // Als user de knop in de email tapt, opent de app direct met code ingevuld
+  try {
+    const url = new URL(window.location.href);
+    const authcode = url.searchParams.get('authcode');
+    const emailFromLink = url.searchParams.get('email');
+    if (authcode && /^\d{6}$/.test(authcode)) {
+      // Haal URL params weg (schone URL voor history)
+      url.searchParams.delete('authcode');
+      url.searchParams.delete('email');
+      window.history.replaceState({}, '', url.pathname + (url.search || '') + url.hash);
+      // Als email ook meegegeven → zet die als pending
+      if (emailFromLink && emailFromLink.includes('@')) {
+        try { localStorage.setItem('wmm_email_auth', emailFromLink.toLowerCase().trim()); } catch(e) {}
+      }
+      // Open modal, spring direct naar stap 2, vul code in, verifieer
+      setTimeout(() => {
+        EmailAuthUI.open();
+        document.getElementById('wmmStep1').style.display = 'none';
+        document.getElementById('wmmStep2').style.display = 'block';
+        document.getElementById('wmmSentTo').textContent = emailFromLink || AuthLibrary.getPendingEmail() || '';
+        document.getElementById('wmmCode').value = authcode;
+        // Direct verifiëren
+        EmailAuthUI.verifyCode();
+      }, 500);
+    }
+  } catch (e) {
+    console.warn('deep-link parsing failed:', e);
+  }
 
   console.log('[EmailAuthUI] Initialized. Logged in:', AuthLibrary.isEmailAuthenticated());
 });

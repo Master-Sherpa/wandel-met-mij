@@ -50,7 +50,13 @@ function saveStorage(data) {
 
 const db = admin.firestore();
 
-function buildEmailHtml(code) {
+function buildEmailHtml(code, email) {
+  // Deep-link naar de app met code als URL parameter
+  // Zodra user hierop tikt → app opent → code wordt automatisch ingevuld + geverifieerd
+  const appUrl = 'https://fsy-prep.web.app';
+  const emailParam = email ? `&email=${encodeURIComponent(email)}` : '';
+  const deepLink = `${appUrl}/?authcode=${code}${emailParam}`;
+
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -70,13 +76,31 @@ function buildEmailHtml(code) {
               <p style="color:#7ab8d4; margin:0; font-size:14px;">Je inlogcode</p>
             </td>
           </tr>
+          <!-- 1-tap login knop (deep link) -->
+          <tr>
+            <td style="padding:12px 40px 8px; text-align:center;">
+              <a href="${deepLink}" style="display:inline-block; background:#f0a500; color:#0c1f31; padding:16px 32px; border-radius:10px; text-decoration:none; font-weight:700; font-size:16px; box-shadow:0 4px 12px rgba(240,165,0,0.3);">
+                🔓 Direct inloggen met 1 tik
+              </a>
+              <p style="color:#7ab8d4; margin:12px 0 0; font-size:12px;">
+                Tik de knop in dezelfde browser als waar je de app geopend hebt
+              </p>
+            </td>
+          </tr>
+          <!-- Of handmatig -->
+          <tr>
+            <td style="padding:16px 40px 8px; text-align:center;">
+              <div style="height:1px; background:rgba(122,184,212,0.2); margin:12px 0;"></div>
+              <p style="color:#7ab8d4; margin:0 0 12px; font-size:13px; text-transform:uppercase; letter-spacing:1px;">of vul deze code in</p>
+            </td>
+          </tr>
           <!-- Code (makkelijk te selecteren) -->
           <tr>
-            <td style="padding:12px 40px 24px; text-align:center;">
-              <div style="background:rgba(240,165,0,0.08); border:1px solid rgba(240,165,0,0.3); border-radius:12px; padding:28px 20px;">
-                <div style="font-family:'Courier New',Monaco,monospace; font-size:44px; font-weight:700; letter-spacing:12px; color:#f0a500; user-select:all; -webkit-user-select:all;">${code}</div>
+            <td style="padding:0 40px 24px; text-align:center;">
+              <div style="background:rgba(240,165,0,0.08); border:1px solid rgba(240,165,0,0.3); border-radius:12px; padding:24px 20px;">
+                <div style="font-family:'Courier New',Monaco,monospace; font-size:40px; font-weight:700; letter-spacing:10px; color:#f0a500; user-select:all; -webkit-user-select:all;">${code}</div>
               </div>
-              <p style="color:#e8f4f8; margin:16px 0 0; font-size:14px;">Tik op de code om te selecteren en kopiëren</p>
+              <p style="color:#e8f4f8; margin:12px 0 0; font-size:13px;">Tik op de code om te selecteren en kopiëren</p>
             </td>
           </tr>
           <!-- Info -->
@@ -169,7 +193,7 @@ exports.sendCode = functions
             from: 'Wandel met Mij <noreply@realgood.nl>',
             to: normalizedEmail,
             subject: 'Jouw inlogcode voor Wandel met Mij',
-            html: buildEmailHtml(code)
+            html: buildEmailHtml(code, normalizedEmail)
           });
           if (error) {
             console.error('Resend error:', error);
