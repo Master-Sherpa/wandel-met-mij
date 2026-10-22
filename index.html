@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-10-22 19:50 -->
+<!-- WMM-BUILD: 2026-10-22 22:15 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -877,7 +877,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-10-22 19:50";</script>
+<script>window.WMM_BUILD = "2026-10-22 22:15";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -8052,10 +8052,26 @@ function fotoKiezen(e){
   if (!f) return;
   const url = URL.createObjectURL(f);
   const img = new Image();
-  img.onload = () => { fotoCropOpen(img, url); };
+  img.onload = () => {
+    // iPhone laat je bij het kiezen al bijsnijden ("Verplaats en wijzig grootte")
+    // en levert dan een vierkante foto. Is de foto al vierkant, dan is ons eigen
+    // venster een overbodige tweede stap en slaan we meteen op. Op Android en
+    // computer komt de foto ongesneden binnen; daar opent het venster wel.
+    const verschil = Math.abs(img.width - img.height);
+    if (verschil <= Math.max(img.width, img.height) * 0.01) fotoDirectOpslaan(img, url);
+    else fotoCropOpen(img, url);
+  };
   img.onerror = () => { URL.revokeObjectURL(url); if (window.toonToast) toonToast('Dit bestand is geen afbeelding'); };
   img.src = url;
   e.target.value = '';
+}
+function fotoDirectOpslaan(img, url){
+  const kant = Math.min(img.width, img.height);
+  const c = document.createElement('canvas'); c.width = 256; c.height = 256;
+  c.getContext('2d').drawImage(img, (img.width-kant)/2, (img.height-kant)/2, kant, kant, 0, 0, 256, 256);
+  try { URL.revokeObjectURL(url); } catch {}
+  try { localStorage.setItem('wmm_foto', c.toDataURL('image/jpeg', 0.8)); renderInstellingen(); renderDiscAvatar(); publiceerFotoNaarKoppels(); }
+  catch { if (window.toonToast) toonToast('Foto kon niet worden opgeslagen'); }
 }
 function fotoCropOpen(img, url){
   const ov = document.getElementById('foto-crop');
