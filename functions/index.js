@@ -50,13 +50,25 @@ function saveStorage(data) {
 
 const db = admin.firestore();
 
-function buildEmailHtml(code, email) {
-  // Deep-link naar de app met code als URL parameter
-  // Zodra user hierop tikt → app opent → code wordt automatisch ingevuld + geverifieerd
-  const appUrl = 'https://fsy-prep.web.app';
-  const emailParam = email ? `&email=${encodeURIComponent(email)}` : '';
-  const deepLink = `${appUrl}/?authcode=${code}${emailParam}`;
+function buildEmailText(code) {
+  return [
+    'Wandel met Mij \u2014 je inlogcode',
+    '',
+    '    ' + code,
+    '',
+    'Open de app en vul deze code in op het inlogscherm.',
+    '',
+    'De code is 10 minuten geldig. Deel hem met niemand.',
+    'Niet aangevraagd? Dan kun je deze mail negeren.'
+  ].join('\n');
+}
 
+// Geen knop en geen link in deze mail, met opzet.
+// Een link opent altijd de browser, en op iOS heeft een app op je beginscherm
+// zijn eigen opslag los van Safari. Inloggen via de link logde je dus in op
+// een andere kopie van de app dan die op je beginscherm staat. De code
+// overtypen of plakken in de app zelf is de enige route die overal werkt.
+function buildEmailHtml(code) {
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -69,38 +81,31 @@ function buildEmailHtml(code, email) {
     <tr>
       <td align="center">
         <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:500px; background:#0c1f31; border-radius:16px; border:1px solid rgba(240,165,0,0.2); overflow:hidden;">
-          <!-- Header -->
+          <!-- Kop -->
           <tr>
-            <td style="padding:32px 40px 16px; text-align:center;">
-              <h1 style="color:#f0a500; margin:0 0 4px; font-size:24px; font-weight:700;">🚶 Wandel met Mij</h1>
+            <td style="padding:32px 40px 8px; text-align:center;">
+              <h1 style="color:#f0a500; margin:0 0 4px; font-size:24px; font-weight:700;">\u{1F6B6} Wandel met Mij</h1>
               <p style="color:#7ab8d4; margin:0; font-size:14px;">Je inlogcode</p>
             </td>
           </tr>
-          <!-- 1-tap login knop (deep link) -->
+          <!-- De code: het enige wat je nodig hebt -->
           <tr>
-            <td style="padding:12px 40px 8px; text-align:center;">
-              <a href="${deepLink}" style="display:inline-block; background:#f0a500; color:#0c1f31; padding:16px 32px; border-radius:10px; text-decoration:none; font-weight:700; font-size:16px; box-shadow:0 4px 12px rgba(240,165,0,0.3);">
-                🔓 Direct inloggen met 1 tik
-              </a>
-              <p style="color:#7ab8d4; margin:12px 0 0; font-size:12px;">
-                Tik de knop in dezelfde browser als waar je de app geopend hebt
-              </p>
-            </td>
-          </tr>
-          <!-- Of handmatig -->
-          <tr>
-            <td style="padding:16px 40px 8px; text-align:center;">
-              <div style="height:1px; background:rgba(122,184,212,0.2); margin:12px 0;"></div>
-              <p style="color:#7ab8d4; margin:0 0 12px; font-size:13px; text-transform:uppercase; letter-spacing:1px;">of vul deze code in</p>
-            </td>
-          </tr>
-          <!-- Code (makkelijk te selecteren) -->
-          <tr>
-            <td style="padding:0 40px 24px; text-align:center;">
-              <div style="background:rgba(240,165,0,0.08); border:1px solid rgba(240,165,0,0.3); border-radius:12px; padding:24px 20px;">
+            <td style="padding:20px 40px 8px; text-align:center;">
+              <div style="background:rgba(240,165,0,0.08); border:1px solid rgba(240,165,0,0.3); border-radius:12px; padding:26px 20px;">
                 <div style="font-family:'Courier New',Monaco,monospace; font-size:40px; font-weight:700; letter-spacing:10px; color:#f0a500; user-select:all; -webkit-user-select:all;">${code}</div>
               </div>
-              <p style="color:#e8f4f8; margin:12px 0 0; font-size:13px;">Tik op de code om te selecteren en kopiëren</p>
+            </td>
+          </tr>
+          <!-- Wat je ermee doet -->
+          <tr>
+            <td style="padding:14px 40px 24px; text-align:center;">
+              <p style="color:#e8f4f8; margin:0 0 8px; font-size:15px; line-height:1.6;">
+                Ga terug naar <strong>Wandel met Mij</strong> en vul deze code in op het inlogscherm.
+              </p>
+              <p style="color:#7ab8d4; margin:0; font-size:13px; line-height:1.6;">
+                Houd de code even ingedrukt om hem te kopi\u00EBren.<br>
+                Op een iPhone biedt het toetsenbord hem soms zelf al aan.
+              </p>
             </td>
           </tr>
           <!-- Info -->
@@ -109,15 +114,15 @@ function buildEmailHtml(code, email) {
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                 <tr>
                   <td style="padding:12px 16px; background:rgba(122,184,212,0.08); border-radius:8px; color:#e8f4f8; font-size:13px; line-height:1.6;">
-                    ⏱️ Deze code is <strong>10 minuten geldig</strong>.<br>
-                    🔒 Deel deze code met niemand.<br>
-                    ❓ Niet aangevraagd? Negeer deze mail.
+                    \u23F1\uFE0F Deze code is <strong>10 minuten geldig</strong>.<br>
+                    \u{1F512} Deel deze code met niemand.<br>
+                    \u2753 Niet aangevraagd? Negeer deze mail.
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
-          <!-- Footer -->
+          <!-- Voettekst -->
           <tr>
             <td style="padding:20px 40px; border-top:1px solid rgba(122,184,212,0.1); text-align:center;">
               <p style="color:#7ab8d4; margin:0; font-size:12px;">
@@ -192,8 +197,9 @@ exports.sendCode = functions
           const { data, error } = await resend.emails.send({
             from: 'Wandel met Mij <noreply@realgood.nl>',
             to: normalizedEmail,
-            subject: 'Jouw inlogcode voor Wandel met Mij',
-            html: buildEmailHtml(code, normalizedEmail)
+            subject: `Je inlogcode voor Wandel met Mij: ${code}`,
+            html: buildEmailHtml(code),
+            text: buildEmailText(code)
           });
           if (error) {
             console.error('Resend error:', error);
