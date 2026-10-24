@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-10-23 01:40 -->
+<!-- WMM-BUILD: 2026-10-24 20:00 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -881,7 +881,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-10-23 01:40";</script>
+<script>window.WMM_BUILD = "2026-10-24 20:00";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -8652,8 +8652,10 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
   // Hij mag alleen naar vroeger verschuiven, nooit naar later.
   async function bepaalKoppelStart(code) {
     window._koppelStart = window._koppelStart || {};
+    window._koppelStartVast = window._koppelStartVast || {};
     const lokaal = (laadKoppels().find(k => k.code === code) || {}).aangemaakt || null;
     const ref = doc(db, 'koppels', code);
+    let vast = false;   // staat de datum ook echt in Firestore?
     try {
       const snap = await getDoc(ref);
       const inCloud = snap.exists() ? (snap.data().gestart || null) : null;
@@ -8661,21 +8663,51 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
         // Nog niet vastgelegd: neem de datum uit je eigen koppellijst, niet
         // vandaag. Zo krijgt een koppeling die al bestond de juiste dag.
         const start = lokaal || new Date().toISOString();
-        try { await setDoc(ref, {gestart: start}); } catch(e) {}
+        try { await setDoc(ref, {gestart: start}); vast = true; } catch(e) {}
         window._koppelStart[code] = start;
       } else if (lokaal && lokaal < inCloud) {
         // Jouw kant weet een vroegere datum: corrigeer naar voren.
-        try { await setDoc(ref, {gestart: lokaal}); } catch(e) {}
+        try { await setDoc(ref, {gestart: lokaal}); vast = true; } catch(e) {}
         window._koppelStart[code] = lokaal;
       } else {
         window._koppelStart[code] = inCloud;
+        vast = true;
       }
     } catch(e) {
       window._koppelStart[code] = lokaal;   // offline of geen rechten: val terug
     }
+    window._koppelStartVast[code] = vast;
     try { localStorage.setItem('wmm_koppelstart_' + code, window._koppelStart[code] || ''); } catch {}
     if (window.renderEchtHistory) { try { renderEchtHistory(); } catch {} }
     if (window.renderPartner) { try { renderPartner(); } catch {} }
+  }
+
+  // Ruimt je eigen dagen van voor de koppeling op uit de gedeelde koppeling.
+  // Die stammen uit de tijd dat de app bij het koppelen 90 dagen geschiedenis
+  // meestuurde. Ze zijn al onzichtbaar in de grafieken; dit haalt ze ook echt weg.
+  //
+  // Twee waarborgen:
+  //   - alleen als de startdatum in Firestore staat, dus vast is voor jullie
+  //     allebei. Nooit wissen op basis van een datum die alleen jouw telefoon kent.
+  //   - eenmalig per koppeling, onthouden in localStorage.
+  //
+  // Ieder ruimt alleen zijn eigen dagen op; de regels staan niets anders toe.
+  // Je eigen gegevens blijven gewoon in je telefoon en in je accountback-up staan:
+  // dit wist alleen de gedeelde kopie.
+  async function ruimDagenVoorKoppelingOp(code) {
+    if (!window._koppelStartVast || !window._koppelStartVast[code]) return;
+    if (!koppelStart(code)) return;
+    const vlag = 'wmm_opgeruimd_' + code;
+    try { if (localStorage.getItem(vlag)) return; } catch {}
+    try {
+      const snap = await getDocs(collection(db, 'koppels', code, 'gebruikers', mijnNaam, 'data'));
+      let weg = 0;
+      for (const d of snap.docs) {
+        if (!naKoppeling(code, d.id)) { await deleteDoc(d.ref); weg++; }
+      }
+      try { localStorage.setItem(vlag, new Date().toISOString()); } catch {}
+      if (weg > 0) console.log(`[WMM] ${weg} dagen van voor de koppeling opgeruimd uit ${code}`);
+    } catch(e) { console.warn('Opruimen van oude koppeldagen mislukt:', e); }
   }
 
   async function initEenKoppel(code) {
@@ -8703,6 +8735,7 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
         } catch(e) { /* oude regels: lidmaatschap nog niet toegestaan */ }
       }
       await bepaalKoppelStart(code);
+      ruimDagenVoorKoppelingOp(code);   // op de achtergrond, hoeft niet te wachten
       const bestaand = await getDoc(mijnRef);
       const d = bestaand.exists() ? bestaand.data() : null;
       // Een naam is bezet als een andere gebruiker hem heeft geclaimd. Voor
