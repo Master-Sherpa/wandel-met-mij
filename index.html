@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-10-24 20:00 -->
+<!-- WMM-BUILD: 2026-10-24 20:55 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -557,6 +557,11 @@
     .week-mini-star{position:absolute;transform:translate(-50%,0);color:#f0a500;font-size:12px;line-height:1;}
     .sub-note{display:block;font-size:11px;color:#7ab8d4;font-weight:400;margin-top:2px;}
     .blok-kop{display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 6px;font-size:11px;color:#f0a500;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;}
+    .blok-kop.klapbaar{cursor:pointer;user-select:none;-webkit-user-select:none;}
+    /* display:contents laat de vraagrijen gewoon meedoen in de flex-kolom
+       eromheen, inclusief de tussenruimte. Dicht = helemaal weg. */
+    .klap-vak{display:contents;}
+    .klap-vak.dicht{display:none;}
     .blok-kop .blok-pct{font-size:12px;color:#7ab8d4;letter-spacing:0;text-transform:none;font-weight:600;}
     .bc-wrap{position:relative;padding:14px 0 0 28px;}
     .bc-axis{position:absolute;left:0;top:14px;width:26px;height:100px;}
@@ -881,7 +886,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-10-24 20:00";</script>
+<script>window.WMM_BUILD = "2026-10-24 20:55";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -2284,6 +2289,10 @@ function answerKey(k, val) {
   const key = todayKey(), data = loadDay(key);
   data[k] = val;
   if (['e0', 'e1', 'eb', 'p'].includes(k)) data['_t_' + k] = Date.now();
+  // Beantwoord je een echtgenoot-vraag, dan blijft het blok open staan. Anders
+  // zou het bij de laatste tik onder je vinger dichtklappen, met de bonusregel
+  // erin. Het klapt pas dicht als je terugkomt op het scherm.
+  if (['e0', 'e1', 'eb'].includes(k)) window._echtDicht = false;
   saveDay(key, data); renderVragen(data); updateBattery(data);
   if (k === 'p' && val === 'ja' && window.toonToast) toonToast('★ ' + uiT().periodeLabel + ' opgeslagen');
 }
@@ -2400,6 +2409,30 @@ function answerDoel(index, val) {
   const key = todayKey(), data = loadDay(key);
   data['doel_'+index] = val; saveDay(key, data); renderVragen(data); updateBattery(data);
 }
+// Open- en dichtklappen van de echtgenoot-vragen.
+// undefined = geen eigen keuze, dan beslist de regel (dicht als ingevuld).
+window._echtDicht = undefined;
+function echtKlap() {
+  const vak = document.getElementById('echt-vragen');
+  if (!vak) return;
+  const dicht = !vak.classList.contains('dicht');
+  vak.classList.toggle('dicht', dicht);
+  window._echtDicht = dicht;
+  const chev = document.querySelector('.blok-kop.klapbaar [class*="ti-chevron-"]');
+  if (chev) chev.className = 'ti ti-chevron-' + (dicht ? 'down' : 'up');
+}
+window.echtKlap = echtKlap;
+// Gaat de app naar de achtergrond, dan vervalt je eigen keuze. Op een iPhone
+// wordt een app vaak alleen geparkeerd en niet echt afgesloten; zonder dit
+// zou je bij terugkomst de vragen nog open zien staan.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') {
+    window._echtDicht = undefined;
+  } else {
+    try { renderVragen(loadDay(todayKey())); } catch {}
+  }
+});
+
 function renderVragen(data) {
   const c = document.getElementById('questions'); c.innerHTML = '';
   const t = T();
@@ -2410,7 +2443,11 @@ function renderVragen(data) {
   });
   // Lichamelijke batterij (altijd aan)
   const ui = uiT();
-  const blokKop = (titel, pct) => `<div class="blok-kop" style="width:100%"><span><i class="ti ti-battery-charging"></i> ${titel}</span>${pct !== null ? `<span class="blok-pct">${pct}%</span>` : ''}</div>`;
+  const blokKop = (titel, pct, klapDicht) => {
+    const klapbaar = klapDicht !== undefined;
+    const chev = klapbaar ? ` <i class="ti ti-chevron-${klapDicht ? 'down' : 'up'}" style="font-size:13px;opacity:0.7;"></i>` : '';
+    return `<div class="blok-kop${klapbaar ? ' klapbaar' : ''}" style="width:100%"${klapbaar ? ' onclick="echtKlap()" role="button" tabindex="0"' : ''}><span><i class="ti ti-battery-charging"></i> ${titel}${chev}</span>${pct !== null ? `<span class="blok-pct">${pct}%</span>` : ''}</div>`;
+  };
   const vraagRij = (tekst, key, sub) => `<div class="question-row" style="width:100%"><span class="question-text">${tekst}${sub ? `<span class="sub-note">${sub}</span>` : ''}</span><div class="btn-group"><button class="btn-yn ${data[key]==='ja'?'selected-ja':''}" onclick="answerKey('${key}','ja')">${t.ja}</button><button class="btn-yn ${data[key]==='nee'?'selected-nee':''}" onclick="answerKey('${key}','nee')">${t.nee}</button></div></div>`;
   c.insertAdjacentHTML('beforeend', blokKop(t.lichLabel, lichPctFromData(data)) + balkHTML(lichPctFromData(data), 100, BAT_RGB.lich) + t.lichVragen.map((_, i) => vraagRij(lichVraagTekst(i), 'l' + i)).join(''));
   // Gezamenlijke echtgenoot-batterij: één stand van beide partners, iedereen kan invullen
@@ -2429,10 +2466,20 @@ function renderVragen(data) {
   if (echtAan()) {
     const gisteren = new Date(); gisteren.setDate(gisteren.getDate() - 1);
     const echtPct = echtPctFromData(m, echtEbOpDag(gisteren));
-    c.insertAdjacentHTML('beforeend', blokKop(t.echtLabel, echtPct) + balkHTML(echtPct, 150, BAT_RGB.echt) + t.echtVragen.map((v, i) => gedeeldeRij(`${v} <span style="color:#f0a500">(+${ECHT_PUNTEN['e' + i]}%)</span>`, 'e' + i)).join('') + gedeeldeRij(`${t.echtBonus} <span style="color:#f0a500">${ui.bonusNote}</span>`, 'eb'));
-  }
-  // Periode (puntloos, aan via instellingen; ook gedeeld)
-  if (periodeAan()) {
+    // Dicht zodra de twee vragen van vandaag beantwoord zijn, open zolang dat
+    // nog niet zo is. Een eigen tik gaat voor, maar alleen tot de app naar de
+    // achtergrond gaat; daarna geldt de regel weer.
+    const ingevuld = ['e0','e1'].every(k => m[k] === 'ja' || m[k] === 'nee');
+    const dicht = (window._echtDicht === undefined) ? ingevuld : window._echtDicht;
+    let rijen = t.echtVragen.map((v, i) => gedeeldeRij(`${v} <span style="color:#f0a500">(+${ECHT_PUNTEN['e' + i]}%)</span>`, 'e' + i)).join('')
+              + gedeeldeRij(`${t.echtBonus} <span style="color:#f0a500">${ui.bonusNote}</span>`, 'eb');
+    // De periode staat onder dezelfde kop en hoort dus mee te klappen. Hij telt
+    // niet mee voor 'ingevuld': puntloos, en niet iets wat je elke dag aantikt.
+    if (periodeAan()) rijen += gedeeldeRij(ui.periodeLabel, 'p', ui.periodeSub);
+    c.insertAdjacentHTML('beforeend', blokKop(t.echtLabel, echtPct, dicht) + balkHTML(echtPct, 150, BAT_RGB.echt)
+      + `<div class="klap-vak${dicht ? ' dicht' : ''}" id="echt-vragen">${rijen}</div>`);
+  } else if (periodeAan()) {
+    // Periode zonder echtgenoot-batterij: losse regel, er is niets om in te klappen.
     c.insertAdjacentHTML('beforeend', gedeeldeRij(ui.periodeLabel, 'p', ui.periodeSub));
   }
   const doelen = loadDoelen();
