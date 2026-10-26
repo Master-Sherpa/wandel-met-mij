@@ -6920,6 +6920,14 @@ function startApp() {
 }
 registerSW().then(startApp).catch(startApp);
 setTimeout(startApp, 3000); // absoluut vangnet: na 3s start de app sowieso
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') {
+    window._gevoeligOpen = false;
+  } else {
+    try { renderVragen(loadDay(todayKey())); } catch {}
+    try { renderBoosters(); } catch {}
+  }
+});
 </script>
 </body>
 </html>
