@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-10-24 21:10 -->
+<!-- WMM-BUILD: 2026-10-30 00:50 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -890,7 +890,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-10-24 21:10";</script>
+<script>window.WMM_BUILD = "2026-10-30 00:50";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -1128,6 +1128,23 @@
         <button class="doel-add-btn" id="doel-add-btn" onclick="voegDoelToe()">+</button>
       </div>
       <div class="doel-hint" id="doel-hint"></div>
+    </div>
+    <!-- ECHTGENOOT DOELEN (standaard ingeklapt, alleen zichtbaar als echtgenoot-batterij aan staat) -->
+    <div class="card" id="echt-doel-card" style="display:none;">
+      <button type="button" id="echt-doel-toggle" onclick="toggleEchtDoelKaart()" aria-expanded="false" aria-controls="echt-doel-body" style="width:100%;background:none;border:0;padding:0;margin:0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
+        <span class="card-label" style="margin:0;"><i class="ti ti-heart"></i> <span id="echt-doel-label">Echtgenoot doelen</span></span>
+        <i class="ti ti-chevron-down" id="echt-doel-chev" aria-hidden="true" style="color:#7ab8d4;transition:transform .2s;"></i>
+      </button>
+      <div id="echt-doel-body" style="display:none;margin-top:10px;">
+        <p style="font-size:13px;color:#7ab8d4;margin-bottom:12px;line-height:1.6">Een echtgenoot-doel geeft +50% bonus, net als "vlees worden". De twee markeringen zijn ja/nee en komen alleen als vinkje in de grafiek.</p>
+        <label style="font-size:12px;color:#7ab8d4;">Doel</label>
+        <input class="doel-input" id="echt-doel-tekst" type="text" maxlength="60" placeholder="Bijv: samen 10 minuten bidden"/>
+        <label style="font-size:12px;color:#7ab8d4;">Markering 1</label>
+        <input class="doel-input" id="echt-m0-tekst" type="text" maxlength="40" placeholder="Bijv: samen gewandeld"/>
+        <label style="font-size:12px;color:#7ab8d4;">Markering 2</label>
+        <input class="doel-input" id="echt-m1-tekst" type="text" maxlength="40" placeholder="Bijv: samen gegeten"/>
+        <button class="doel-add-btn" style="width:auto;padding:0 14px;margin-top:10px;" onclick="saveEchtDoel()">Opslaan</button>
+      </div>
     </div>
     <!-- GOUDEN TIPS -->
     <div class="card" id="gouden-tips-card" style="border:1px solid #c8a400;">
@@ -2276,12 +2293,14 @@ function lichPctFromData(data) {
 }
 // Puntentelling: samen God gezocht 45%, samen tijd 45%, 1 vlees 50%.
 // 1 vlees van gisteren telt ook vandaag mee (prevEb), zonder dubbel te tellen.
-const ECHT_PUNTEN = {e0: 45, e1: 45, eb: 50};
+const ECHT_PUNTEN = {e0: 45, e1: 45, eb: 50, ed: 50};
+const ECHT_MK_KLEUR = ['#5ee6a8', '#ff9f5a'];
 function echtPctFromData(data, prevEb = false) {
   let p = 0;
   if (data.e0 === 'ja') p += ECHT_PUNTEN.e0;
   if (data.e1 === 'ja') p += ECHT_PUNTEN.e1;
   if (data.eb === 'ja' || prevEb) p += ECHT_PUNTEN.eb;
+  if (data.ed === 'ja') p += ECHT_PUNTEN.ed;
   return p;
 }
 // Is 1 vlees (gezamenlijk) op een bepaalde dag gegeven?
@@ -2292,10 +2311,10 @@ function echtEbOpDag(d) {
 function answerKey(k, val) {
   const key = todayKey(), data = loadDay(key);
   data[k] = val;
-  if (['e0', 'e1', 'eb', 'p'].includes(k)) data['_t_' + k] = Date.now();
+  if (['e0', 'e1', 'eb', 'p', 'ed', 'm0', 'm1'].includes(k)) data['_t_' + k] = Date.now();
   // Beantwoord je een persoonlijke vraag, dan blijft dat vak open staan; anders
   // zou het bij je tik onder je vinger dichtklappen.
-  if (['eb', 'p'].includes(k)) window._gevoeligOpen = true;
+  if (['eb', 'p', 'ed', 'm0', 'm1'].includes(k)) window._gevoeligOpen = true;
   saveDay(key, data); renderVragen(data); updateBattery(data);
   if (k === 'p' && val === 'ja' && window.toonToast) toonToast('★ ' + uiT().periodeLabel + ' opgeslagen');
 }
@@ -2307,6 +2326,43 @@ function xpFromData(data) {
 }
 
 // ── DOELEN ───────────────────────────────────────────────────
+// ── ECHTGENOOT DOELEN ────────────────────────────────────────
+// Doel (ja/nee per dag, +50%) en twee markeringen (ja/nee, alleen vinkje in de grafiek).
+// De teksten staan per persoon; de dagantwoorden gaan via de gewone echtgenoot-koppeling.
+function loadEchtDoel() {
+  try { return Object.assign({doel:'', m0:'', m1:''}, JSON.parse(localStorage.getItem('wmm_echt_doel')) || {}); }
+  catch { return {doel:'', m0:'', m1:''}; }
+}
+function saveEchtDoel() {
+  const obj = {
+    doel: (document.getElementById('echt-doel-tekst').value || '').trim(),
+    m0:   (document.getElementById('echt-m0-tekst').value || '').trim(),
+    m1:   (document.getElementById('echt-m1-tekst').value || '').trim()
+  };
+  try { localStorage.setItem('wmm_echt_doel', JSON.stringify(obj)); } catch {}
+  if (window.cloudSave) window.cloudSave('echtdoel', obj);
+  const data = loadDay(todayKey());
+  renderVragen(data); updateBattery(data); renderEchtDoelKaart();
+}
+function toggleEchtDoelKaart() {
+  const body = document.getElementById('echt-doel-body');
+  const btn = document.getElementById('echt-doel-toggle');
+  const open = body.style.display === 'none';
+  body.style.display = open ? 'block' : 'none';
+  btn.setAttribute('aria-expanded', String(open));
+  document.getElementById('echt-doel-chev').style.transform = open ? 'rotate(180deg)' : '';
+}
+function renderEchtDoelKaart() {
+  const card = document.getElementById('echt-doel-card');
+  if (!card) return;
+  card.style.display = echtAan() ? '' : 'none';
+  const v = loadEchtDoel();
+  const velden = {doel:'echt-doel-tekst', m0:'echt-m0-tekst', m1:'echt-m1-tekst'};
+  Object.keys(velden).forEach(k => {
+    const el = document.getElementById(velden[k]);
+    if (el && document.activeElement !== el) el.value = v[k] || '';
+  });
+}
 function loadDoelen() { try { return JSON.parse(localStorage.getItem('wmm_doelen')) || []; } catch { return []; } }
 function saveDoelen(doelen) {
   try { localStorage.setItem('wmm_doelen', JSON.stringify(doelen)); } catch {}
@@ -2478,6 +2534,10 @@ function renderVragen(data) {
     // iemand meekijkt. Ze gaan vanzelf weer dicht als de app wegvalt.
     const gewoon = t.echtVragen.map((v, i) => gedeeldeRij(`${v} <span style="color:#f0a500">(+${ECHT_PUNTEN['e' + i]}%)</span>`, 'e' + i)).join('');
     let persoonlijk = gedeeldeRij(`${t.echtBonus} <span style="color:#f0a500">${ui.bonusNote}</span>`, 'eb');
+    const ed = loadEchtDoel();
+    if (ed.doel) persoonlijk += gedeeldeRij(`${ed.doel} <span style="color:#f0a500">${ui.bonusNote}</span>`, 'ed');
+    if (ed.m0) persoonlijk += gedeeldeRij(ed.m0, 'm0');
+    if (ed.m1) persoonlijk += gedeeldeRij(ed.m1, 'm1');
     if (periodeAan()) persoonlijk += gedeeldeRij(ui.periodeLabel, 'p', ui.periodeSub);
     c.insertAdjacentHTML('beforeend', blokKop(t.echtLabel, echtPct) + balkHTML(echtPct, 150, BAT_RGB.echt)
       + gewoon + gevoeligKnopHTML(ui) + gevoeligVakHTML(persoonlijk));
@@ -3713,6 +3773,7 @@ function renderEchtKaart() {
   const mijn = localStorage.getItem('wmm_naam') || '';
   const partner = window._echtPartnerNaam || '';
   if (lbl) lbl.textContent = (mijn && partner) ? `${mijn} & ${partner} ${ui.echtKaart}` : ui.echtKaart;
+  renderEchtDoelKaart();
 }
 
 // ── KLEUR, GLOED EN STAVEN ───────────────────────────────────
@@ -3849,7 +3910,7 @@ function echtKies(k, eigen, partner) {
 }
 function echtSamengevoegd(eigen, partner) {
   const out = {};
-  ['e0', 'e1', 'eb', 'p'].forEach(k => { const v = echtKies(k, eigen, partner); if (v) out[k] = v; });
+  ['e0', 'e1', 'eb', 'p', 'ed', 'm0', 'm1'].forEach(k => { const v = echtKies(k, eigen, partner); if (v) out[k] = v; });
   return out;
 }
 function renderEchtHistory() {
@@ -3860,6 +3921,7 @@ function renderEchtHistory() {
   const fmtShort = d => d.toLocaleDateString(taalLocale(), {day:'numeric', month:'short'});
   const toonEcht = echtAan(), toonPeriode = periodeAan();
   let getoond = 0;
+  const ld = loadEchtDoel();
   bouwWekenLijst().forEach((maandag, wi) => {
     const zondag = new Date(maandag); zondag.setDate(maandag.getDate()+6);
     const dagen = []; let heeftData = false;
@@ -3876,6 +3938,7 @@ function renderEchtHistory() {
       if (h) heeftData = true;
       dagen.push({h, isTv: false, naam, periode: toonPeriode && h && m.p === 'ja',
         bonus: toonEcht && h && m.eb === 'ja',
+        mk0: toonEcht && h && !!ld.m0 && m.m0 === 'ja', mk1: toonEcht && h && !!ld.m1 && m.m1 === 'ja',
         waarden: {echt: toonEcht && h ? echtPctFromData(m, prevEb) : null}});
     }
     if (wi !== 0 && !heeftData) return;
@@ -3892,13 +3955,17 @@ function renderEchtHistory() {
     legenda.push({rgb:BAT_RGB.laag, label:'< 35%'});
     if (toonPeriode) legenda.push({rgb:BAT_RGB.ger, label:'★ ' + ui.periodeLabel});
     if (toonEcht && dagen.some(d => d.bonus)) legenda.push({symbool:'♥', kleur:'#ff7eb6', label: t.echtBonusKort});
+    if (toonEcht && ld.m0 && dagen.some(d => d.mk0)) legenda.push({symbool:'✓', kleur:ECHT_MK_KLEUR[0], label: ld.m0});
+    if (toonEcht && ld.m1 && dagen.some(d => d.mk1)) legenda.push({symbool:'✓', kleur:ECHT_MK_KLEUR[1], label: ld.m1});
     blok.innerHTML = kop + bcWeekHTML(dagen, 150, [{key:'echt', rgb:BAT_RGB.echt}], [0, 50, 100, 150]) + legendaHTML(legenda);
     container.appendChild(blok);
     const plot = blok.querySelector('.bc-plot');
     if (plot) {
       if (toonPeriode) tekenPeriodeCurve(plot, dagen);
       const harten = dagen.map((d, i) => d.bonus ? `<div class="echt-hart" style="left:${dagX(i)}%;">♥</div>` : '').join('');
-      if (harten) plot.insertAdjacentHTML('beforeend', `<div class="week-mini-overlay" style="top:0;bottom:auto;height:100px;">${harten}</div>`);
+      const vinkjes = (k, kleur, top) => dagen.map((d, i) => d[k] ? `<div class="echt-hart" style="left:${dagX(i)}%;top:${top}px;color:${kleur};text-shadow:none;">✓</div>` : '').join('');
+      const extra = harten + vinkjes('mk0', ECHT_MK_KLEUR[0], -24) + vinkjes('mk1', ECHT_MK_KLEUR[1], -38);
+      if (extra) plot.insertAdjacentHTML('beforeend', `<div class="week-mini-overlay" style="top:0;bottom:auto;height:100px;">${extra}</div>`);
     }
   });
   if (getoond === 0) container.innerHTML = `<p style="font-size:13px;color:#3a6a8c;text-align:center;padding:16px 0;">${ui.leegEcht}</p>`;
