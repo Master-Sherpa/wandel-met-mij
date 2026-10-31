@@ -553,6 +553,7 @@
     .week-mini-overlay{position:absolute;left:0;right:0;bottom:12px;height:100px;pointer-events:none;}
     .week-mini-line{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;}
     .week-mini-dot{position:absolute;width:7px;height:7px;border-radius:50%;background:#7ab8d4;border:1.5px solid #0d2d4a;transform:translate(-50%,50%);}
+    .doel-tag{display:inline-flex;align-items:center;line-height:1.2;}
     .mat-ref{display:block;width:max-content;margin-top:8px;cursor:pointer;color:#7ab8d4;font-size:12px;font-weight:400;text-transform:none;letter-spacing:0;border:1px solid #1a3f5c;border-radius:12px;padding:3px 10px;white-space:nowrap;}
     .echt-hart{position:absolute;transform:translate(-50%,0);top:-24px;color:#ff7eb6;font-size:11px;line-height:1;text-shadow:0 0 6px rgba(255,126,182,.6);}
     .week-mini-star{position:absolute;transform:translate(-50%,0);color:#f0a500;font-size:12px;line-height:1;}
@@ -2388,7 +2389,7 @@ function renderEchtRefs() {
     if (!obj[k]) return;
     const row = document.createElement('div');
     row.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:10px;';
-    row.innerHTML = `<span class="doel-tag">Referentie ${n}</span><span style="flex:1;font-size:14px;color:#e8f4f8">${setEsc(obj[k])}</span><button class="doel-remove-btn" onclick="verwijderEchtRef('${k}')">×</button>`;
+    row.innerHTML = `<span class="doel-tag">Referentie ${n}</span><span style="flex:1;font-size:14px;color:#e8f4f8;line-height:1.3;">${setEsc(obj[k])}</span><button class="doel-remove-btn" onclick="verwijderEchtRef('${k}')">×</button>`;
     list.appendChild(row);
   });
   if (rij) rij.style.display = (obj.m0 && obj.m1) ? 'none' : 'flex';
@@ -2415,7 +2416,7 @@ function renderEchtDoelKaart() {
     if (obj.doel) {
       const row = document.createElement('div');
       row.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:10px;';
-      row.innerHTML = `<span class="doel-tag">Doel</span><span style="flex:1;font-size:14px;color:#e8f4f8">${setEsc(obj.doel)}</span><button class="doel-remove-btn" onclick="verwijderEchtDoel()">×</button>`;
+      row.innerHTML = `<span class="doel-tag">Doel</span><span style="flex:1;font-size:14px;color:#e8f4f8;line-height:1.3;">${setEsc(obj.doel)}</span><button class="doel-remove-btn" onclick="verwijderEchtDoel()">×</button>`;
       list.appendChild(row);
     }
   }
@@ -2439,7 +2440,7 @@ function renderDoelen() {
   doelen.forEach((d, i) => {
     const row = document.createElement('div');
     row.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:10px;';
-    row.innerHTML = `<span class="doel-tag">${t.doelNummer} ${i+1}</span><span style="flex:1;font-size:14px;color:#e8f4f8">${d}</span><button class="doel-remove-btn" onclick="verwijderDoel(${i})">×</button>`;
+    row.innerHTML = `<span class="doel-tag">${t.doelNummer} ${i+1}</span><span style="flex:1;font-size:14px;color:#e8f4f8;line-height:1.3;">${d}</span><button class="doel-remove-btn" onclick="verwijderDoel(${i})">×</button>`;
     list.appendChild(row);
   });
   if (addRow) addRow.style.display = doelen.length >= 3 ? 'none' : 'flex';
