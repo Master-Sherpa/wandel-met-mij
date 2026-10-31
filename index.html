@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-10-31 21:40 -->
+<!-- WMM-BUILD: 2026-10-31 21:45 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -891,7 +891,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-10-31 21:40";</script>
+<script>window.WMM_BUILD = "2026-10-31 21:45";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -1104,7 +1104,7 @@
   <!-- FSY -->
   <div class="page" id="page-countdown">
     <div class="card">
-      <div class="card-label" id="countdown-label"><i class="ti ti-calendar-event"></i> Countdown naar nieuw verbond, het avondmaal<span class="mat-ref" onclick="toonMatPopup()">Mat. 26:26-28</span></div>
+      <div class="card-label" id="countdown-label"><i class="ti ti-calendar-event"></i> Countdown naar het Nieuwe Verbond, het avondmaal<span class="mat-ref" onclick="toonMatPopup()">Mat. 26:26-28</span></div>
       <div class="countdown-grid">
         <div class="cd-box"><div class="cd-num" id="cd-d">–</div><div class="cd-label" id="cd-label-d">dagen</div></div>
         <div class="cd-box"><div class="cd-num" id="cd-h">–</div><div class="cd-label" id="cd-label-h">uur</div></div>
@@ -1138,8 +1138,8 @@
       </button>
       <div id="echt-doel-body" style="display:none;margin-top:10px;">
         <p style="font-size:13px;color:#7ab8d4;margin-bottom:12px;line-height:1.6">Een echtgenoot-doel geeft +10% bonus.</p>
-        <label style="font-size:12px;color:#7ab8d4;">Doel</label>
-        <input class="doel-input" id="echt-doel-tekst" type="text" maxlength="60" placeholder="Bijv: samen 10 minuten bidden" oninput="planEchtDoelOpslaan()"/>
+        <div id="echt-doel-list" style="margin-top:12px;"></div>
+        <div class="doel-input-row" id="echt-doel-rij"><input class="doel-input" id="echt-doel-tekst" type="text" maxlength="60" placeholder="Bijv: samen 10 minuten bidden"/><button class="doel-add-btn" type="button" onclick="voegEchtDoelToe()">+</button></div>
         <p style="font-size:13px;color:#7ab8d4;margin:12px 0 8px;line-height:1.6">Hieronder kun je referentiepunten invullen, deze twee zijn ja/nee vragen en komen alleen als een vinkje in de grafiek.</p>
         <div id="echt-ref-list" style="margin-top:12px;"></div>
         <div class="doel-input-row" id="echt-ref-rij"><input class="doel-input" id="echt-ref-nieuw" type="text" maxlength="40" placeholder="Bijv: samen gewandeld"/><button class="doel-add-btn" type="button" onclick="voegEchtRefToe()">+</button></div>
@@ -1619,7 +1619,7 @@ const TALEN = {
     doneMessages:[["Kleine stap, grote moed.","Elke dag telt. Probeer morgen meer."],["Goed gedaan vandaag!","Je bent op de goede weg."],["Bijna op volle kracht!","Zo ga je vol vertrouwen."],["Geestelijke batterij vol! 🌟","De Heer is trots op jou vandaag."]],
     xpLabel:"Totaalscore (XP)", gemiddeldLabel:"Gemiddeld", gemBatterij:"Gem. batterij", dagenActief:"Aantal dagen sereen en doelbewust", besteDag:"Beste dag",
     dezeWeek:"Alle weken", jouwWeek:"Jouw week", volgendNiveau:"Volgend niveau:", hoogsteNiveau:"Discipel bereikt! 🏆",
-    countdownLabel:"Countdown naar nieuw verbond, het avondmaal<span class=\"mat-ref\" onclick=\"toonMatPopup()\">Mat. 26:26-28</span>", dagen:"dagen", uur:"uur", minuten:"minuten", seconden:"seconden",
+    countdownLabel:"Countdown naar het Nieuwe Verbond, het avondmaal<span class=\"mat-ref\" onclick=\"toonMatPopup()\">Mat. 26:26-28</span>", dagen:"dagen", uur:"uur", minuten:"minuten", seconden:"seconden",
     onderwegLabel:"% van de week", geestVoortgang:"Geestelijke voortgang naar Nieuw Verbond", dagenGedaan:"dagen gedaan", dagenTeGaan:"dagen te gaan",
     juillezErBijna:"Wandel elke dag met Hem 🌟",
     notifLabel:"Dagelijkse herinnering", notifTekst:"Stuur mij elke dag een herinnering om mijn batterij in te vullen",
@@ -2336,9 +2336,6 @@ function toonMatPopup() {
   document.getElementById('mat-popup').style.display = 'flex';
 }
 function sluitMatPopup() { document.getElementById('mat-popup').style.display = 'none'; }
-// Echtgenoot-doel opslaan gebeurt nu automatisch, een paar tellen na het typen
-let _echtDoelTimer = null;
-function planEchtDoelOpslaan() { clearTimeout(_echtDoelTimer); _echtDoelTimer = setTimeout(saveEchtDoel, 600); }
 function loadEchtDoel() {
   try { return Object.assign({doel:'', m0:'', m1:''}, JSON.parse(localStorage.getItem('wmm_echt_doel')) || {}); }
   catch { return {doel:'', m0:'', m1:''}; }
@@ -2349,9 +2346,19 @@ function slaEchtDoelOp(obj) {
   const data = loadDay(todayKey());
   renderVragen(data); updateBattery(data); renderEchtDoelKaart();
 }
-function saveEchtDoel() {
+// Doel toevoegen en verwijderen, zoals bij persoonlijke doelen
+function voegEchtDoelToe() {
+  const inp = document.getElementById('echt-doel-tekst');
+  const tekst = (inp && inp.value || '').trim();
+  if (!tekst) return;
   const obj = loadEchtDoel();
-  obj.doel = (document.getElementById('echt-doel-tekst').value || '').trim();
+  obj.doel = tekst;
+  inp.value = '';
+  slaEchtDoelOp(obj);
+}
+function verwijderEchtDoel() {
+  const obj = loadEchtDoel();
+  obj.doel = '';
   slaEchtDoelOp(obj);
 }
 // Referentie toevoegen: vult de eerste vrije plek, zoals een persoonlijk doel
@@ -2400,8 +2407,19 @@ function renderEchtDoelKaart() {
   const card = document.getElementById('echt-doel-card');
   if (!card) return;
   card.style.display = echtAan() ? '' : 'none';
-  const el = document.getElementById('echt-doel-tekst');
-  if (el && document.activeElement !== el) el.value = loadEchtDoel().doel || '';
+  const obj = loadEchtDoel();
+  const list = document.getElementById('echt-doel-list');
+  const rij = document.getElementById('echt-doel-rij');
+  if (list) {
+    list.innerHTML = '';
+    if (obj.doel) {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:10px;';
+      row.innerHTML = `<span class="doel-tag">Doel</span><span style="flex:1;font-size:14px;color:#e8f4f8">${setEsc(obj.doel)}</span><button class="doel-remove-btn" onclick="verwijderEchtDoel()">×</button>`;
+      list.appendChild(row);
+    }
+  }
+  if (rij) rij.style.display = obj.doel ? 'none' : 'flex';
   renderEchtRefs();
 }
 function loadDoelen() { try { return JSON.parse(localStorage.getItem('wmm_doelen')) || []; } catch { return []; } }
