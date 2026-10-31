@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-10-30 00:50 -->
+<!-- WMM-BUILD: 2026-10-31 21:20 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -553,6 +553,7 @@
     .week-mini-overlay{position:absolute;left:0;right:0;bottom:12px;height:100px;pointer-events:none;}
     .week-mini-line{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;}
     .week-mini-dot{position:absolute;width:7px;height:7px;border-radius:50%;background:#7ab8d4;border:1.5px solid #0d2d4a;transform:translate(-50%,50%);}
+    .mat-ref{cursor:pointer;color:#7ab8d4;font-size:12px;text-decoration:underline;margin-left:4px;}
     .echt-hart{position:absolute;transform:translate(-50%,0);top:-24px;color:#ff7eb6;font-size:11px;line-height:1;text-shadow:0 0 6px rgba(255,126,182,.6);}
     .week-mini-star{position:absolute;transform:translate(-50%,0);color:#f0a500;font-size:12px;line-height:1;}
     .sub-note{display:block;font-size:11px;color:#7ab8d4;font-weight:400;margin-top:2px;}
@@ -890,7 +891,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-10-30 00:50";</script>
+<script>window.WMM_BUILD = "2026-10-31 21:20";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -903,7 +904,7 @@
   <div class="tabs">
     <button class="tab active" onclick="showPage('vandaag',this)"><i class="ti ti-sun"></i>Vandaag</button>
     <button class="tab" onclick="showPage('voortgang',this)"><i class="ti ti-chart-bar"></i>Voortgang</button>
-    <button class="tab" onclick="showPage('countdown',this)"><i class="ti ti-calendar-event"></i>Avondmaal</button>
+    <button class="tab" onclick="showPage('countdown',this)"><i class="ti ti-calendar-event"></i>Verbond(en)</button>
     <button class="tab" onclick="showPage('bibliotheek',this)"><i class="ti ti-books"></i>Bibliotheek</button>
   </div>
 
@@ -1103,7 +1104,7 @@
   <!-- FSY -->
   <div class="page" id="page-countdown">
     <div class="card">
-      <div class="card-label" id="countdown-label"><i class="ti ti-calendar-event"></i> Countdown naar Avondmaal</div>
+      <div class="card-label" id="countdown-label"><i class="ti ti-calendar-event"></i> Countdown naar nieuw verbond, het avondmaal <span class="mat-ref" onclick="toonMatPopup()">Mat. 26:26-28</span></div>
       <div class="countdown-grid">
         <div class="cd-box"><div class="cd-num" id="cd-d">–</div><div class="cd-label" id="cd-label-d">dagen</div></div>
         <div class="cd-box"><div class="cd-num" id="cd-h">–</div><div class="cd-label" id="cd-label-h">uur</div></div>
@@ -1136,14 +1137,13 @@
         <i class="ti ti-chevron-down" id="echt-doel-chev" aria-hidden="true" style="color:#7ab8d4;transition:transform .2s;"></i>
       </button>
       <div id="echt-doel-body" style="display:none;margin-top:10px;">
-        <p style="font-size:13px;color:#7ab8d4;margin-bottom:12px;line-height:1.6">Een echtgenoot-doel geeft +50% bonus, net als "vlees worden". De twee markeringen zijn ja/nee en komen alleen als vinkje in de grafiek.</p>
+        <p style="font-size:13px;color:#7ab8d4;margin-bottom:12px;line-height:1.6">Een echtgenoot-doel geeft +10% bonus.</p>
         <label style="font-size:12px;color:#7ab8d4;">Doel</label>
-        <input class="doel-input" id="echt-doel-tekst" type="text" maxlength="60" placeholder="Bijv: samen 10 minuten bidden"/>
-        <label style="font-size:12px;color:#7ab8d4;">Markering 1</label>
-        <input class="doel-input" id="echt-m0-tekst" type="text" maxlength="40" placeholder="Bijv: samen gewandeld"/>
+        <input class="doel-input" id="echt-doel-tekst" type="text" maxlength="60" placeholder="Bijv: samen 10 minuten bidden" oninput="planEchtDoelOpslaan()"/>
+        <p style="font-size:13px;color:#7ab8d4;margin:12px 0 8px;line-height:1.6">Hieronder kun je referentiepunten invullen, deze twee zijn ja/nee vragen en komen alleen als een vinkje in de grafiek.</p>
+        <input class="doel-input" id="echt-m0-tekst" type="text" maxlength="40" placeholder="Bijv: samen gewandeld" oninput="planEchtDoelOpslaan()"/>
         <label style="font-size:12px;color:#7ab8d4;">Markering 2</label>
-        <input class="doel-input" id="echt-m1-tekst" type="text" maxlength="40" placeholder="Bijv: samen gegeten"/>
-        <button class="doel-add-btn" style="width:auto;padding:0 14px;margin-top:10px;" onclick="saveEchtDoel()">Opslaan</button>
+        <input class="doel-input" id="echt-m1-tekst" type="text" maxlength="40" placeholder="Bijv: samen gegeten" oninput="planEchtDoelOpslaan()"/>
       </div>
     </div>
     <!-- GOUDEN TIPS -->
@@ -1610,7 +1610,7 @@ const TERUGVAL_TEKSTEN = [
 // ── TAAL SYSTEEM ─────────────────────────────────────────────
 const TALEN = {
   nl: { vlag:"🇳🇱", naam:"Nederlands",
-    tabs:["Vandaag","Voortgang","Avondmaal","Bibliotheek"],
+    tabs:["Vandaag","Voortgang","Verbond(en)","Bibliotheek"],
     quoteLabel:"Quote van de dag", batterijLabel:"Geestelijke batterij",
     batterijStatus:["Beantwoord de vragen","Opwarmen...","Goed bezig!","Bijna vol!","Volledig opgeladen! 🌟"],
     vragen:["Mijn relatie met God is versterkt door mijn gesprekken en gebeden","Heb ik vandaag iets goed gedaan voor een ander, zoals Jezus dat zou doen?","Heb ik mijn goddelijke gaven/talenten gebruikt?","Mijn relatie met God is door schriftstudie verdiept"],
@@ -1620,7 +1620,7 @@ const TALEN = {
     doneMessages:[["Kleine stap, grote moed.","Elke dag telt. Probeer morgen meer."],["Goed gedaan vandaag!","Je bent op de goede weg."],["Bijna op volle kracht!","Zo ga je vol vertrouwen."],["Geestelijke batterij vol! 🌟","De Heer is trots op jou vandaag."]],
     xpLabel:"Totaalscore (XP)", gemiddeldLabel:"Gemiddeld", gemBatterij:"Gem. batterij", dagenActief:"Aantal dagen sereen en doelbewust", besteDag:"Beste dag",
     dezeWeek:"Alle weken", jouwWeek:"Jouw week", volgendNiveau:"Volgend niveau:", hoogsteNiveau:"Discipel bereikt! 🏆",
-    countdownLabel:"Countdown naar Avondmaal", dagen:"dagen", uur:"uur", minuten:"minuten", seconden:"seconden",
+    countdownLabel:"Countdown naar nieuw verbond, het avondmaal <span class=\"mat-ref\" onclick=\"toonMatPopup()\">Mat. 26:26-28</span>", dagen:"dagen", uur:"uur", minuten:"minuten", seconden:"seconden",
     onderwegLabel:"% van de week", geestVoortgang:"Geestelijke voortgang naar Nieuw Verbond", dagenGedaan:"dagen gedaan", dagenTeGaan:"dagen te gaan",
     juillezErBijna:"Wandel elke dag met Hem 🌟",
     notifLabel:"Dagelijkse herinnering", notifTekst:"Stuur mij elke dag een herinnering om mijn batterij in te vullen",
@@ -2293,7 +2293,7 @@ function lichPctFromData(data) {
 }
 // Puntentelling: samen God gezocht 45%, samen tijd 45%, 1 vlees 50%.
 // 1 vlees van gisteren telt ook vandaag mee (prevEb), zonder dubbel te tellen.
-const ECHT_PUNTEN = {e0: 45, e1: 45, eb: 50, ed: 50};
+const ECHT_PUNTEN = {e0: 35, e1: 35, eb: 50, ed: 10};
 const ECHT_MK_KLEUR = ['#5ee6a8', '#ff9f5a'];
 function echtPctFromData(data, prevEb = false) {
   let p = 0;
@@ -2329,6 +2329,17 @@ function xpFromData(data) {
 // ── ECHTGENOOT DOELEN ────────────────────────────────────────
 // Doel (ja/nee per dag, +50%) en twee markeringen (ja/nee, alleen vinkje in de grafiek).
 // De teksten staan per persoon; de dagantwoorden gaan via de gewone echtgenoot-koppeling.
+// Bijbeltekst Matteüs 26:26-28 (Canisiusvertaling 1939, publiek domein)
+const MAT_26_26_28 = [{"v": 26, "t": "Terwijl zij nu aten nam Jesus het brood, zegende het, brak het, gaf het zijn leerlingen en sprak: Neemt en eet, dit is mijn lichaam."}, {"v": 27, "t": "Daarna nam Hij de kelk, sprak een dankgebed uit, gaf hun de kelk, en zeide: Drinkt allen hieruit;"}, {"v": 28, "t": "want dit is mijn bloed van het Nieuwe Verbond, dat wordt vergoten voor velen tot vergiffenis der zonden."}];
+function toonMatPopup() {
+  const el = document.getElementById('mat-popup-tekst');
+  if (el) el.innerHTML = MAT_26_26_28.map(v => '<sup>' + v.v + '</sup> ' + v.t).join(' ');
+  document.getElementById('mat-popup').style.display = 'flex';
+}
+function sluitMatPopup() { document.getElementById('mat-popup').style.display = 'none'; }
+// Echtgenoot-doel opslaan gebeurt nu automatisch, een paar tellen na het typen
+let _echtDoelTimer = null;
+function planEchtDoelOpslaan() { clearTimeout(_echtDoelTimer); _echtDoelTimer = setTimeout(saveEchtDoel, 600); }
 function loadEchtDoel() {
   try { return Object.assign({doel:'', m0:'', m1:''}, JSON.parse(localStorage.getItem('wmm_echt_doel')) || {}); }
   catch { return {doel:'', m0:'', m1:''}; }
@@ -2535,7 +2546,7 @@ function renderVragen(data) {
     const gewoon = t.echtVragen.map((v, i) => gedeeldeRij(`${v} <span style="color:#f0a500">(+${ECHT_PUNTEN['e' + i]}%)</span>`, 'e' + i)).join('');
     let persoonlijk = gedeeldeRij(`${t.echtBonus} <span style="color:#f0a500">${ui.bonusNote}</span>`, 'eb');
     const ed = loadEchtDoel();
-    if (ed.doel) persoonlijk += gedeeldeRij(`${ed.doel} <span style="color:#f0a500">${ui.bonusNote}</span>`, 'ed');
+    if (ed.doel) persoonlijk += gedeeldeRij(`${ed.doel} <span style="color:#f0a500">(+10%)</span>`, 'ed');
     if (ed.m0) persoonlijk += gedeeldeRij(ed.m0, 'm0');
     if (ed.m1) persoonlijk += gedeeldeRij(ed.m1, 'm1');
     if (periodeAan()) persoonlijk += gedeeldeRij(ui.periodeLabel, 'p', ui.periodeSub);
@@ -9690,6 +9701,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+<div id="mat-popup" onclick="if(event.target===this)sluitMatPopup()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#0d2d4a;border:1px solid #1a3f5c;border-radius:14px;max-width:420px;padding:20px;color:#e8f4f8;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <span style="font-weight:600;color:#f0a500;">Matteüs 26:26-28</span>
+      <button onclick="sluitMatPopup()" style="background:none;border:0;color:#7ab8d4;font-size:22px;cursor:pointer;">×</button>
+    </div>
+    <div id="mat-popup-tekst" style="font-size:15px;line-height:1.7;"></div>
+    <div style="font-size:11px;color:#7ab8d4;margin-top:12px;">Petrus Canisiusvertaling 1939 (publiek domein)</div>
+  </div>
+</div>
 </body>
 </html>   
 
