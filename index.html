@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-10-31 21:20 -->
+<!-- WMM-BUILD: 2026-10-31 21:30 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -891,7 +891,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-10-31 21:20";</script>
+<script>window.WMM_BUILD = "2026-10-31 21:30";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -1141,9 +1141,8 @@
         <label style="font-size:12px;color:#7ab8d4;">Doel</label>
         <input class="doel-input" id="echt-doel-tekst" type="text" maxlength="60" placeholder="Bijv: samen 10 minuten bidden" oninput="planEchtDoelOpslaan()"/>
         <p style="font-size:13px;color:#7ab8d4;margin:12px 0 8px;line-height:1.6">Hieronder kun je referentiepunten invullen, deze twee zijn ja/nee vragen en komen alleen als een vinkje in de grafiek.</p>
-        <input class="doel-input" id="echt-m0-tekst" type="text" maxlength="40" placeholder="Bijv: samen gewandeld" oninput="planEchtDoelOpslaan()"/>
-        <label style="font-size:12px;color:#7ab8d4;">Markering 2</label>
-        <input class="doel-input" id="echt-m1-tekst" type="text" maxlength="40" placeholder="Bijv: samen gegeten" oninput="planEchtDoelOpslaan()"/>
+        <div class="doel-input-row"><input class="doel-input" id="echt-m0-tekst" type="text" maxlength="40" placeholder="Bijv: samen gewandeld" oninput="planEchtDoelOpslaan()"/><button class="doel-add-btn" type="button" onclick="saveEchtDoel()">+</button></div>
+        <div class="doel-input-row"><input class="doel-input" id="echt-m1-tekst" type="text" maxlength="40" placeholder="Bijv: samen gegeten" oninput="planEchtDoelOpslaan()"/><button class="doel-add-btn" type="button" onclick="saveEchtDoel()">+</button></div>
       </div>
     </div>
     <!-- GOUDEN TIPS -->
