@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-10-31 21:30 -->
+<!-- WMM-BUILD: 2026-10-31 21:40 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -553,7 +553,7 @@
     .week-mini-overlay{position:absolute;left:0;right:0;bottom:12px;height:100px;pointer-events:none;}
     .week-mini-line{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;}
     .week-mini-dot{position:absolute;width:7px;height:7px;border-radius:50%;background:#7ab8d4;border:1.5px solid #0d2d4a;transform:translate(-50%,50%);}
-    .mat-ref{cursor:pointer;color:#7ab8d4;font-size:12px;text-decoration:underline;margin-left:4px;}
+    .mat-ref{display:block;width:max-content;margin-top:8px;cursor:pointer;color:#7ab8d4;font-size:12px;font-weight:400;text-transform:none;letter-spacing:0;border:1px solid #1a3f5c;border-radius:12px;padding:3px 10px;white-space:nowrap;}
     .echt-hart{position:absolute;transform:translate(-50%,0);top:-24px;color:#ff7eb6;font-size:11px;line-height:1;text-shadow:0 0 6px rgba(255,126,182,.6);}
     .week-mini-star{position:absolute;transform:translate(-50%,0);color:#f0a500;font-size:12px;line-height:1;}
     .sub-note{display:block;font-size:11px;color:#7ab8d4;font-weight:400;margin-top:2px;}
@@ -891,7 +891,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-10-31 21:30";</script>
+<script>window.WMM_BUILD = "2026-10-31 21:40";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -1104,7 +1104,7 @@
   <!-- FSY -->
   <div class="page" id="page-countdown">
     <div class="card">
-      <div class="card-label" id="countdown-label"><i class="ti ti-calendar-event"></i> Countdown naar nieuw verbond, het avondmaal <span class="mat-ref" onclick="toonMatPopup()">Mat. 26:26-28</span></div>
+      <div class="card-label" id="countdown-label"><i class="ti ti-calendar-event"></i> Countdown naar nieuw verbond, het avondmaal<span class="mat-ref" onclick="toonMatPopup()">Mat. 26:26-28</span></div>
       <div class="countdown-grid">
         <div class="cd-box"><div class="cd-num" id="cd-d">–</div><div class="cd-label" id="cd-label-d">dagen</div></div>
         <div class="cd-box"><div class="cd-num" id="cd-h">–</div><div class="cd-label" id="cd-label-h">uur</div></div>
@@ -1141,8 +1141,8 @@
         <label style="font-size:12px;color:#7ab8d4;">Doel</label>
         <input class="doel-input" id="echt-doel-tekst" type="text" maxlength="60" placeholder="Bijv: samen 10 minuten bidden" oninput="planEchtDoelOpslaan()"/>
         <p style="font-size:13px;color:#7ab8d4;margin:12px 0 8px;line-height:1.6">Hieronder kun je referentiepunten invullen, deze twee zijn ja/nee vragen en komen alleen als een vinkje in de grafiek.</p>
-        <div class="doel-input-row"><input class="doel-input" id="echt-m0-tekst" type="text" maxlength="40" placeholder="Bijv: samen gewandeld" oninput="planEchtDoelOpslaan()"/><button class="doel-add-btn" type="button" onclick="saveEchtDoel()">+</button></div>
-        <div class="doel-input-row"><input class="doel-input" id="echt-m1-tekst" type="text" maxlength="40" placeholder="Bijv: samen gegeten" oninput="planEchtDoelOpslaan()"/><button class="doel-add-btn" type="button" onclick="saveEchtDoel()">+</button></div>
+        <div id="echt-ref-list" style="margin-top:12px;"></div>
+        <div class="doel-input-row" id="echt-ref-rij"><input class="doel-input" id="echt-ref-nieuw" type="text" maxlength="40" placeholder="Bijv: samen gewandeld"/><button class="doel-add-btn" type="button" onclick="voegEchtRefToe()">+</button></div>
       </div>
     </div>
     <!-- GOUDEN TIPS -->
@@ -1619,7 +1619,7 @@ const TALEN = {
     doneMessages:[["Kleine stap, grote moed.","Elke dag telt. Probeer morgen meer."],["Goed gedaan vandaag!","Je bent op de goede weg."],["Bijna op volle kracht!","Zo ga je vol vertrouwen."],["Geestelijke batterij vol! 🌟","De Heer is trots op jou vandaag."]],
     xpLabel:"Totaalscore (XP)", gemiddeldLabel:"Gemiddeld", gemBatterij:"Gem. batterij", dagenActief:"Aantal dagen sereen en doelbewust", besteDag:"Beste dag",
     dezeWeek:"Alle weken", jouwWeek:"Jouw week", volgendNiveau:"Volgend niveau:", hoogsteNiveau:"Discipel bereikt! 🏆",
-    countdownLabel:"Countdown naar nieuw verbond, het avondmaal <span class=\"mat-ref\" onclick=\"toonMatPopup()\">Mat. 26:26-28</span>", dagen:"dagen", uur:"uur", minuten:"minuten", seconden:"seconden",
+    countdownLabel:"Countdown naar nieuw verbond, het avondmaal<span class=\"mat-ref\" onclick=\"toonMatPopup()\">Mat. 26:26-28</span>", dagen:"dagen", uur:"uur", minuten:"minuten", seconden:"seconden",
     onderwegLabel:"% van de week", geestVoortgang:"Geestelijke voortgang naar Nieuw Verbond", dagenGedaan:"dagen gedaan", dagenTeGaan:"dagen te gaan",
     juillezErBijna:"Wandel elke dag met Hem 🌟",
     notifLabel:"Dagelijkse herinnering", notifTekst:"Stuur mij elke dag een herinnering om mijn batterij in te vullen",
@@ -2343,16 +2343,50 @@ function loadEchtDoel() {
   try { return Object.assign({doel:'', m0:'', m1:''}, JSON.parse(localStorage.getItem('wmm_echt_doel')) || {}); }
   catch { return {doel:'', m0:'', m1:''}; }
 }
-function saveEchtDoel() {
-  const obj = {
-    doel: (document.getElementById('echt-doel-tekst').value || '').trim(),
-    m0:   (document.getElementById('echt-m0-tekst').value || '').trim(),
-    m1:   (document.getElementById('echt-m1-tekst').value || '').trim()
-  };
+function slaEchtDoelOp(obj) {
   try { localStorage.setItem('wmm_echt_doel', JSON.stringify(obj)); } catch {}
   if (window.cloudSave) window.cloudSave('echtdoel', obj);
   const data = loadDay(todayKey());
   renderVragen(data); updateBattery(data); renderEchtDoelKaart();
+}
+function saveEchtDoel() {
+  const obj = loadEchtDoel();
+  obj.doel = (document.getElementById('echt-doel-tekst').value || '').trim();
+  slaEchtDoelOp(obj);
+}
+// Referentie toevoegen: vult de eerste vrije plek, zoals een persoonlijk doel
+function voegEchtRefToe() {
+  const inp = document.getElementById('echt-ref-nieuw');
+  const tekst = (inp && inp.value || '').trim();
+  if (!tekst) return;
+  const obj = loadEchtDoel();
+  const slot = !obj.m0 ? 'm0' : (!obj.m1 ? 'm1' : null);
+  if (!slot) return;
+  obj[slot] = tekst;
+  inp.value = '';
+  slaEchtDoelOp(obj);
+}
+function verwijderEchtRef(slot) {
+  const obj = loadEchtDoel();
+  obj[slot] = '';
+  slaEchtDoelOp(obj);
+}
+function renderEchtRefs() {
+  const list = document.getElementById('echt-ref-list');
+  const rij = document.getElementById('echt-ref-rij');
+  if (!list) return;
+  const obj = loadEchtDoel();
+  list.innerHTML = '';
+  [['m0', 1], ['m1', 2]].forEach(([k, n]) => {
+    if (!obj[k]) return;
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:10px;';
+    row.innerHTML = `<span class="doel-tag">Referentie ${n}</span><span style="flex:1;font-size:14px;color:#e8f4f8">${setEsc(obj[k])}</span><button class="doel-remove-btn" onclick="verwijderEchtRef('${k}')">×</button>`;
+    list.appendChild(row);
+  });
+  if (rij) rij.style.display = (obj.m0 && obj.m1) ? 'none' : 'flex';
+  const inp = document.getElementById('echt-ref-nieuw');
+  if (inp) inp.placeholder = obj.m0 ? 'Bijv: samen gegeten' : 'Bijv: samen gewandeld';
 }
 function toggleEchtDoelKaart() {
   const body = document.getElementById('echt-doel-body');
@@ -2366,12 +2400,9 @@ function renderEchtDoelKaart() {
   const card = document.getElementById('echt-doel-card');
   if (!card) return;
   card.style.display = echtAan() ? '' : 'none';
-  const v = loadEchtDoel();
-  const velden = {doel:'echt-doel-tekst', m0:'echt-m0-tekst', m1:'echt-m1-tekst'};
-  Object.keys(velden).forEach(k => {
-    const el = document.getElementById(velden[k]);
-    if (el && document.activeElement !== el) el.value = v[k] || '';
-  });
+  const el = document.getElementById('echt-doel-tekst');
+  if (el && document.activeElement !== el) el.value = loadEchtDoel().doel || '';
+  renderEchtRefs();
 }
 function loadDoelen() { try { return JSON.parse(localStorage.getItem('wmm_doelen')) || []; } catch { return []; } }
 function saveDoelen(doelen) {
@@ -7610,6 +7641,7 @@ function showPage(id, btn) {
   btn.classList.add('active');
   applyLevelTheme();
   if (id==='voortgang') { renderVoortgang(); renderPartner(); renderPostvak(); }
+  if (id==='countdown') renderEchtDoelKaart();
   if (id==='countdown') { renderCountdown(); initMusicPlayer(); }
   if (id==='bibliotheek') { renderBibliotheek(); }
 }
