@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-10-31 21:45 -->
+<!-- WMM-BUILD: 2026-11-03 16:10 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-10-31 21:45";</script>
+<script>window.WMM_BUILD = "2026-11-03 16:10";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -2295,11 +2295,11 @@ function lichPctFromData(data) {
 // 1 vlees van gisteren telt ook vandaag mee (prevEb), zonder dubbel te tellen.
 const ECHT_PUNTEN = {e0: 35, e1: 35, eb: 50, ed: 10};
 const ECHT_MK_KLEUR = ['#5ee6a8', '#ff9f5a'];
-function echtPctFromData(data, prevEb = false) {
+function echtPctFromData(data) {
   let p = 0;
   if (data.e0 === 'ja') p += ECHT_PUNTEN.e0;
   if (data.e1 === 'ja') p += ECHT_PUNTEN.e1;
-  if (data.eb === 'ja' || prevEb) p += ECHT_PUNTEN.eb;
+  if (data.eb === 'ja') p += ECHT_PUNTEN.eb;
   if (data.ed === 'ja') p += ECHT_PUNTEN.ed;
   return p;
 }
@@ -2587,8 +2587,7 @@ function renderVragen(data) {
   };
   // Echtgenoot batterij (aan via instellingen)
   if (echtAan()) {
-    const gisteren = new Date(); gisteren.setDate(gisteren.getDate() - 1);
-    const echtPct = echtPctFromData(m, echtEbOpDag(gisteren));
+    const echtPct = echtPctFromData(m);
     // De twee gewone vragen staan er altijd. De persoonlijke twee zitten
     // achter een knop: standaard dicht, zodat ze niet op je scherm staan als
     // iemand meekijkt. Ze gaan vanzelf weer dicht als de app wegvalt.
@@ -3992,14 +3991,12 @@ function renderEchtHistory() {
       const data = loadDay(key);
       const pd = echtPartnerDag(key) || {};
       const m = echtSamengevoegd(data, pd);
-      const gisteren = new Date(d); gisteren.setDate(d.getDate() - 1);
-      const prevEb = echtEbOpDag(gisteren);
-      const h = Object.keys(data).length > 0 || Object.keys(pd).length > 0 || prevEb;
+      const h = Object.keys(data).length > 0 || Object.keys(pd).length > 0;
       if (h) heeftData = true;
       dagen.push({h, isTv: false, naam, periode: toonPeriode && h && m.p === 'ja',
         bonus: toonEcht && h && m.eb === 'ja',
         mk0: toonEcht && h && !!ld.m0 && m.m0 === 'ja', mk1: toonEcht && h && !!ld.m1 && m.m1 === 'ja',
-        waarden: {echt: toonEcht && h ? echtPctFromData(m, prevEb) : null}});
+        waarden: {echt: toonEcht && h ? echtPctFromData(m) : null}});
     }
     if (wi !== 0 && !heeftData) return;
     // Weken die helemaal voor de koppeling liggen horen niet in de
