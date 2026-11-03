@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-11-03 16:10 -->
+<!-- WMM-BUILD: 2026-11-03 21:55 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-03 16:10";</script>
+<script>window.WMM_BUILD = "2026-11-03 21:55";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -9037,6 +9037,19 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
 
   // Koppel nieuwe code aanmaken vanuit de UI
   window.koppelAanNieuweCode = async function(code) {
+    // Lidmaatschap eerst vastleggen, net als bij koppelen met een code. De
+    // regels laten daarna pas het koppeldocument en de gegevens toe. Zonder dit
+    // ziet het toestel dat de code maakt niets van de partner.
+    try {
+      const uid = (auth.currentUser && auth.currentUser.uid) || window._wmm_authUid || null;
+      if (uid) {
+        const lidRef = doc(db, 'koppels', code, 'leden', uid);
+        const lid = await getDoc(lidRef);
+        const velden = {naam: mijnNaam};
+        if (!lid.exists()) velden.sinds = new Date().toISOString();
+        await setDoc(lidRef, velden, {merge: true});
+      }
+    } catch(e) {}
     await initEenKoppel(code);
     // Alleen de dag van vandaag meesturen. Eerder werden hier 90 dagen
     // geschiedenis geupload, waardoor een verse koppeling meteen maanden
