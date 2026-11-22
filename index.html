@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-11-03 21:55 -->
+<!-- WMM-BUILD: 2026-11-23 00:58 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-03 21:55";</script>
+<script>window.WMM_BUILD = "2026-11-23 00:58";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -2404,6 +2404,26 @@ function toggleEchtDoelKaart() {
   btn.setAttribute('aria-expanded', String(open));
   document.getElementById('echt-doel-chev').style.transform = open ? 'rotate(180deg)' : '';
 }
+// Doel en referenties van de partner (alleen-lezen), opgehaald via de partner-dagdata
+function echtPartnerDoel() {
+  const code = echtKoppelCode();
+  const m = code && window._partnerDagen && window._partnerDagen[code];
+  const d = m && m.echtdoel;
+  return d && (d.doel || d.m0 || d.m1) ? d : null;
+}
+function renderEchtPartnerDoel() {
+  const list = document.getElementById('echt-doel-list');
+  if (!list) return;
+  let el = document.getElementById('echt-partner-doel');
+  if (!el) { el = document.createElement('div'); el.id = 'echt-partner-doel'; list.parentNode.appendChild(el); }
+  const pd = echtPartnerDoel();
+  if (!pd) { el.innerHTML = ''; return; }
+  const stijl = 'font-size:14px;color:#e8f4f8;line-height:1.3;margin-bottom:6px;';
+  el.innerHTML = `<div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:#9fd3e6;margin-bottom:8px;">${setEsc(window._echtPartnerNaam || 'Partner')} heeft:</div>`
+    + (pd.doel ? `<div style="${stijl}">Doel: ${setEsc(pd.doel)}</div>` : '')
+    + (pd.m0 ? `<div style="${stijl}">Referentie 1: ${setEsc(pd.m0)}</div>` : '')
+    + (pd.m1 ? `<div style="${stijl}">Referentie 2: ${setEsc(pd.m1)}</div>` : '');
+}
 function renderEchtDoelKaart() {
   const card = document.getElementById('echt-doel-card');
   if (!card) return;
@@ -2422,6 +2442,7 @@ function renderEchtDoelKaart() {
   }
   if (rij) rij.style.display = obj.doel ? 'none' : 'flex';
   renderEchtRefs();
+  renderEchtPartnerDoel();
 }
 function loadDoelen() { try { return JSON.parse(localStorage.getItem('wmm_doelen')) || []; } catch { return []; } }
 function saveDoelen(doelen) {
@@ -4061,7 +4082,7 @@ function updateDebugStatus() {
       <div>🔄 Migratie oude data: ${localStorage.getItem('wmm_migratie_v2_done') ? '✅ Uitgevoerd' : '— niet nodig'}</div>
       <div>✉️ Laatste bericht: ${window._wmm_laatsteBerichtStatus || '—'}</div>
       <div>💑 Echtgenoot-koppeling: ${laadKoppels().some(k => koppelType(k) === 'echt') ? '✅ Ja (type echt)' : '❌ Nee — op dit toestel staat geen echt-koppeling'}</div>
-      <div>📥 Dagen van partner ontvangen: ${(() => { const c = (laadKoppels().find(k => koppelType(k) === 'echt') || {}).code; return c && window._partnerDagen && window._partnerDagen[c] ? Object.keys(window._partnerDagen[c]).length : 0; })()}</div>
+      <div>📥 Dagen van partner ontvangen: ${(() => { const c = (laadKoppels().find(k => koppelType(k) === 'echt') || {}).code; return c && window._partnerDagen && window._partnerDagen[c] ? Object.keys(window._partnerDagen[c]).filter(k => k.startsWith('wmm_')).length : 0; })()}</div>
       ${status.foutmelding ? `<div style="color:#e05a3a;">⚠️ ${status.foutmelding}</div>` : ''}
     `;
   }
@@ -9130,6 +9151,7 @@ function koppelPartnerListeners(koppelCode, partnerNaam) {
       const body = document.getElementById('echt-body');
       if (body && body.style.display === 'block' && window.renderEchtHistory) renderEchtHistory();
       if (window.renderVragen) renderVragen(loadDay(todayKey()));
+      renderEchtDoelKaart();
     }, (err) => console.warn('Echt-data partner mislukt:', err));
   }
   const partnerDocRef = doc(db, 'koppels', koppelCode, 'gebruikers', partnerNaam);
