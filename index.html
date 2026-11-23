@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-11-23 01:55 -->
+<!-- WMM-BUILD: 2026-11-23 02:00 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-23 01:55";</script>
+<script>window.WMM_BUILD = "2026-11-23 02:00";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -4043,21 +4043,28 @@ function renderEchtHistory() {
       if (toonPeriode) tekenPeriodeCurve(plot, dagen);
       // Hartjes (bonus) blijven boven de grafiek; alleen als er een bonus in de week is
       const heeftBonus = dagen.some(d => d.bonus);
-      const harten = dagen.map((d, i) => d.bonus ? `<div class="echt-hart" style="left:${dagX(i)}%;top:-18px;">♥</div>` : '').join('');
+      const harten = dagen.map((d, i) => d.bonus ? `<div class="echt-hart" style="left:${dagX(i)}%;top:-44px;">♥</div>` : '').join('');
       const wrap = blok.querySelector('.bc-wrap');
       if (wrap) {
-        const boven = 14 + (heeftBonus ? 18 : 0);
+        const boven = heeftBonus ? 58 : 36;
         wrap.style.paddingTop = boven + 'px';
         const ax = wrap.querySelector('.bc-axis'), gr = wrap.querySelector('.bc-grid');
         if (ax) ax.style.top = boven + 'px';
         if (gr) gr.style.top = boven + 'px';
       }
       const extra = harten;
-      // Vinkjes van de referenties: een rij onder de dagnamen, per dag uitgelijnd
-      if (wrap && (dagen.some(d => d.mk0) || dagen.some(d => d.mk1))) {
-        const cellen = dagen.map(d => `<div>${d.mk0 ? `<span style="color:${ECHT_MK_KLEUR[0]}">✓</span>` : ''}${d.mk1 ? `<span style="color:${ECHT_MK_KLEUR[1]};margin-left:2px;">✓</span>` : ''}</div>`).join('');
-        wrap.insertAdjacentHTML('beforeend', `<div style="display:grid;grid-template-columns:repeat(7,1fr);margin-left:28px;text-align:center;font-size:12px;line-height:1.4;margin-top:4px;">${cellen}</div>`);
+      // Vinkjes van de referenties: onderaan in elke dagkolom, dus precies onder de dag
+      const heeftVink = dagen.some(d => d.mk0 || d.mk1);
+      if (heeftVink) {
+        plot.style.height = '128px'; // 14px extra voor de vinkjes; staven blijven op dezelfde hoogte
+        plot.querySelectorAll('.bc-day').forEach((kolom, i) => {
+          const d = dagen[i];
+          const inhoud = `${d.mk0 ? `<span style="color:${ECHT_MK_KLEUR[0]}">✓</span>` : ''}${d.mk1 ? `<span style="color:${ECHT_MK_KLEUR[1]};margin-left:2px;">✓</span>` : ''}`;
+          kolom.insertAdjacentHTML('beforeend', `<div style="height:14px;line-height:14px;font-size:11px;text-align:center;">${inhoud}</div>`);
+        });
       }
+      // Sterretje (maandelijkse periode) iets hoger, zodat hij niet door het getal van de staaf heen loopt
+      plot.querySelectorAll('.week-mini-star').forEach(el => { el.style.top = '-22px'; });
       if (extra) plot.insertAdjacentHTML('beforeend', `<div class="week-mini-overlay" style="top:0;bottom:auto;height:100px;">${extra}</div>`);
     }
   });
