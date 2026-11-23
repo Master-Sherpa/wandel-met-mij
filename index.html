@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-11-23 01:34 -->
+<!-- WMM-BUILD: 2026-11-23 01:40 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-23 01:34";</script>
+<script>window.WMM_BUILD = "2026-11-23 01:40";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -4040,8 +4040,10 @@ function renderEchtHistory() {
       if (toonPeriode) tekenPeriodeCurve(plot, dagen);
       const harten = dagen.map((d, i) => d.bonus ? `<div class="echt-hart" style="left:${dagX(i)}%;">♥</div>` : '').join('');
       const vinkjes = (k, kleur, top) => dagen.map((d, i) => d[k] ? `<div class="echt-hart" style="left:${dagX(i)}%;top:${top}px;color:${kleur};text-shadow:none;">✓</div>` : '').join('');
-      plot.style.marginTop = '56px';
-      const extra = harten + vinkjes('mk0', ECHT_MK_KLEUR[0], -24) + vinkjes('mk1', ECHT_MK_KLEUR[1], -38);
+      // Ruimte boven de grafiek (in de wrapper, niet op de staven), met een eigen rij per teken
+      const wrap = blok.querySelector('.bc-wrap');
+      if (wrap && (harten || vinkjes('mk0', '', 0) || vinkjes('mk1', '', 0))) wrap.style.paddingTop = '66px';
+      const extra = harten + vinkjes('mk0', ECHT_MK_KLEUR[0], -38) + vinkjes('mk1', ECHT_MK_KLEUR[1], -52);
       if (extra) plot.insertAdjacentHTML('beforeend', `<div class="week-mini-overlay" style="top:0;bottom:auto;height:100px;">${extra}</div>`);
     }
   });
