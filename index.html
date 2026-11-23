@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-11-23 01:40 -->
+<!-- WMM-BUILD: 2026-11-23 01:46 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-23 01:40";</script>
+<script>window.WMM_BUILD = "2026-11-23 01:46";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -3995,6 +3995,9 @@ function renderEchtHistory() {
   const container = document.getElementById('echt-history-list');
   if (!container) return;
   container.innerHTML = '';
+  // Geen scrollbalk: de hele geschiedenis is in één keer te zien
+  container.style.maxHeight = 'none';
+  container.style.overflow = 'visible';
   const ui = uiT(), t = T();
   const fmtShort = d => d.toLocaleDateString(taalLocale(), {day:'numeric', month:'short'});
   const toonEcht = echtAan(), toonPeriode = periodeAan();
@@ -4038,12 +4041,21 @@ function renderEchtHistory() {
     const plot = blok.querySelector('.bc-plot');
     if (plot) {
       if (toonPeriode) tekenPeriodeCurve(plot, dagen);
-      const harten = dagen.map((d, i) => d.bonus ? `<div class="echt-hart" style="left:${dagX(i)}%;">♥</div>` : '').join('');
-      const vinkjes = (k, kleur, top) => dagen.map((d, i) => d[k] ? `<div class="echt-hart" style="left:${dagX(i)}%;top:${top}px;color:${kleur};text-shadow:none;">✓</div>` : '').join('');
-      // Ruimte boven de grafiek (in de wrapper, niet op de staven), met een eigen rij per teken
+      // Elke soort teken krijgt een eigen rij boven de grafiek, alleen als die soort voorkomt
+      const soorten = ['bonus', 'mk0', 'mk1'].filter(k => dagen.some(d => d[k]));
+      const rijY = k => -18 * (soorten.length - soorten.indexOf(k));
+      const harten = dagen.map((d, i) => d.bonus ? `<div class="echt-hart" style="left:${dagX(i)}%;top:${rijY('bonus')}px;">♥</div>` : '').join('');
+      const vinkjes = (k, kleur) => dagen.map((d, i) => d[k] ? `<div class="echt-hart" style="left:${dagX(i)}%;top:${rijY(k)}px;color:${kleur};text-shadow:none;">✓</div>` : '').join('');
+      // De ruimte boven de grafiek groeit mee met het aantal rijen; assen en raster schuiven mee
       const wrap = blok.querySelector('.bc-wrap');
-      if (wrap && (harten || vinkjes('mk0', '', 0) || vinkjes('mk1', '', 0))) wrap.style.paddingTop = '66px';
-      const extra = harten + vinkjes('mk0', ECHT_MK_KLEUR[0], -38) + vinkjes('mk1', ECHT_MK_KLEUR[1], -52);
+      if (wrap) {
+        const boven = 14 + soorten.length * 18;
+        wrap.style.paddingTop = boven + 'px';
+        const ax = wrap.querySelector('.bc-axis'), gr = wrap.querySelector('.bc-grid');
+        if (ax) ax.style.top = boven + 'px';
+        if (gr) gr.style.top = boven + 'px';
+      }
+      const extra = harten + vinkjes('mk0', ECHT_MK_KLEUR[0]) + vinkjes('mk1', ECHT_MK_KLEUR[1]);
       if (extra) plot.insertAdjacentHTML('beforeend', `<div class="week-mini-overlay" style="top:0;bottom:auto;height:100px;">${extra}</div>`);
     }
   });
