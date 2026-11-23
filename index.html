@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-11-23 01:50 -->
+<!-- WMM-BUILD: 2026-11-23 01:55 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-23 01:50";</script>
+<script>window.WMM_BUILD = "2026-11-23 01:55";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -4041,21 +4041,23 @@ function renderEchtHistory() {
     const plot = blok.querySelector('.bc-plot');
     if (plot) {
       if (toonPeriode) tekenPeriodeCurve(plot, dagen);
-      // Elke soort teken krijgt een eigen rij boven de grafiek, alleen als die soort voorkomt
-      const soorten = ['bonus', 'mk0', 'mk1'].filter(k => dagen.some(d => d[k]));
-      const rijY = k => -18 * (soorten.length - soorten.indexOf(k));
-      const harten = dagen.map((d, i) => d.bonus ? `<div class="echt-hart" style="left:${dagX(i)}%;top:${rijY('bonus')}px;">♥</div>` : '').join('');
-      const vinkjes = (k, kleur) => dagen.map((d, i) => d[k] ? `<div class="echt-hart" style="left:${dagX(i)}%;top:${rijY(k)}px;color:${kleur};text-shadow:none;">✓</div>` : '').join('');
-      // De ruimte boven de grafiek groeit mee met het aantal rijen; assen en raster schuiven mee
+      // Hartjes (bonus) blijven boven de grafiek; alleen als er een bonus in de week is
+      const heeftBonus = dagen.some(d => d.bonus);
+      const harten = dagen.map((d, i) => d.bonus ? `<div class="echt-hart" style="left:${dagX(i)}%;top:-18px;">♥</div>` : '').join('');
       const wrap = blok.querySelector('.bc-wrap');
       if (wrap) {
-        const boven = 14 + soorten.length * 18;
+        const boven = 14 + (heeftBonus ? 18 : 0);
         wrap.style.paddingTop = boven + 'px';
         const ax = wrap.querySelector('.bc-axis'), gr = wrap.querySelector('.bc-grid');
         if (ax) ax.style.top = boven + 'px';
         if (gr) gr.style.top = boven + 'px';
       }
-      const extra = harten + vinkjes('mk0', ECHT_MK_KLEUR[0]) + vinkjes('mk1', ECHT_MK_KLEUR[1]);
+      const extra = harten;
+      // Vinkjes van de referenties: een rij onder de dagnamen, per dag uitgelijnd
+      if (wrap && (dagen.some(d => d.mk0) || dagen.some(d => d.mk1))) {
+        const cellen = dagen.map(d => `<div>${d.mk0 ? `<span style="color:${ECHT_MK_KLEUR[0]}">✓</span>` : ''}${d.mk1 ? `<span style="color:${ECHT_MK_KLEUR[1]};margin-left:2px;">✓</span>` : ''}</div>`).join('');
+        wrap.insertAdjacentHTML('beforeend', `<div style="display:grid;grid-template-columns:repeat(7,1fr);margin-left:28px;text-align:center;font-size:12px;line-height:1.4;margin-top:4px;">${cellen}</div>`);
+      }
       if (extra) plot.insertAdjacentHTML('beforeend', `<div class="week-mini-overlay" style="top:0;bottom:auto;height:100px;">${extra}</div>`);
     }
   });
