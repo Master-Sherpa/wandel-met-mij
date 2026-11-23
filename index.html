@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-11-23 01:12 -->
+<!-- WMM-BUILD: 2026-11-23 01:24 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-23 01:12";</script>
+<script>window.WMM_BUILD = "2026-11-23 01:24";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -2347,7 +2347,7 @@ function slaEchtDoelOp(obj) {
   try { localStorage.setItem('wmm_echt_doel', JSON.stringify(obj)); } catch {}
   const ec = echtKoppelCode();
   if (ec) {
-    const gedeeld = {doel: obj.doel || '', m0: obj.m0 || '', m1: obj.m1 || '', door: mijnNaam, tijd: new Date().toISOString()};
+    const gedeeld = {doel: obj.doel || '', m0: obj.m0 || '', m1: obj.m1 || '', door: _mijnNaam || localStorage.getItem('wmm_naam') || '', tijd: new Date().toISOString()};
     window._echtGedeeld = gedeeld;
     setDoc(doc(db, 'koppels', ec, 'gedeeld', 'echtdoel'), gedeeld).catch(e => console.warn('Gedeelde echt-doelen opslaan mislukt:', e));
   }
