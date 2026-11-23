@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-23 20:55";</script>
+<script>window.WMM_BUILD = "2026-11-23 21:10";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -2985,6 +2985,123 @@ const BOOSTERS_VRIEND = [
   {id:'gebed',    icon:'🙏', label:'Heb ik voor andere gebeden?',                  xp:5, vers:'"Bidt voor elkander, opdat gij gezond wordt." — Jakobus 5:16'},
   {id:'goudentips',icon:'🌟', label:'Heb ik deze week de Gouden Tips gevolgd?',    xp:5, vers:'"Wie in het kleine getrouw is, is ook in het grote getrouw." — Lukas 16:10'},
 ];
+// Vertalingen van de boosters (vragen, XP, vers, weekregel)
+const BOOSTER_T = {
+  "nl": {
+    "titel": "Wekelijkse XP Boosters",
+    "xp": "+{xp} XP bij Ja",
+    "week": "Week van",
+    "reset": "Reset elke maandag",
+    "q": {
+      "avondmaal": "Heb ik van het Avondmaal genomen?",
+      "tempel": "Ben ik naar de Tempel geweest?",
+      "hulp": "Heb ik iemand onvoorwaardelijk geholpen?",
+      "gebedsrol": "Heb ik de gebedsrol deze week gebruikt?",
+      "goudentips": "Heb ik deze week de Gouden Tips gevolgd?",
+      "kerk": "Ben ik naar de kerk geweest?",
+      "hertsel": "Ben ik naar een hertsel meeting geweest?",
+      "gebed": "Heb ik voor andere gebeden?"
+    },
+    "vers": {
+      "gebedsrol": "\"Bidt voor elkander, opdat gij gezond wordt.\" — Jakobus 5:16",
+      "gebed": "\"Bidt voor elkander, opdat gij gezond wordt.\" — Jakobus 5:16",
+      "goudentips": "\"Wie in het kleine getrouw is, is ook in het grote getrouw.\" — Lukas 16:10"
+    }
+  },
+  "en": {
+    "titel": "Weekly XP Boosters",
+    "xp": "+{xp} XP on Yes",
+    "week": "Week of",
+    "reset": "Resets every Monday",
+    "q": {
+      "avondmaal": "Did I take Communion?",
+      "tempel": "Did I go to the Temple?",
+      "hulp": "Did I help someone unconditionally?",
+      "gebedsrol": "Did I use the prayer list this week?",
+      "goudentips": "Did I follow the Golden Tips this week?",
+      "kerk": "Did I go to church?",
+      "hertsel": "Did I go to a revival meeting?",
+      "gebed": "Did I pray for others?"
+    },
+    "vers": {
+      "gebedsrol": "\"Confess your faults one to another, and pray one for another, that ye may be healed. The effectual fervent prayer of a righteous man availeth much.\" — James 5:16",
+      "gebed": "\"Confess your faults one to another, and pray one for another, that ye may be healed. The effectual fervent prayer of a righteous man availeth much.\" — James 5:16",
+      "goudentips": "\"He that is faithful in that which is least is faithful also in much: and he that is unjust in the least is unjust also in much.\" — Luke 16:10"
+    }
+  },
+  "fr": {
+    "titel": "Boosters XP hebdomadaires",
+    "xp": "+{xp} XP si Oui",
+    "week": "Semaine du",
+    "reset": "Réinitialisation chaque lundi",
+    "q": {
+      "avondmaal": "Ai-je pris la Sainte Cène ?",
+      "tempel": "Suis-je allé au temple ?",
+      "hulp": "Ai-je aidé quelqu’un sans condition ?",
+      "gebedsrol": "Ai-je utilisé la liste de prière cette semaine ?",
+      "goudentips": "Ai-je suivi les Conseils d’or cette semaine ?",
+      "kerk": "Suis-je allé à l’église ?",
+      "hertsel": "Suis-je allé à une réunion de réveil ?",
+      "gebed": "Ai-je prié pour d’autres personnes ?"
+    },
+    "vers": {
+      "gebedsrol": "\"Confessez donc vos fautes l’un à l’autre, et priez l’un pour l’autre, en sorte que vous soyez guéris: la fervente supplication du juste peut beaucoup.\" — Jacques 5:16",
+      "gebed": "\"Confessez donc vos fautes l’un à l’autre, et priez l’un pour l’autre, en sorte que vous soyez guéris: la fervente supplication du juste peut beaucoup.\" — Jacques 5:16",
+      "goudentips": "\"Celui qui est fidèle dans ce qui est très petit, est fidèle aussi dans ce qui est grand; et celui qui est injuste dans ce qui est très petit, est injuste aussi dans ce qui est grand.\" — Luc 16:10"
+    }
+  },
+  "de": {
+    "titel": "Wöchentliche XP-Booster",
+    "xp": "+{xp} XP bei Ja",
+    "week": "Woche vom",
+    "reset": "Setzt sich jeden Montag zurück",
+    "q": {
+      "avondmaal": "Habe ich am Abendmahl teilgenommen?",
+      "tempel": "Bin ich in den Tempel gegangen?",
+      "hulp": "Habe ich jemandem bedingungslos geholfen?",
+      "gebedsrol": "Habe ich diese Woche die Gebetsliste benutzt?",
+      "goudentips": "Habe ich diese Woche die Goldenen Tipps befolgt?",
+      "kerk": "Bin ich zur Kirche gegangen?",
+      "hertsel": "Bin ich zu einer Erweckungsversammlung gegangen?",
+      "gebed": "Habe ich für andere gebetet?"
+    },
+    "vers": {
+      "gebedsrol": "\"Bekennet denn einander die Vergehungen und betet füreinander, damit ihr geheilt werdet; das inbrünstige Gebet eines Gerechten vermag viel.\" — Jakobus 5:16",
+      "gebed": "\"Bekennet denn einander die Vergehungen und betet füreinander, damit ihr geheilt werdet; das inbrünstige Gebet eines Gerechten vermag viel.\" — Jakobus 5:16",
+      "goudentips": "\"Wer im Geringsten treu ist, ist auch in vielem treu, und wer im Geringsten ungerecht ist, ist auch in vielem ungerecht.\" — Lukas 16:10"
+    }
+  },
+  "es": {
+    "titel": "Impulsos semanales de XP",
+    "xp": "+{xp} XP al Sí",
+    "week": "Semana del",
+    "reset": "Se reinicia cada lunes",
+    "q": {
+      "avondmaal": "¿Participé de la Santa Cena?",
+      "tempel": "¿Fui al templo?",
+      "hulp": "¿Ayudé a alguien sin condiciones?",
+      "gebedsrol": "¿Usé la lista de oración esta semana?",
+      "goudentips": "¿Seguí los Consejos de Oro esta semana?",
+      "kerk": "¿Fui a la iglesia?",
+      "hertsel": "¿Fui a una reunión de avivamiento?",
+      "gebed": "¿Oré por otros?"
+    },
+    "vers": {
+      "gebedsrol": "\"Confesaos vuestras faltas unos á otros, y rogad los unos por los otros, para que seáis sanos; la oración del justo, obrando eficazmente, puede mucho.\" — Santiago 5:16",
+      "gebed": "\"Confesaos vuestras faltas unos á otros, y rogad los unos por los otros, para que seáis sanos; la oración del justo, obrando eficazmente, puede mucho.\" — Santiago 5:16",
+      "goudentips": "\"El que es fiel en lo muy poco, también en lo más es fiel: y el que en lo muy poco es injusto, también en lo más es injusto.\" — Lucas 16:10"
+    }
+  }
+};
+function boosterTxt(b) {
+  const t = BOOSTER_T[huidigtaal] || BOOSTER_T.nl;
+  return {
+    label: t.q[b.id] || b.label,
+    vers: t.vers[b.id] || b.vers,
+    xp: t.xp.replace('{xp}', b.xp),
+    titel: t.titel, week: t.week, reset: t.reset
+  };
+}
 function activeBoosters() {
   return localStorage.getItem('wmm_modus') === 'vriend' ? BOOSTERS_VRIEND : BOOSTERS_LDS;
 }
@@ -3004,9 +3121,9 @@ function answerBooster(id, val) {
   // Toon vers bij aanvinken van gebedsrol
   if (val === 'ja') {
     const b = activeBoosters().find(x => x.id === id);
-    if (b && b.vers) {
+    if (b && boosterTxt(b).vers) {
       const versEl = document.getElementById('booster-vers-' + id);
-      if (versEl) { versEl.textContent = b.vers; versEl.style.display = 'block'; }
+      if (versEl) { versEl.textContent = boosterTxt(b).vers; versEl.style.display = 'block'; }
     }
   }
 }
@@ -3017,24 +3134,28 @@ function renderBoosters() {
   const zo = new Date(ma); zo.setDate(ma.getDate()+6);
   const fmt = d => d.toLocaleDateString(taalLocale(),{day:'numeric',month:'short'});
   const weekLbl = document.getElementById('booster-week-lbl');
-  if (weekLbl) weekLbl.textContent = `Week van ${fmt(ma)} – ${fmt(zo)} · Reset elke maandag`;
+  const bt = BOOSTER_T[huidigtaal] || BOOSTER_T.nl;
+  if (weekLbl) weekLbl.textContent = `${bt.week} ${fmt(ma)} – ${fmt(zo)} · ${bt.reset}`;
+  const boosterKop = document.querySelector('#booster-card .card-label');
+  if (boosterKop) boosterKop.innerHTML = `<i class="ti ti-bolt"></i> ${bt.titel}`;
   const lijst = document.getElementById('booster-vragen');
   if (!lijst) return;
   lijst.innerHTML = '';
   let totaalXP = 0;
   activeBoosters().forEach(b => {
+    const tx = boosterTxt(b);
     const val = data[b.id];
     if (val === 'ja') totaalXP += b.xp;
     const row = document.createElement('div');
     row.style.cssText = 'margin-bottom:12px;';
-    const versZichtbaar = (val === 'ja' && b.vers);
+    const versZichtbaar = (val === 'ja' && tx.vers);
     row.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
         <div style="display:flex;align-items:center;gap:10px;flex:1;">
           <div style="font-size:20px;min-width:28px;">${b.icon}</div>
           <div>
-            <div style="font-size:14px;color:#b8ddf0;line-height:1.4;">${b.label}</div>
-            <div style="font-size:11px;color:#f0a500;font-weight:600;margin-top:2px;">+${b.xp} XP bij Ja</div>
+            <div style="font-size:14px;color:#b8ddf0;line-height:1.4;">${tx.label}</div>
+            <div style="font-size:11px;color:#f0a500;font-weight:600;margin-top:2px;">${tx.xp}</div>
           </div>
         </div>
         <div class="btn-group">
@@ -3042,7 +3163,7 @@ function renderBoosters() {
           <button class="btn-yn ${val==='nee'?'selected-nee':''}" onclick="answerBooster('${b.id}','nee')">Nee</button>
         </div>
       </div>
-      ${b.vers ? `<div id="booster-vers-${b.id}" style="display:${versZichtbaar?'block':'none'};font-size:12px;color:#f0c060;font-style:italic;line-height:1.5;margin-top:8px;padding:8px 12px;background:#1a1500;border-left:2px solid #c8a400;border-radius:6px;">${b.vers}</div>` : ''}`;
+      ${tx.vers ? `<div id="booster-vers-${b.id}" style="display:${versZichtbaar?'block':'none'};font-size:12px;color:#f0c060;font-style:italic;line-height:1.5;margin-top:8px;padding:8px 12px;background:#1a1500;border-left:2px solid #c8a400;border-radius:6px;">${tx.vers}</div>` : ''}`;
     lijst.appendChild(row);
   });
   const totaalEl = document.getElementById('booster-totaal');
