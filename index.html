@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-11-23 23:36 -->
+<!-- WMM-BUILD: 2026-11-24 00:13 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-23 23:36";</script>
+<script>window.WMM_BUILD = "2026-11-24 00:13";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -2668,6 +2668,11 @@ function echtEbOpDag(d) {
 function answerKey(k, val) {
   const key = todayKey(), data = loadDay(key);
   data[k] = val;
+  // Referentie afvinken: de tekst van dat moment bewaren, zodat latere wijzigingen de geschiedenis niet veranderen
+  if ((k === 'm0' || k === 'm1') && val === 'ja') {
+    const lbl = loadEchtDoel()[k];
+    if (lbl) data['_l_' + k] = lbl;
+  }
   if (['e0', 'e1', 'eb', 'p', 'ed', 'm0', 'm1'].includes(k)) data['_t_' + k] = Date.now();
   // Beantwoord je een persoonlijke vraag, dan blijft dat vak open staan; anders
   // zou het bij je tik onder je vinger dichtklappen.
@@ -4507,7 +4512,8 @@ function renderEchtHistory() {
       if (h) heeftData = true;
       dagen.push({h, isTv: false, naam, periode: toonPeriode && h && m.p === 'ja',
         bonus: toonEcht && h && m.eb === 'ja',
-        mk0: toonEcht && h && !!ld.m0 && m.m0 === 'ja', mk1: toonEcht && h && !!ld.m1 && m.m1 === 'ja',
+        mk0: toonEcht && h && m.m0 === 'ja', mk1: toonEcht && h && m.m1 === 'ja',
+        l0: m.m0 === 'ja' ? (data._l_m0 || pd._l_m0 || ld.m0 || '') : '', l1: m.m1 === 'ja' ? (data._l_m1 || pd._l_m1 || ld.m1 || '') : '',
         waarden: {echt: toonEcht && h ? echtPctFromData(m) : null}});
     }
     if (wi !== 0 && !heeftData) return;
@@ -4524,8 +4530,10 @@ function renderEchtHistory() {
     legenda.push({rgb:BAT_RGB.laag, label:'< 35%'});
     if (toonPeriode) legenda.push({rgb:BAT_RGB.ger, label:'★ ' + ui.periodeLabel});
     if (toonEcht && dagen.some(d => d.bonus)) legenda.push({symbool:'♥', kleur:'#ff7eb6', label: t.echtBonusKort});
-    if (toonEcht && ld.m0 && dagen.some(d => d.mk0)) legenda.push({symbool:'✓', kleur:ECHT_MK_KLEUR[0], label: ld.m0});
-    if (toonEcht && ld.m1 && dagen.some(d => d.mk1)) legenda.push({symbool:'✓', kleur:ECHT_MK_KLEUR[1], label: ld.m1});
+    const lblWk0 = (dagen.find(d => d.mk0 && d.l0) || {}).l0;
+    const lblWk1 = (dagen.find(d => d.mk1 && d.l1) || {}).l1;
+    if (toonEcht && lblWk0) legenda.push({symbool:'✓', kleur:ECHT_MK_KLEUR[0], label: lblWk0});
+    if (toonEcht && lblWk1) legenda.push({symbool:'✓', kleur:ECHT_MK_KLEUR[1], label: lblWk1});
     blok.innerHTML = kop + bcWeekHTML(dagen, 150, [{key:'echt', rgb:BAT_RGB.echt}], [0, 50, 100, 150]) + legendaHTML(legenda);
     container.appendChild(blok);
     const plot = blok.querySelector('.bc-plot');
@@ -9332,7 +9340,7 @@ function vandaagKey() {
 
 // Echtgenoot-velden (e0, e1, eb) en periode (p) gaan alleen naar een echtgenoot-koppeling.
 // Vriend-koppelingen krijgen ze als null, zodat ze nooit de echtgenoot-gegevens zien.
-const ECHT_VELDEN = ['e0', 'e1', 'eb', 'p', '_t_e0', '_t_e1', '_t_eb', '_t_p'];
+const ECHT_VELDEN = ['e0', 'e1', 'eb', 'p', '_t_e0', '_t_e1', '_t_eb', '_t_p', '_l_m0', '_l_m1'];
 function voorKoppel(data, k) {
   if (!data || typeof data !== 'object') return data;
   const c = { ...data };
