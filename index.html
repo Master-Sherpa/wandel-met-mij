@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-23 21:30";</script>
+<script>window.WMM_BUILD = "2026-11-23 22:36";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -9475,6 +9475,8 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
   // Modus: per account in de cloud (alleen met e-mailaccount), anders alleen op dit toestel
   window.schrijfModus = async function(v) {
     localStorage.setItem('wmm_modus', v === 'vriend' ? 'vriend' : 'lds');
+    try { updateTaalUI(); } catch (e) {}
+    try { renderBoosters(); } catch (e) {}
     const u = auth.currentUser;
     if (u && !u.isAnonymous) {
       try { await setDoc(doc(db, 'modusInstellingen', u.uid), {modus: v === 'vriend' ? 'vriend' : 'lds'}); }
