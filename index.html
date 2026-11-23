@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-11-23 00:58 -->
+<!-- WMM-BUILD: 2026-11-23 01:12 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-23 00:58";</script>
+<script>window.WMM_BUILD = "2026-11-23 01:12";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -2338,12 +2338,19 @@ function toonMatPopup() {
 }
 function sluitMatPopup() { document.getElementById('mat-popup').style.display = 'none'; }
 function loadEchtDoel() {
+  // Bij een echtgenoot-koppeling is de gedeelde set leidend (voor beide partners gelijk)
+  if (echtKoppelCode() && window._echtGedeeld) return Object.assign({doel:'', m0:'', m1:''}, window._echtGedeeld);
   try { return Object.assign({doel:'', m0:'', m1:''}, JSON.parse(localStorage.getItem('wmm_echt_doel')) || {}); }
   catch { return {doel:'', m0:'', m1:''}; }
 }
 function slaEchtDoelOp(obj) {
   try { localStorage.setItem('wmm_echt_doel', JSON.stringify(obj)); } catch {}
-  if (window.cloudSave) window.cloudSave('echtdoel', obj);
+  const ec = echtKoppelCode();
+  if (ec) {
+    const gedeeld = {doel: obj.doel || '', m0: obj.m0 || '', m1: obj.m1 || '', door: mijnNaam, tijd: new Date().toISOString()};
+    window._echtGedeeld = gedeeld;
+    setDoc(doc(db, 'koppels', ec, 'gedeeld', 'echtdoel'), gedeeld).catch(e => console.warn('Gedeelde echt-doelen opslaan mislukt:', e));
+  }
   const data = loadDay(todayKey());
   renderVragen(data); updateBattery(data); renderEchtDoelKaart();
 }
@@ -2404,25 +2411,16 @@ function toggleEchtDoelKaart() {
   btn.setAttribute('aria-expanded', String(open));
   document.getElementById('echt-doel-chev').style.transform = open ? 'rotate(180deg)' : '';
 }
-// Doel en referenties van de partner (alleen-lezen), opgehaald via de partner-dagdata
-function echtPartnerDoel() {
-  const code = echtKoppelCode();
-  const m = code && window._partnerDagen && window._partnerDagen[code];
-  const d = m && m.echtdoel;
-  return d && (d.doel || d.m0 || d.m1) ? d : null;
-}
-function renderEchtPartnerDoel() {
+// Wie de gedeelde set het laatst heeft aangepast
+function renderEchtAttributie() {
   const list = document.getElementById('echt-doel-list');
   if (!list) return;
   let el = document.getElementById('echt-partner-doel');
   if (!el) { el = document.createElement('div'); el.id = 'echt-partner-doel'; list.parentNode.appendChild(el); }
-  const pd = echtPartnerDoel();
-  if (!pd) { el.innerHTML = ''; return; }
-  const stijl = 'font-size:14px;color:#e8f4f8;line-height:1.3;margin-bottom:6px;';
-  el.innerHTML = `<div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:#9fd3e6;margin-bottom:8px;">${setEsc(window._echtPartnerNaam || 'Partner')} heeft:</div>`
-    + (pd.doel ? `<div style="${stijl}">Doel: ${setEsc(pd.doel)}</div>` : '')
-    + (pd.m0 ? `<div style="${stijl}">Referentie 1: ${setEsc(pd.m0)}</div>` : '')
-    + (pd.m1 ? `<div style="${stijl}">Referentie 2: ${setEsc(pd.m1)}</div>` : '');
+  const g = window._echtGedeeld;
+  if (!g || !g.door || !g.tijd) { el.innerHTML = ''; return; }
+  const wanneer = new Date(g.tijd).toLocaleString('nl-NL', {dateStyle: 'short', timeStyle: 'short'});
+  el.innerHTML = `<div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:#9fd3e6;">Laatst aangepast door ${setEsc(g.door)} op ${setEsc(wanneer)}</div>`;
 }
 function renderEchtDoelKaart() {
   const card = document.getElementById('echt-doel-card');
@@ -2442,7 +2440,7 @@ function renderEchtDoelKaart() {
   }
   if (rij) rij.style.display = obj.doel ? 'none' : 'flex';
   renderEchtRefs();
-  renderEchtPartnerDoel();
+  renderEchtAttributie();
 }
 function loadDoelen() { try { return JSON.parse(localStorage.getItem('wmm_doelen')) || []; } catch { return []; } }
 function saveDoelen(doelen) {
@@ -9140,6 +9138,10 @@ function koppelPartnerListeners(koppelCode, partnerNaam) {
   // Echtgenoot: alle dagdata van de partner, voor de echt-grafiek en de periode
   if (laadKoppels().some(k => k.code === koppelCode && koppelType(k) === 'echt')) {
     window._echtPartnerNaam = partnerNaam;
+    onSnapshot(doc(db, 'koppels', koppelCode, 'gedeeld', 'echtdoel'), (snap) => {
+      window._echtGedeeld = snap.exists() ? snap.data() : {};
+      renderEchtDoelKaart();
+    }, (err) => console.warn('Gedeelde echt-doelen mislukt:', err));
     renderEchtKaart();
     window._partnerDagen = window._partnerDagen || {};
     window._partnerDagen[koppelCode] = window._partnerDagen[koppelCode] || {};
