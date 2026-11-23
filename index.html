@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-11-23 01:24 -->
+<!-- WMM-BUILD: 2026-11-23 01:28 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-23 01:24";</script>
+<script>window.WMM_BUILD = "2026-11-23 01:28";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -2347,9 +2347,9 @@ function slaEchtDoelOp(obj) {
   try { localStorage.setItem('wmm_echt_doel', JSON.stringify(obj)); } catch {}
   const ec = echtKoppelCode();
   if (ec) {
-    const gedeeld = {doel: obj.doel || '', m0: obj.m0 || '', m1: obj.m1 || '', door: _mijnNaam || localStorage.getItem('wmm_naam') || '', tijd: new Date().toISOString()};
+    const gedeeld = {doel: obj.doel || '', m0: obj.m0 || '', m1: obj.m1 || '', door: localStorage.getItem('wmm_naam') || '', tijd: new Date().toISOString()};
     window._echtGedeeld = gedeeld;
-    setDoc(doc(db, 'koppels', ec, 'gedeeld', 'echtdoel'), gedeeld).catch(e => console.warn('Gedeelde echt-doelen opslaan mislukt:', e));
+    if (window.schrijfGedeeldEcht) window.schrijfGedeeldEcht(ec, gedeeld);
   }
   const data = loadDay(todayKey());
   renderVragen(data); updateBattery(data); renderEchtDoelKaart();
@@ -8974,6 +8974,11 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
   }
 
   // Sync upload functie — stuurt data naar alle gekoppelde codes
+  // Gedeelde echtgenoot-doelen wegschrijven (aangeroepen vanuit het klassieke script)
+  window.schrijfGedeeldEcht = async function(code, gegevens) {
+    try { await setDoc(doc(db, 'koppels', code, 'gedeeld', 'echtdoel'), gegevens); }
+    catch (e) { console.warn('Gedeelde echt-doelen opslaan mislukt:', e); }
+  };
   window.cloudSave = async function(key, data) {
     if (window._wmm_naamBotst) return;
     const koppels = laadKoppels();
