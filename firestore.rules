@@ -102,6 +102,18 @@ service cloud.firestore {
         allow delete: if isAuthenticated() && request.auth.uid == lidId;
       }
 
+      // Gedeelde echtgenoot-doelen: beide leden lezen en schrijven dezelfde set.
+      match /gedeeld/{docId} {
+        allow read: if isLid(koppelCode);
+        allow write: if isLid(koppelCode)
+                     && request.resource.data.keys().hasOnly(['doel', 'm0', 'm1', 'door', 'tijd'])
+                     && request.resource.data.doel is string && request.resource.data.doel.size() <= 300
+                     && request.resource.data.m0 is string && request.resource.data.m0.size() <= 300
+                     && request.resource.data.m1 is string && request.resource.data.m1.size() <= 300
+                     && request.resource.data.door is string && request.resource.data.door.size() <= 60
+                     && request.resource.data.tijd is string && request.resource.data.tijd.size() <= 40;
+      }
+
       // Gebruikers binnen een koppeling. Lezen mag ieder lid — partners
       // moeten elkaars voortgang kunnen zien. Schrijven mag alleen de
       // eigenaar van die naam.
