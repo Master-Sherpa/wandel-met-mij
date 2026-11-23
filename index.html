@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-23 20:40";</script>
+<script>window.WMM_BUILD = "2026-11-23 20:55";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -2970,13 +2970,24 @@ function renderVragen(data) {
 }
 
 // ── WEKELIJKSE XP BOOSTERS ───────────────────────────────────
-const BOOSTERS = [
+const BOOSTERS_LDS = [
   {id:'avondmaal', icon:'🍞', label:'Heb ik van het Avondmaal genomen?',          xp:5},
   {id:'tempel',   icon:'🏛️', label:'Ben ik naar de Tempel geweest?',              xp:5},
   {id:'hulp',     icon:'🤲', label:'Heb ik iemand onvoorwaardelijk geholpen?',    xp:5},
   {id:'gebedsrol',icon:'🙏', label:'Heb ik de gebedsrol deze week gebruikt?',     xp:5, vers:'"Bidt voor elkander, opdat gij gezond wordt." — Jakobus 5:16'},
   {id:'goudentips',icon:'🌟', label:'Heb ik deze week de Gouden Tips gevolgd?',    xp:5, vers:'"Wie in het kleine getrouw is, is ook in het grote getrouw." — Lukas 16:10'},
 ];
+// Modus B (vriend): andere ids, zodat antwoorden van A en B elkaar niet overschrijven
+const BOOSTERS_VRIEND = [
+  {id:'kerk',     icon:'⛪', label:'Ben ik naar de kerk geweest?',                 xp:5},
+  {id:'hertsel',  icon:'🤝', label:'Ben ik naar een hertsel meeting geweest?',     xp:5},
+  {id:'hulp',     icon:'🤲', label:'Heb ik iemand onvoorwaardelijk geholpen?',    xp:5},
+  {id:'gebed',    icon:'🙏', label:'Heb ik voor andere gebeden?',                  xp:5, vers:'"Bidt voor elkander, opdat gij gezond wordt." — Jakobus 5:16'},
+  {id:'goudentips',icon:'🌟', label:'Heb ik deze week de Gouden Tips gevolgd?',    xp:5, vers:'"Wie in het kleine getrouw is, is ook in het grote getrouw." — Lukas 16:10'},
+];
+function activeBoosters() {
+  return localStorage.getItem('wmm_modus') === 'vriend' ? BOOSTERS_VRIEND : BOOSTERS_LDS;
+}
 function boosterWeekKey() {
   const now = new Date();
   const ma = new Date(now);
@@ -2992,7 +3003,7 @@ function answerBooster(id, val) {
   const data = loadBoosters(); data[id] = val; saveBoosters(data); renderBoosters();
   // Toon vers bij aanvinken van gebedsrol
   if (val === 'ja') {
-    const b = BOOSTERS.find(x => x.id === id);
+    const b = activeBoosters().find(x => x.id === id);
     if (b && b.vers) {
       const versEl = document.getElementById('booster-vers-' + id);
       if (versEl) { versEl.textContent = b.vers; versEl.style.display = 'block'; }
@@ -3011,7 +3022,7 @@ function renderBoosters() {
   if (!lijst) return;
   lijst.innerHTML = '';
   let totaalXP = 0;
-  BOOSTERS.forEach(b => {
+  activeBoosters().forEach(b => {
     const val = data[b.id];
     if (val === 'ja') totaalXP += b.xp;
     const row = document.createElement('div');
