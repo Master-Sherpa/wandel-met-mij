@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-11-23 23:10 -->
+<!-- WMM-BUILD: 2026-11-23 23:29 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-23 23:10";</script>
+<script>window.WMM_BUILD = "2026-11-23 23:29";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -2594,6 +2594,15 @@ function sluitPartnerTv() {
 }
 // Vlaggen om blokken aan/uit te zetten (instellingen komen in fase 4)
 function echtAan()   { return localStorage.getItem('wmm_echt_aan') === '1'; }
+// "1 vlees worden"-vraag: standaard aan. Uit = verborgen en telt niet mee in de score (per toestel).
+function ebAan()     { return localStorage.getItem('wmm_eb_aan') !== '0'; }
+const EB_INSTEL = {
+  nl: {naam:'Vraag "1 vlees worden" tonen', sub:'Als uit: de vraag is verborgen en telt niet mee in je score.'},
+  en: {naam:'Show the "one flesh" question', sub:'When off: the question is hidden and does not count toward your score.'},
+  fr: {naam:'Afficher la question « une seule chair »', sub:'Désactivé : la question est masquée et ne compte pas dans ton score.'},
+  de: {naam:'Frage „ein Fleisch werden“ anzeigen', sub:'Aus: Die Frage ist ausgeblendet und zählt nicht zur Punktzahl.'},
+  es: {naam:'Mostrar la pregunta «una sola carne»', sub:'Desactivado: la pregunta está oculta y no cuenta en tu puntuación.'}
+};
 function periodeAan(){ return localStorage.getItem('wmm_periode_aan') === '1'; }
 
 // ── DAGVRAGEN: sleutels per batterij ─────────────────────────
@@ -2631,7 +2640,7 @@ function echtPctFromData(data) {
   let p = 0;
   if (data.e0 === 'ja') p += ECHT_PUNTEN.e0;
   if (data.e1 === 'ja') p += ECHT_PUNTEN.e1;
-  if (data.eb === 'ja') p += ECHT_PUNTEN.eb;
+  if (data.eb === 'ja' && ebAan()) p += ECHT_PUNTEN.eb;
   if (data.ed === 'ja') p += ECHT_PUNTEN.ed;
   return p;
 }
@@ -2942,7 +2951,7 @@ function renderVragen(data) {
     // achter een knop: standaard dicht, zodat ze niet op je scherm staan als
     // iemand meekijkt. Ze gaan vanzelf weer dicht als de app wegvalt.
     const gewoon = t.echtVragen.map((v, i) => gedeeldeRij(`${v} <span style="color:#f0a500">(+${ECHT_PUNTEN['e' + i]}%)</span>`, 'e' + i)).join('');
-    let persoonlijk = gedeeldeRij(`${t.echtBonus} <span style="color:#f0a500">${ui.bonusNote}</span>`, 'eb');
+    let persoonlijk = ebAan() ? gedeeldeRij(`${t.echtBonus} <span style="color:#f0a500">${ui.bonusNote}</span>`, 'eb') : '';
     const ed = loadEchtDoel();
     const doelDoor = window._echtGedeeld && window._echtGedeeld.door;
     if (ed.doel) persoonlijk += gedeeldeRij(`${ed.doel} <span style="color:#f0a500">(+10%)</span>`, 'ed', doelDoor ? `<span style="color:#f0a500">✓ laatst gewijzigd door ${setEsc(doelDoor)}</span>` : '');
@@ -4442,6 +4451,7 @@ function echtPartnerDag(key){ const code = echtKoppelCode();
 // Gezamenlijke batterij: een vraag telt als ja zodra een van beiden hem met ja beantwoordt
 // Het laatst gegeven antwoord (ja of nee) geldt voor beiden
 function echtKies(k, eigen, partner) {
+  if (k === 'eb' && !ebAan()) return '';
   const ev = eigen[k], pv = partner[k];
   if (ev === undefined || ev === null) return pv;
   if (pv === undefined || pv === null) return ev;
@@ -8570,6 +8580,7 @@ function renderInstellingen(){
     <div class="instel-groep">${t.rel}</div>
     <div class="instel-rij"><span>${t.echt}<span class="sub">${t.echtUit}</span></span>${setSchakelaar('set-echt', echtAan(), "instelZet('wmm_echt_aan', this.checked, 1)")}</div>
     <div class="instel-rij"><span>${t.periode}<span class="sub">${t.periodeUit}</span></span>${setSchakelaar('set-periode', periodeAan(), "instelZet('wmm_periode_aan', this.checked, 1)")}</div>
+    <div class="instel-rij"><span>${(EB_INSTEL[huidigtaal] || EB_INSTEL.nl).naam}<span class="sub">${(EB_INSTEL[huidigtaal] || EB_INSTEL.nl).sub}</span></span>${setSchakelaar('set-eb', ebAan(), "instelZet('wmm_eb_aan', this.checked, 1)")}</div>
     <div class="instel-groep">${t.echtKoppelen}</div>
     ${echtBlok}
     <div class="instel-groep">${t.vriendKoppelen}</div>
@@ -8695,7 +8706,7 @@ function publiceerFotoNaarKoppels(){
 // Instellingen die alleen een vlag zetten; daarna het Vandaag- en Voortgang-scherm bijwerken
 function instelZet(sleutel, aan, herlaadVoortgang){
   try { if (aan) localStorage.setItem(sleutel, '1'); else localStorage.setItem(sleutel, '0'); } catch {}
-  if (sleutel === 'wmm_echt_aan' || sleutel === 'wmm_periode_aan' || sleutel === 'wmm_foto_disc' || sleutel === 'wmm_foto_vriend') {
+  if (sleutel === 'wmm_echt_aan' || sleutel === 'wmm_eb_aan' || sleutel === 'wmm_periode_aan' || sleutel === 'wmm_foto_disc' || sleutel === 'wmm_foto_vriend') {
     try { renderVragen(loadDay(todayKey())); } catch {}
   }
   if (sleutel === 'wmm_foto_disc') { renderDiscAvatar(); }
