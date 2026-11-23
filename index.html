@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-11-23 23:29 -->
+<!-- WMM-BUILD: 2026-11-23 23:36 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-23 23:29";</script>
+<script>window.WMM_BUILD = "2026-11-23 23:36";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -2595,7 +2595,23 @@ function sluitPartnerTv() {
 // Vlaggen om blokken aan/uit te zetten (instellingen komen in fase 4)
 function echtAan()   { return localStorage.getItem('wmm_echt_aan') === '1'; }
 // "1 vlees worden"-vraag: standaard aan. Uit = verborgen en telt niet mee in de score (per toestel).
-function ebAan()     { return localStorage.getItem('wmm_eb_aan') !== '0'; }
+// Bij een echtgenoot-koppeling geldt de gedeelde keuze voor beide partners (cloud); anders alleen dit toestel.
+function ebAan() {
+  if (echtKoppelCode() && window._echtEbGedeeld) return window._echtEbGedeeld.ebAan !== false;
+  return localStorage.getItem('wmm_eb_aan') !== '0';
+}
+// Schakelaar aanzetten of uitzetten. Bewaart niets weg: de antwoorden blijven staan.
+function zetEbAan(aan) {
+  try { localStorage.setItem('wmm_eb_aan', aan ? '1' : '0'); } catch {}
+  const ec = echtKoppelCode();
+  if (ec) {
+    window._echtEbGedeeld = {ebAan: !!aan};
+    if (window.schrijfEbInstelling) window.schrijfEbInstelling(ec, !!aan);
+  }
+  try { const d = loadDay(todayKey()); renderVragen(d); updateBattery(d); } catch {}
+  try { renderEchtKaart(); } catch {}
+}
+window.zetEbAan = zetEbAan;
 const EB_INSTEL = {
   nl: {naam:'Vraag "1 vlees worden" tonen', sub:'Als uit: de vraag is verborgen en telt niet mee in je score.'},
   en: {naam:'Show the "one flesh" question', sub:'When off: the question is hidden and does not count toward your score.'},
@@ -8580,7 +8596,7 @@ function renderInstellingen(){
     <div class="instel-groep">${t.rel}</div>
     <div class="instel-rij"><span>${t.echt}<span class="sub">${t.echtUit}</span></span>${setSchakelaar('set-echt', echtAan(), "instelZet('wmm_echt_aan', this.checked, 1)")}</div>
     <div class="instel-rij"><span>${t.periode}<span class="sub">${t.periodeUit}</span></span>${setSchakelaar('set-periode', periodeAan(), "instelZet('wmm_periode_aan', this.checked, 1)")}</div>
-    <div class="instel-rij"><span>${(EB_INSTEL[huidigtaal] || EB_INSTEL.nl).naam}<span class="sub">${(EB_INSTEL[huidigtaal] || EB_INSTEL.nl).sub}</span></span>${setSchakelaar('set-eb', ebAan(), "instelZet('wmm_eb_aan', this.checked, 1)")}</div>
+    <div class="instel-rij"><span>${(EB_INSTEL[huidigtaal] || EB_INSTEL.nl).naam}<span class="sub">${(EB_INSTEL[huidigtaal] || EB_INSTEL.nl).sub}</span></span>${setSchakelaar('set-eb', ebAan(), "zetEbAan(this.checked)")}</div>
     <div class="instel-groep">${t.echtKoppelen}</div>
     ${echtBlok}
     <div class="instel-groep">${t.vriendKoppelen}</div>
@@ -9483,6 +9499,11 @@ window.initFirebaseKoppel = async function(koppelCode, mijnNaam) {
     try { await setDoc(doc(db, 'koppels', code, 'gedeeld', 'echtdoel'), gegevens); }
     catch (e) { console.warn('Gedeelde echt-doelen opslaan mislukt:', e); }
   };
+  // "1 vlees worden"-vraag aan/uit: gedeeld voor het hele echt-koppel
+  window.schrijfEbInstelling = async function(code, aan) {
+    try { await setDoc(doc(db, 'koppels', code, 'gedeeld', 'instellingen'), {ebAan: !!aan, door: localStorage.getItem('wmm_naam') || '', tijd: new Date().toISOString()}); }
+    catch (e) { console.warn('Instelling 1 vlees opslaan mislukt:', e); }
+  };
   // Modus: per account in de cloud (alleen met e-mailaccount), anders alleen op dit toestel
   window.schrijfModus = async function(v) {
     localStorage.setItem('wmm_modus', v === 'vriend' ? 'vriend' : 'lds');
@@ -9675,6 +9696,11 @@ function koppelPartnerListeners(koppelCode, partnerNaam) {
       window._echtGedeeld = snap.exists() ? snap.data() : {};
       renderEchtDoelKaart();
     }, (err) => console.warn('Gedeelde echt-doelen mislukt:', err));
+    onSnapshot(doc(db, 'koppels', koppelCode, 'gedeeld', 'instellingen'), (snap) => {
+      window._echtEbGedeeld = {ebAan: !(snap.exists() && snap.data().ebAan === false)};
+      try { const d = loadDay(todayKey()); if (window.renderVragen) renderVragen(d); if (window.updateBattery) updateBattery(d); } catch {}
+      try { renderEchtKaart(); } catch {}
+    }, (err) => console.warn('Instelling 1 vlees mislukt:', err));
     renderEchtKaart();
     window._partnerDagen = window._partnerDagen || {};
     window._partnerDagen[koppelCode] = window._partnerDagen[koppelCode] || {};
