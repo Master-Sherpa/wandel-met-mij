@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-11-23 01:28 -->
+<!-- WMM-BUILD: 2026-11-23 01:34 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-23 01:28";</script>
+<script>window.WMM_BUILD = "2026-11-23 01:34";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -2600,8 +2600,7 @@ function renderVragen(data) {
   const gedeeldeRij = (tekst, key, sub) => {
     const selJa = m[key] === 'ja';
     const selNee = m[key] === 'nee';
-    const doorPartner = pd[key] !== undefined && m[key] === pd[key] && data[key] !== pd[key];
-    const notitie = doorPartner && pNaam ? `<span class="sub-note" style="color:#f0a500">✓ laatst gewijzigd door ${setEsc(pNaam)}</span>` : (sub ? `<span class="sub-note">${sub}</span>` : '');
+    const notitie = sub ? `<span class="sub-note">${sub}</span>` : '';
     return `<div class="question-row" style="width:100%"><span class="question-text">${tekst}${notitie}</span><div class="btn-group"><button class="btn-yn ${selJa?'selected-ja':''}" onclick="answerKey('${key}','ja')">${t.ja}</button><button class="btn-yn ${selNee?'selected-nee':''}" onclick="answerKey('${key}','nee')">${t.nee}</button></div></div>`;
   };
   // Echtgenoot batterij (aan via instellingen)
@@ -2613,7 +2612,8 @@ function renderVragen(data) {
     const gewoon = t.echtVragen.map((v, i) => gedeeldeRij(`${v} <span style="color:#f0a500">(+${ECHT_PUNTEN['e' + i]}%)</span>`, 'e' + i)).join('');
     let persoonlijk = gedeeldeRij(`${t.echtBonus} <span style="color:#f0a500">${ui.bonusNote}</span>`, 'eb');
     const ed = loadEchtDoel();
-    if (ed.doel) persoonlijk += gedeeldeRij(`${ed.doel} <span style="color:#f0a500">(+10%)</span>`, 'ed');
+    const doelDoor = window._echtGedeeld && window._echtGedeeld.door;
+    if (ed.doel) persoonlijk += gedeeldeRij(`${ed.doel} <span style="color:#f0a500">(+10%)</span>`, 'ed', doelDoor ? `<span style="color:#f0a500">✓ laatst gewijzigd door ${setEsc(doelDoor)}</span>` : '');
     if (ed.m0) persoonlijk += gedeeldeRij(ed.m0, 'm0');
     if (ed.m1) persoonlijk += gedeeldeRij(ed.m1, 'm1');
     if (periodeAan()) persoonlijk += gedeeldeRij(ui.periodeLabel, 'p', ui.periodeSub);
@@ -4040,6 +4040,7 @@ function renderEchtHistory() {
       if (toonPeriode) tekenPeriodeCurve(plot, dagen);
       const harten = dagen.map((d, i) => d.bonus ? `<div class="echt-hart" style="left:${dagX(i)}%;">♥</div>` : '').join('');
       const vinkjes = (k, kleur, top) => dagen.map((d, i) => d[k] ? `<div class="echt-hart" style="left:${dagX(i)}%;top:${top}px;color:${kleur};text-shadow:none;">✓</div>` : '').join('');
+      plot.style.marginTop = '56px';
       const extra = harten + vinkjes('mk0', ECHT_MK_KLEUR[0], -24) + vinkjes('mk1', ECHT_MK_KLEUR[1], -38);
       if (extra) plot.insertAdjacentHTML('beforeend', `<div class="week-mini-overlay" style="top:0;bottom:auto;height:100px;">${extra}</div>`);
     }
