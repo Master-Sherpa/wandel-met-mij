@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-<!-- WMM-BUILD: 2026-11-24 00:13 -->
+<!-- WMM-BUILD: 2026-11-24 21:19 -->
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
@@ -892,7 +892,7 @@
   </div>
 </div>
 
-<script>window.WMM_BUILD = "2026-11-24 00:13";</script>
+<script>window.WMM_BUILD = "2026-11-24 21:19";</script>
 <div class="app" id="main-app">
   <div class="header">
     <div class="header-logo">
@@ -9138,9 +9138,7 @@ async function registerSW() {
   if(!('serviceWorker' in navigator)) return null;
   const swPoging = (async () => {
     try {
-      const swCode=`self.addEventListener('notificationclick',e=>{e.notification.close();clients.openWindow('/');});self.addEventListener('message',e=>{if(e.data&&e.data.type==='SCHEDULE'){const{ms,title,body}=e.data;setTimeout(()=>{self.registration.showNotification(title,{body});},ms);}});`;
-      const blob=new Blob([swCode],{type:'application/javascript'});
-      const reg=await navigator.serviceWorker.register(URL.createObjectURL(blob),{scope:'/'});
+      const reg=await navigator.serviceWorker.register('/sw.js',{scope:'/'});
       await navigator.serviceWorker.ready;
       return reg;
     } catch(e) {
